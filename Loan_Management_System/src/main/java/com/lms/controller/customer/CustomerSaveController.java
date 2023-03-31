@@ -1,7 +1,10 @@
 package com.lms.controller.customer;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +50,7 @@ public class CustomerSaveController {
 			customer.setKycnum(saveCustomer.getBkycnumber());
 			customer.setEntrydate(saveCustomer.getBentrydate());
 			customer.setEntryby(saveCustomer.getBentryby());
+			customer.setSourcedBy(saveCustomer.getSourcedby());
 			//saveBerrower
 			customer=customerRepository.save(customer);
 			int borrowerId=customer.getCid();
@@ -70,6 +74,7 @@ public class CustomerSaveController {
 			customer.setKycnum(saveCustomer.getCbkycnumber());
 			customer.setEntrydate(saveCustomer.getBentrydate());
 			customer.setEntryby(saveCustomer.getBentryby());
+			customer.setSourcedBy(saveCustomer.getSourcedby());
 			//save Co_Borrower
 			customerRepository.save(customer);
 			int coborrowerId=customer.getCid();
@@ -83,13 +88,19 @@ public class CustomerSaveController {
 			lead.setAplicationDate(saveCustomer.getAppdate());
 			lead.setBranchID(saveCustomer.getBranch());
 			lead.setCenterID(saveCustomer.getCentername());
-			lead.setSourcedBy(saveCustomer.getBentryby());
-			//lead.setManageBy()
-			//lead.set
+			lead.setSourcedBy(saveCustomer.getSourcedby());
+			lead.setManageBy(saveCustomer.getSourcedby());
+			
+//															lead.s(coborrowerId)
 			leadRepository.save(lead);
 			
 			
 		return saveCustomer;
 		
+	}
+	
+	@GetMapping("/lead/list")
+	public List<Lead> getLeads(){
+		return leadRepository.findAll();
 	}
 }

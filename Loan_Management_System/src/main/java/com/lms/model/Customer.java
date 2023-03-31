@@ -43,6 +43,7 @@ public class Customer {
 	private String kycname;
 	@Column(name="kyc_number")
 	private String kycnum;
+	private String sourcedBy;
 	
 	@Column(name="entry_date", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	@CreationTimestamp
@@ -299,8 +300,8 @@ public class Customer {
 
 
 
-	public void setDistrict(String district) {
-		this.district = district;
+	public void setDistrict(String string) {
+		this.district = string;
 	}
 
 
@@ -321,8 +322,8 @@ public class Customer {
 
 
 
-	public void setState(String state) {
-		this.state = state;
+	public void setState(String string) {
+		this.state = string;
 	}
 
 
@@ -420,6 +421,28 @@ public class Customer {
 
 
 
+	public String getSourcedBy() {
+		return sourcedBy;
+	}
+
+
+
+
+
+
+
+
+	public void setSourcedBy(String string) {
+		this.sourcedBy = string;
+	}
+
+
+
+
+
+
+
+
 	public Date getEntrydate() {
 		return entrydate;
 	}
@@ -453,8 +476,8 @@ public class Customer {
 
 
 
-	public void setEntryby(String entryby) {
-		this.entryby = entryby;
+	public void setEntryby(String string) {
+		this.entryby = string;
 	}
 
 
@@ -466,7 +489,7 @@ public class Customer {
 
 	public Customer(int cid, String cname, String fname, String mobnumber, Date dob, String education, String addl1,
 			String addl2, String landmark, String city, String district, String state, int pincode, String pannum,
-			String kycname, String kycnum, Date entrydate, String entryby) {
+			String kycname, String kycnum, String sourcedBy, Date entrydate, String entryby) {
 		super();
 		this.cid = cid;
 		this.cname = cname;
@@ -484,6 +507,7 @@ public class Customer {
 		this.pannum = pannum;
 		this.kycname = kycname;
 		this.kycnum = kycnum;
+		this.sourcedBy = sourcedBy;
 		this.entrydate = entrydate;
 		this.entryby = entryby;
 	}
@@ -495,20 +519,7 @@ public class Customer {
 
 
 
-	@Override
-	public String toString() {
-		return "Customer [cid=" + cid + ", cname=" + cname + ", fname=" + fname + ", mobnumber=" + mobnumber + ", dob="
-				+ dob + ", education=" + education + ", addl1=" + addl1 + ", addl2=" + addl2 + ", landmark=" + landmark
-				+ ", city=" + city + ", district=" + district + ", state=" + state + ", pincode=" + pincode
-				+ ", pannum=" + pannum + ", kycname=" + kycname + ", kycnum=" + kycnum + ", entrydate=" + entrydate
-				+ ", entryby=" + entryby + "]";
-	}
-
-
-
-
-
-
+	 
 
 
 	 	

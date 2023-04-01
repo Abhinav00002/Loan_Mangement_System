@@ -99,8 +99,5 @@ public class CustomerSaveController {
 		
 	}
 	
-	@GetMapping("/lead/list")
-	public List<Lead> getLeads(){
-		return leadRepository.findAll();
-	}
+	 
 }

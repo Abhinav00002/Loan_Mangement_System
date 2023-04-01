@@ -13,7 +13,7 @@ public class CustomerSave {
 	private String branch;
 	private String sourcedby;
 	private String centername;
-	private Date appdate;
+	private String appdate;
 //	Borrower Details
 	private String bname;
 	private String bfhname;
@@ -145,7 +145,7 @@ public class CustomerSave {
 
 
 
-	public Date getAppdate() {
+	public String getAppdate() {
 		return appdate;
 	}
 
@@ -156,7 +156,7 @@ public class CustomerSave {
 
 
 
-	public void setAppdate(Date appdate) {
+	public void setAppdate(String appdate) {
 		this.appdate = appdate;
 	}
 
@@ -930,7 +930,7 @@ public class CustomerSave {
 
 
 
-	public CustomerSave(  String branch, String sourcedby, String centername, Date appdate, String bname,
+	public CustomerSave(  String branch, String sourcedby, String centername, String appdate, String bname,
 			String bfhname, String bcontectnum, String bpannum, String bkycname, String bkycnumber, Date bdob,
 			String beducation, String bemail, String baddressl1, String baddressl2, String blandmark, String bcity,
 			String bstate, String bdistrict, int bpincode, Date bentrydate, String bentryby, String cbname,

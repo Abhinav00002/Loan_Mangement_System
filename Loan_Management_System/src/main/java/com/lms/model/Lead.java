@@ -21,7 +21,7 @@ public class Lead {
 	private String centerID;
 	private String sourcedBy;
 	private String manageBy;
-	private Date aplicationDate;
+	private String aplicationDate;
 	private String entryBy;
 	
 	
@@ -117,13 +117,13 @@ public class Lead {
 
 
 
-	public Date getAplicationDate() {
+	public String getAplicationDate() {
 		return aplicationDate;
 	}
 
 
 
-	public void setAplicationDate(Date aplicationDate) {
+	public void setAplicationDate(String aplicationDate) {
 		this.aplicationDate = aplicationDate;
 	}
 
@@ -142,7 +142,7 @@ public class Lead {
 
 
 	public Lead(int leadID, int borrowerID, int coBorrowerId, String branchID, String centerID, String sourcedBy,
-			String manageBy, Date aplicationDate, String entryBy) {
+			String manageBy, String aplicationDate, String entryBy) {
 		super();
 		this.leadID = leadID;
 		this.borrowerID = borrowerID;

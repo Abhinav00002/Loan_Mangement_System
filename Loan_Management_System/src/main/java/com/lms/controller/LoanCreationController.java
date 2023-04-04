@@ -28,7 +28,9 @@ public class LoanCreationController {
 	
 	@PostMapping("/")
 	public LoanCreation createLoanCreation(@RequestBody LoanCreation loanCreation) throws Exception{
-		return loanCreationRepository.save(loanCreation);
+//		LoanCreation loan=loanCreationRepository.save(loanCreation);
+		System.out.println(loanCreation);
+		return null;
 		
 	}
 	

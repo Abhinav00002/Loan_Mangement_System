@@ -28,15 +28,24 @@ public class LoanCreationController {
 	
 	@PostMapping("/")
 	public LoanCreation createLoanCreation(@RequestBody LoanCreation loanCreation) throws Exception{
-//		LoanCreation loan=loanCreationRepository.save(loanCreation);
-		System.out.println(loanCreation);
-		return null;
+		
+		double financeamount=0;
+		int schemeno =loanCreation.getScheme();
+		schemeno=
+		
+		
+		
+		
+		LoanCreation loan=loanCreationRepository.save(loanCreation);
+		
+		System.out.println(loan);
+		return loan;
 		
 	}
 	
 	
 	@GetMapping("/list")
-	public List<LoanCreation> getLoanCreations(){
+	public List<LoanCreation> getLoanCreations(int schemeno){
 		List<LoanCreation> loanCreations=new ArrayList<LoanCreation>();
 		loanCreations=loanCreationRepository.findAll();
 		return loanCreations;

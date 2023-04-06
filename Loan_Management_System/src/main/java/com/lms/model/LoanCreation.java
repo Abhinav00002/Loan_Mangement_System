@@ -26,7 +26,7 @@ public class LoanCreation {
 	private String name;
 	@Column(name="spouse_name")
 	private String sname;
-	private String scheme;
+	private int scheme;
 	private String purpose;
 	@Column(name="disbursement_date")
 	private Date ddate;
@@ -182,7 +182,7 @@ public class LoanCreation {
 
 
 
-	public String getScheme() {
+	public int getScheme() {
 		return scheme;
 	}
 
@@ -192,7 +192,7 @@ public class LoanCreation {
 
 
 
-	public void setScheme(String scheme) {
+	public void setScheme(int scheme) {
 		this.scheme = scheme;
 	}
 
@@ -403,7 +403,7 @@ public class LoanCreation {
 
 
 	public LoanCreation(long id, String leadid, String branchname, String centername, String name, String sname,
-			String scheme, String purpose, Date ddate, String cbrelation, String selfincome, String sincome,
+			int scheme, String purpose, Date ddate, String cbrelation, String selfincome, String sincome,
 			String oincome, String hexpences, String bexpences, String lexpences, String sourcedby) {
 		super();
 		this.id = id;

@@ -1,4 +1,4 @@
-package com.lms.model;
+package com.lms.model.address;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,25 +7,45 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GeneratorType;
+
 @Entity
-@Table(name="due_master")
-public class Due {
-	
+@Table(name="purpose")
+public class Purpose {
+
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="due_id")
+	@Column(name="purpose_id")
 	private int id;
-	@Column(name="due_name")
-	private String type;
+	@Column(name="purpose_name")
+	private String name;
 	
 	
 	
 	
-	public Due() {
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public Purpose() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -37,6 +57,15 @@ public class Due {
 
 
 
+
+
+
+
+
+
+
+
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -44,45 +73,71 @@ public class Due {
 
 
 
-	public String getType() {
-		return type;
+
+
+
+
+
+
+
+
+
+	public String getName() {
+		return name;
 	}
 
 
 
 
-	public void setType(String type) {
-		this.type = type;
+
+
+
+
+
+
+
+
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 
 
 
 
-	public Due(int id, String type) {
+
+
+
+
+
+
+
+
+
+	public Purpose(int id, String name) {
 		super();
 		this.id = id;
-		this.type = type;
+		this.name = name;
 	}
+
+
+
+
+
+
+
+
+
 
 
 
 
 	@Override
 	public String toString() {
-		return "Due [id=" + id + ", type=" + type + ", getId()=" + getId() + ", getType()=" + getType()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
+		return "Purpose [id=" + id + ", name=" + name + "]";
 	}
 	
 	
-
-	 
+	
+	
 }

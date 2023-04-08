@@ -1,4 +1,4 @@
-package com.lms.model;
+package com.lms.model.address;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

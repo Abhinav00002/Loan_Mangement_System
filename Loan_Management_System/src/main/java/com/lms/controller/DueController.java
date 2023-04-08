@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lms.model.Due;
+import com.lms.model.address.Due;
 import com.lms.repo.DueRepository;
 
 @RestController

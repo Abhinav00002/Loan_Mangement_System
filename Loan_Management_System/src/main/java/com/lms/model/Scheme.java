@@ -1,5 +1,7 @@
 package com.lms.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,11 +27,13 @@ public class Scheme {
 	private double insuranceamount;
 	private double pfamount;
 	private  double intrestrate;
+	private Date schemeDate;
+	private long  schemeBy;
 	
 	
 	
 	
-	
+	//getter setter
 	
 	public Scheme() {
 		super();
@@ -219,10 +223,51 @@ public class Scheme {
 
 
 
+ 
+
+
+
+
+
+
+	public Date getSchemeDate() {
+		return schemeDate;
+	}
+
+
+
+
+
+
+	public void setSchemeDate(Date schemeDate) {
+		this.schemeDate = schemeDate;
+	}
+
+
+
+
+
+
+	public long getSchemeBy() {
+		return schemeBy;
+	}
+
+
+
+
+
+
+	public void setSchemeBy(long schemeBy) {
+		this.schemeBy = schemeBy;
+	}
+
+
+
+
 
 
 	public Scheme(long id, String schemeName, double loneamount, int emitype, double emi, double tenor, int duetype,
-			double insuranceamount, double pfamount, double intrestrate) {
+			double insuranceamount, double pfamount, double intrestrate, Date schemeDate, long schemeBy) {
 		super();
 		this.id = id;
 		this.schemeName = schemeName;
@@ -234,6 +279,8 @@ public class Scheme {
 		this.insuranceamount = insuranceamount;
 		this.pfamount = pfamount;
 		this.intrestrate = intrestrate;
+		this.schemeDate = schemeDate;
+		this.schemeBy = schemeBy;
 	}
 
 
@@ -245,10 +292,19 @@ public class Scheme {
 	public String toString() {
 		return "Scheme [id=" + id + ", schemeName=" + schemeName + ", loneamount=" + loneamount + ", emitype=" + emitype
 				+ ", emi=" + emi + ", tenor=" + tenor + ", duetype=" + duetype + ", insuranceamount=" + insuranceamount
-				+ ", pfamount=" + pfamount + ", intrestrate=" + intrestrate + "]";
+				+ ", pfamount=" + pfamount + ", intrestrate=" + intrestrate + ", schemeDate=" + schemeDate
+				+ ", schemeBy=" + schemeBy + "]";
 	}
 
 
+
+
+ 
+
+
+
+ 
+ 
 
 
 

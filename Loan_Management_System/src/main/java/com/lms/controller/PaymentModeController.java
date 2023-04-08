@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lms.model.PaymentMode;
+import com.lms.model.address.PaymentMode;
 import com.lms.repo.PaymentModeRepository;
 
 @RestController

@@ -1,5 +1,6 @@
 package com.lms.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -21,14 +22,14 @@ public class LoanRepayment {
 	private long id;
 	@Column(name="loan_id")
 	private Long loanId;
-	private Date dueDate;
+	private LocalDate dueDate;
 	private long installmentNo;
 	private double emi;
 	private double openningAmount;
 	private double principle;
 	private double intrest;
 	private long status;
-	private Date collectionDate;
+	private LocalDate collectionDate;
 	private long collectionBy;
 	
 	
@@ -68,7 +69,7 @@ public class LoanRepayment {
 
 
 
-	public Date getDueDate() {
+	public LocalDate getDueDate() {
 		return dueDate;
 	}
 
@@ -78,8 +79,8 @@ public class LoanRepayment {
 
 
 
-	public void setDueDate(Date dueDate) {
-		this.dueDate = dueDate;
+	public void setDueDate(LocalDate dueDate2) {
+		this.dueDate = dueDate2;
 	}
 
 
@@ -208,7 +209,7 @@ public class LoanRepayment {
 
 
 
-	public Date getCollectionDate() {
+	public LocalDate getCollectionDate() {
 		return collectionDate;
 	}
 
@@ -218,8 +219,8 @@ public class LoanRepayment {
 
 
 
-	public void setCollectionDate(Date collectionDate) {
-		this.collectionDate = collectionDate;
+	public void setCollectionDate(LocalDate dueDate2) {
+		this.collectionDate = dueDate2;
 	}
 
 
@@ -268,8 +269,8 @@ public class LoanRepayment {
 
 
 
-	public LoanRepayment(long id, Long loanId, Date dueDate, long installmentNo, double emi, double openningAmount,
-			double principle, double intrest, long status, Date collectionDate, long collectionBy) {
+	public LoanRepayment(long id, Long loanId, LocalDate dueDate, long installmentNo, double emi, double openningAmount,
+			double principle, double intrest, long status, LocalDate collectionDate, long collectionBy) {
 		super();
 		this.id = id;
 		this.loanId = loanId;

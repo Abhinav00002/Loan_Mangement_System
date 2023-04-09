@@ -44,7 +44,7 @@ public class LoanCreation {
 	@Column(name="lone_expences")
 	private String lexpences;
 	private String sourcedby;
-	
+	private Date meetingDate;
 	
 	
 	
@@ -61,11 +61,9 @@ public class LoanCreation {
 
 
 
-
 	public long getId() {
 		return id;
 	}
-
 
 
 
@@ -81,11 +79,9 @@ public class LoanCreation {
 
 
 
-
 	public String getLeadid() {
 		return leadid;
 	}
-
 
 
 
@@ -101,11 +97,9 @@ public class LoanCreation {
 
 
 
-
 	public String getBranchname() {
 		return branchname;
 	}
-
 
 
 
@@ -121,11 +115,9 @@ public class LoanCreation {
 
 
 
-
 	public String getCentername() {
 		return centername;
 	}
-
 
 
 
@@ -141,11 +133,9 @@ public class LoanCreation {
 
 
 
-
 	public String getName() {
 		return name;
 	}
-
 
 
 
@@ -161,11 +151,9 @@ public class LoanCreation {
 
 
 
-
 	public String getSname() {
 		return sname;
 	}
-
 
 
 
@@ -181,11 +169,9 @@ public class LoanCreation {
 
 
 
-
 	public long getScheme() {
 		return scheme;
 	}
-
 
 
 
@@ -201,11 +187,9 @@ public class LoanCreation {
 
 
 
-
 	public String getPurpose() {
 		return purpose;
 	}
-
 
 
 
@@ -221,11 +205,9 @@ public class LoanCreation {
 
 
 
-
 	public Date getDdate() {
 		return ddate;
 	}
-
 
 
 
@@ -241,11 +223,9 @@ public class LoanCreation {
 
 
 
-
 	public String getCbrelation() {
 		return cbrelation;
 	}
-
 
 
 
@@ -261,11 +241,9 @@ public class LoanCreation {
 
 
 
-
 	public String getSelfincome() {
 		return selfincome;
 	}
-
 
 
 
@@ -281,11 +259,9 @@ public class LoanCreation {
 
 
 
-
 	public String getSincome() {
 		return sincome;
 	}
-
 
 
 
@@ -301,11 +277,9 @@ public class LoanCreation {
 
 
 
-
 	public String getOincome() {
 		return oincome;
 	}
-
 
 
 
@@ -321,11 +295,9 @@ public class LoanCreation {
 
 
 
-
 	public String getHexpences() {
 		return hexpences;
 	}
-
 
 
 
@@ -341,11 +313,9 @@ public class LoanCreation {
 
 
 
-
 	public String getBexpences() {
 		return bexpences;
 	}
-
 
 
 
@@ -361,11 +331,9 @@ public class LoanCreation {
 
 
 
-
 	public String getLexpences() {
 		return lexpences;
 	}
-
 
 
 
@@ -381,11 +349,9 @@ public class LoanCreation {
 
 
 
-
 	public String getSourcedby() {
 		return sourcedby;
 	}
-
 
 
 
@@ -401,10 +367,27 @@ public class LoanCreation {
 
 
 
+	public Date getMeetingDate() {
+		return meetingDate;
+	}
+
+
+
+
+
+
+	public void setMeetingDate(Date meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+
+
+
+
 
 	public LoanCreation(long id, String leadid, String branchname, String centername, String name, String sname,
 			long scheme, String purpose, Date ddate, String cbrelation, String selfincome, String sincome,
-			String oincome, String hexpences, String bexpences, String lexpences, String sourcedby) {
+			String oincome, String hexpences, String bexpences, String lexpences, String sourcedby, Date meetingDate) {
 		super();
 		this.id = id;
 		this.leadid = leadid;
@@ -423,8 +406,8 @@ public class LoanCreation {
 		this.bexpences = bexpences;
 		this.lexpences = lexpences;
 		this.sourcedby = sourcedby;
+		this.meetingDate = meetingDate;
 	}
-
 
 
 
@@ -437,14 +420,13 @@ public class LoanCreation {
 				+ centername + ", name=" + name + ", sname=" + sname + ", scheme=" + scheme + ", purpose=" + purpose
 				+ ", ddate=" + ddate + ", cbrelation=" + cbrelation + ", selfincome=" + selfincome + ", sincome="
 				+ sincome + ", oincome=" + oincome + ", hexpences=" + hexpences + ", bexpences=" + bexpences
-				+ ", lexpences=" + lexpences + ", sourcedby=" + sourcedby + "]";
+				+ ", lexpences=" + lexpences + ", sourcedby=" + sourcedby + ", meetingDate=" + meetingDate + "]";
 	}
-	
-	
-	
-	
-	
-	
-	
 
+
+
+
+
+
+ 
 }

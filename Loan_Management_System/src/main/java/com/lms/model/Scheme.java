@@ -1,5 +1,6 @@
 package com.lms.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -27,7 +28,7 @@ public class Scheme {
 	private double insuranceamount;
 	private double pfamount;
 	private  double intrestrate;
-	private Date schemeDate;
+	private LocalDate schemeDate;
 	private long  schemeBy;
 	
 	
@@ -230,7 +231,7 @@ public class Scheme {
 
 
 
-	public Date getSchemeDate() {
+	public LocalDate getSchemeDate() {
 		return schemeDate;
 	}
 
@@ -239,7 +240,7 @@ public class Scheme {
 
 
 
-	public void setSchemeDate(Date schemeDate) {
+	public void setSchemeDate(LocalDate schemeDate) {
 		this.schemeDate = schemeDate;
 	}
 
@@ -267,7 +268,7 @@ public class Scheme {
 
 
 	public Scheme(long id, String schemeName, double loneamount, int emitype, double emi, double tenor, int duetype,
-			double insuranceamount, double pfamount, double intrestrate, Date schemeDate, long schemeBy) {
+			double insuranceamount, double pfamount, double intrestrate, LocalDate schemeDate, long schemeBy) {
 		super();
 		this.id = id;
 		this.schemeName = schemeName;

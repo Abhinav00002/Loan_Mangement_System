@@ -1,6 +1,8 @@
 package com.lms.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
- 
+
+import com.lms.model.Center;
 import com.lms.model.LoanCreation;
 import com.lms.model.LoanRepayment;
 import com.lms.model.Scheme;
+import com.lms.repo.CenterRepository;
 import com.lms.repo.LoanCreationRepository;
 import com.lms.repo.LoanRepaymentRepository;
 import com.lms.repo.SchemeRepository; 
@@ -32,6 +36,8 @@ public class LoanCreationController {
 	private SchemeRepository schemeRepository;
 	@Autowired
 	private LoanRepaymentRepository loanRepaymentRepository;
+	@Autowired
+	private CenterRepository centerRepository;
 	
 	
 	
@@ -43,14 +49,17 @@ public class LoanCreationController {
 		//fetch Scheme By id
 		Scheme scheme=schemeRepository.findById(schemeno); 
 		double loanAmount=	scheme.getLoneamount();
-		double interestRate=scheme.getIntrestrate();
+		double interestRate=scheme.getIntrestrate();  
 		int emitype = scheme.getEmitype();
 		double emi=scheme.getEmi();
 		double tenor=scheme.getTenor();
 		double pfAmount=scheme.getPfamount();
 		double insuranceAmount=scheme.getInsuranceamount();
 		long schemeBy= scheme.getSchemeBy();
-		
+		LocalDate dueDate=scheme.getSchemeDate();
+		// get center date  
+		 
+		 
 		
 	 // Calculate interest for payment
         double  Interest = 0;
@@ -64,13 +73,16 @@ public class LoanCreationController {
         	
         			/*Four Nightly*/
 			        if (emitype==3) {
-			        		 Interest=(remainingAmount*interestRate/100*365)*7;        	 
+			        		 Interest=(remainingAmount*interestRate/100*365)*7; 
+			        		 dueDate=dueDate.plusDays(14);
 			        }  /*Weekly EMI*/ 
 			        else if (emitype==2) {
 			        	 Interest=(remainingAmount*interestRate/100*365)*14;
+			        	 dueDate=dueDate.plusDays(7);
 			        }/* Monthly EMI */
 			        else if (emitype==1) {
 			        	 Interest=(remainingAmount*interestRate/100*12);//monthly
+			        	 dueDate=dueDate.plusMonths(1);
 			        }
 			            double principal = emi - Interest ;
        
@@ -86,9 +98,9 @@ public class LoanCreationController {
             loanRepayment.setCollectionBy(schemeBy);
             loanRepayment.setPrinciple(principal);
             loanRepayment.setInstallmentNo(i);
-            loanRepayment.setCollectionDate(null);
-            loanRepayment.setDueDate(null); 
-            loanRepayment.getStatus();
+            loanRepayment.setCollectionDate(dueDate);
+            loanRepayment.setDueDate(dueDate); 
+            loanRepayment.setStatus(1);
             loanRepayment.setOpenningAmount(remainingAmount);
             liLoanRepayments.add(loanRepayment);
         } /*for loop close*/ 

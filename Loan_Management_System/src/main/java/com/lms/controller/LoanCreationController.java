@@ -56,7 +56,7 @@ public class LoanCreationController {
 		double pfAmount=scheme.getPfamount();
 		double insuranceAmount=scheme.getInsuranceamount();
 		long schemeBy= scheme.getSchemeBy();
-		LocalDate dueDate=scheme.getSchemeDate();
+//		LocalDate dueDate=scheme.getSchemeDate();
 		// get center date  
 		 
 		 
@@ -74,15 +74,15 @@ public class LoanCreationController {
         			/*Four Nightly*/
 			        if (emitype==3) {
 			        		 Interest=(remainingAmount*interestRate/100*365)*7; 
-			        		 dueDate=dueDate.plusDays(14);
+//			        		 dueDate=dueDate.plusDays(14);
 			        }  /*Weekly EMI*/ 
 			        else if (emitype==2) {
 			        	 Interest=(remainingAmount*interestRate/100*365)*14;
-			        	 dueDate=dueDate.plusDays(7);
+//			        	 dueDate=dueDate.plusDays(7);
 			        }/* Monthly EMI */
 			        else if (emitype==1) {
 			        	 Interest=(remainingAmount*interestRate/100*12);//monthly
-			        	 dueDate=dueDate.plusMonths(1);
+//			        	 dueDate=dueDate.plusMonths(1);
 			        }
 			            double principal = emi - Interest ;
        
@@ -98,8 +98,8 @@ public class LoanCreationController {
             loanRepayment.setCollectionBy(schemeBy);
             loanRepayment.setPrinciple(principal);
             loanRepayment.setInstallmentNo(i);
-            loanRepayment.setCollectionDate(dueDate);
-            loanRepayment.setDueDate(dueDate); 
+//            loanRepayment.setCollectionDate(dueDate);
+//            loanRepayment.setDueDate(dueDate); 
             loanRepayment.setStatus(1);
             loanRepayment.setOpenningAmount(remainingAmount);
             liLoanRepayments.add(loanRepayment);

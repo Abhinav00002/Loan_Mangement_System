@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @Table(name="loan_master")
 public class LoanCreation {
@@ -44,6 +46,8 @@ public class LoanCreation {
 	@Column(name="lone_expences")
 	private String lexpences;
 	private String sourcedby;
+	 @Column(name="meetingDate", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@CreationTimestamp
 	private Date meetingDate;
 	
 	

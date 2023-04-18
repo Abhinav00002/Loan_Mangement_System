@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @Table(name="scheme_master")
 public class Scheme {
@@ -28,6 +30,8 @@ public class Scheme {
 	private double insuranceamount;
 	private double pfamount;
 	private  double intrestrate;
+	@Column(name="schemeDate", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@CreationTimestamp
 	private LocalDate schemeDate;
 	private long  schemeBy;
 	

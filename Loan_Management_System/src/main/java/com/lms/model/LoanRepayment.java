@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Entity
 @Table(name="loan_repayment_master")
 public class LoanRepayment {
@@ -29,6 +31,7 @@ public class LoanRepayment {
 	private double principle;
 	private double intrest;
 	private long status;
+	 
 	private LocalDate collectionDate;
 	private long collectionBy;
 	

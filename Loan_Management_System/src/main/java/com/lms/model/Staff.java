@@ -22,6 +22,7 @@ public class Staff {
 	private String fname;
 	@Column(name="staff_date_of_birth")
 	private String dob;
+	private String email;
 	@Column(name="address_line_1")
 	private String addressl1;
 	@Column (name="address_line_2")
@@ -31,6 +32,8 @@ public class Staff {
 	private String city;
 	private String district;
 	private String state;
+	@Column(name="branch_Id")
+	private String bId;
 	private int pincode;
 	@Column(name="aadhar_c_number")
 	private long acnumber;
@@ -45,20 +48,10 @@ public class Staff {
 	
 	
 	
-	
-	
-	
-	
-	
 	public Staff() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
-
-
-
-
 
 
 
@@ -68,19 +61,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
-
-
-
-
 
 
 
@@ -90,19 +73,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setSname(String sname) {
 		this.sname = sname;
 	}
-
-
-
-
-
 
 
 
@@ -112,19 +85,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setFname(String fname) {
 		this.fname = fname;
 	}
-
-
-
-
-
 
 
 
@@ -134,19 +97,21 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
 
 
+	public String getEmail() {
+		return email;
+	}
 
 
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 
 
@@ -156,19 +121,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setAddressl1(String addressl1) {
 		this.addressl1 = addressl1;
 	}
-
-
-
-
-
 
 
 
@@ -178,19 +133,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setAddressl2(String addressl2) {
 		this.addressl2 = addressl2;
 	}
-
-
-
-
-
 
 
 
@@ -200,19 +145,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setLandmark(String landmark) {
 		this.landmark = landmark;
 	}
-
-
-
-
-
 
 
 
@@ -222,19 +157,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setCity(String city) {
 		this.city = city;
 	}
-
-
-
-
-
 
 
 
@@ -244,19 +169,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setDistrict(String district) {
 		this.district = district;
 	}
-
-
-
-
-
 
 
 
@@ -266,19 +181,21 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setState(String state) {
 		this.state = state;
 	}
 
 
 
+	public String getbId() {
+		return bId;
+	}
 
 
+
+	public void setbId(String bId) {
+		this.bId = bId;
+	}
 
 
 
@@ -288,19 +205,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setPincode(int pincode) {
 		this.pincode = pincode;
 	}
-
-
-
-
-
 
 
 
@@ -310,19 +217,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setAcnumber(long acnumber) {
 		this.acnumber = acnumber;
 	}
-
-
-
-
-
 
 
 
@@ -332,19 +229,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setPcnumber(String pcnumber) {
 		this.pcnumber = pcnumber;
 	}
-
-
-
-
-
 
 
 
@@ -354,19 +241,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setCid(int cid) {
 		this.cid = cid;
 	}
-
-
-
-
-
 
 
 
@@ -376,19 +253,9 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setZid(int zid) {
 		this.zid = zid;
 	}
-
-
-
-
-
 
 
 
@@ -398,36 +265,28 @@ public class Staff {
 
 
 
-
-
-
-
-
 	public void setRid(int rid) {
 		this.rid = rid;
 	}
 
 
 
-
-
-
-
-
-	public Staff(int id, String sname, String fname, String dob, String addressl1, String addressl2, String landmark,
-			String city, String district, String state, int pincode, long acnumber, String pcnumber, int cid, int zid,
-			int rid) {
+	public Staff(int id, String sname, String fname, String dob, String email, String addressl1, String addressl2,
+			String landmark, String city, String district, String state, String bId, int pincode, long acnumber,
+			String pcnumber, int cid, int zid, int rid) {
 		super();
 		this.id = id;
 		this.sname = sname;
 		this.fname = fname;
 		this.dob = dob;
+		this.email = email;
 		this.addressl1 = addressl1;
 		this.addressl2 = addressl2;
 		this.landmark = landmark;
 		this.city = city;
 		this.district = district;
 		this.state = state;
+		this.bId = bId;
 		this.pincode = pincode;
 		this.acnumber = acnumber;
 		this.pcnumber = pcnumber;
@@ -438,37 +297,17 @@ public class Staff {
 
 
 
-
-
-
-
-
 	@Override
 	public String toString() {
-		return "Staff [id=" + id + ", sname=" + sname + ", fname=" + fname + ", dob=" + dob + ", addressl1=" + addressl1
-				+ ", addressl2=" + addressl2 + ", landmark=" + landmark + ", city=" + city + ", district=" + district
-				+ ", state=" + state + ", pincode=" + pincode + ", acnumber=" + acnumber + ", pcnumber=" + pcnumber
-				+ ", cid=" + cid + ", zid=" + zid + ", rid=" + rid + "]";
+		return "Staff [id=" + id + ", sname=" + sname + ", fname=" + fname + ", dob=" + dob + ", email=" + email
+				+ ", addressl1=" + addressl1 + ", addressl2=" + addressl2 + ", landmark=" + landmark + ", city=" + city
+				+ ", district=" + district + ", state=" + state + ", bId=" + bId + ", pincode=" + pincode
+				+ ", acnumber=" + acnumber + ", pcnumber=" + pcnumber + ", cid=" + cid + ", zid=" + zid + ", rid=" + rid
+				+ "]";
 	}
-
-
-
-
-
-
-
- 	
 	
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	 	
 }

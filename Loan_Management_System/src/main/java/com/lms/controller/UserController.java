@@ -33,29 +33,29 @@ public class UserController   {
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	
-	
-	//creating user
-	@PostMapping("/")
-	public User createUser(@RequestBody User user) throws Exception {
-		
-		//Encoding Password using Password Encoder
-		user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
-		
-		Set<UserRole> roles=new HashSet<>();
-		
-		Role role=new Role();
-		role.setRoleId(45L);
-		role.setRoleName("Normal");
-		
-		
-		UserRole userRole=new UserRole();
-		userRole.setUser(user);
-		userRole.setRole(role);
-		
-		roles.add(userRole);
-		
-		return this.userService.createUser(user,roles);
-	}
+//	
+//	//creating user
+//	@PostMapping("/")
+//	public User createUser(@RequestBody User user) throws Exception {
+//		
+//		//Encoding Password using Password Encoder
+//		user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+//		
+//		Set<UserRole> roles=new HashSet<>();
+//		
+//		Role role=new Role();
+//		role.setRoleId(45L);
+//		role.setRoleName("Normal");
+//		
+//		
+//		UserRole userRole=new UserRole();
+//		userRole.setUser(user);
+//		userRole.setRole(role);
+//		
+//		roles.add(userRole);
+//		
+//		return this.userService.createUser(user,roles);
+//	}
 	
 	//get user by username
 	@GetMapping("/{username}")

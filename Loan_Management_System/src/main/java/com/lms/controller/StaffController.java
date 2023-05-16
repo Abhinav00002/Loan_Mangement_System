@@ -74,22 +74,10 @@ public class StaffController {
         password = password.toLowerCase(); // Convert password to lowercase
         System.out.println(password);
 		
-		Set<UserRole> userRoles= new HashSet<UserRole>( );
-		//Encoding Password using Password Encoder
+		 //Encoding Password using Password Encoder
 		user.setPassword(this.bCryptPasswordEncoder.encode(password));
 		
-		Set<UserRole> roles=new HashSet<>();
-		
-		Role role=new Role();
-		role.setRoleId(45L);
-		role.setRoleName("Normal");
-		
-		
-		UserRole userRole=new UserRole();
-		userRole.setUser(user);
-		userRole.setRole(role);
-		 roles.add(userRole);
-		 
+	  
 		
 		User local = this.userRepository.findByUsername(user.getUsername());
 		if(local!=null) {
@@ -98,11 +86,8 @@ public class StaffController {
 		}else {
 			//user create
 	
-			for(UserRole ur:roles) {
-				 roleRepository.save(ur.getRole()); 
-				 }
-				user.getUserRoles().addAll(userRoles);
-			 this.userRepository.save(user);
+			  this.userRepository.save(user);
+			 
 		}
 			
 		return staffRepository.save(staff);

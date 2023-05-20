@@ -1,11 +1,15 @@
 package com.lms.model;
  
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name="staff_master")
@@ -23,6 +27,7 @@ public class Staff {
 	@Column(name="staff_date_of_birth")
 	private String dob;
 	private String email;
+	private String contactNo;
 	@Column(name="address_line_1")
 	private String addressl1;
 	@Column (name="address_line_2")
@@ -45,6 +50,13 @@ public class Staff {
 	private int zid;
 	@Column(name="region_id")
 	private int rid;
+	@Column(name="staff_joinning_date", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@CreationTimestamp
+	private Date sJoinDate;
+	@Column(name="staff_status" ,columnDefinition="integer default 1")
+	private int status;
+	
+	
 	
 	
 	
@@ -55,9 +67,13 @@ public class Staff {
 
 
 
+
+
 	public int getId() {
 		return id;
 	}
+
+
 
 
 
@@ -67,9 +83,13 @@ public class Staff {
 
 
 
+
+
 	public String getSname() {
 		return sname;
 	}
+
+
 
 
 
@@ -79,9 +99,13 @@ public class Staff {
 
 
 
+
+
 	public String getFname() {
 		return fname;
 	}
+
+
 
 
 
@@ -91,9 +115,13 @@ public class Staff {
 
 
 
+
+
 	public String getDob() {
 		return dob;
 	}
+
+
 
 
 
@@ -103,9 +131,13 @@ public class Staff {
 
 
 
+
+
 	public String getEmail() {
 		return email;
 	}
+
+
 
 
 
@@ -115,9 +147,29 @@ public class Staff {
 
 
 
+
+
+	public String getContactNo() {
+		return contactNo;
+	}
+
+
+
+
+
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
+	}
+
+
+
+
+
 	public String getAddressl1() {
 		return addressl1;
 	}
+
+
 
 
 
@@ -127,9 +179,13 @@ public class Staff {
 
 
 
+
+
 	public String getAddressl2() {
 		return addressl2;
 	}
+
+
 
 
 
@@ -139,9 +195,13 @@ public class Staff {
 
 
 
+
+
 	public String getLandmark() {
 		return landmark;
 	}
+
+
 
 
 
@@ -151,9 +211,13 @@ public class Staff {
 
 
 
+
+
 	public String getCity() {
 		return city;
 	}
+
+
 
 
 
@@ -163,9 +227,13 @@ public class Staff {
 
 
 
+
+
 	public String getDistrict() {
 		return district;
 	}
+
+
 
 
 
@@ -175,9 +243,13 @@ public class Staff {
 
 
 
+
+
 	public String getState() {
 		return state;
 	}
+
+
 
 
 
@@ -187,9 +259,13 @@ public class Staff {
 
 
 
+
+
 	public String getbId() {
 		return bId;
 	}
+
+
 
 
 
@@ -199,9 +275,13 @@ public class Staff {
 
 
 
+
+
 	public int getPincode() {
 		return pincode;
 	}
+
+
 
 
 
@@ -211,9 +291,13 @@ public class Staff {
 
 
 
+
+
 	public long getAcnumber() {
 		return acnumber;
 	}
+
+
 
 
 
@@ -223,9 +307,13 @@ public class Staff {
 
 
 
+
+
 	public String getPcnumber() {
 		return pcnumber;
 	}
+
+
 
 
 
@@ -235,9 +323,13 @@ public class Staff {
 
 
 
+
+
 	public int getCid() {
 		return cid;
 	}
+
+
 
 
 
@@ -247,9 +339,13 @@ public class Staff {
 
 
 
+
+
 	public int getZid() {
 		return zid;
 	}
+
+
 
 
 
@@ -259,9 +355,13 @@ public class Staff {
 
 
 
+
+
 	public int getRid() {
 		return rid;
 	}
+
+
 
 
 
@@ -271,15 +371,50 @@ public class Staff {
 
 
 
-	public Staff(int id, String sname, String fname, String dob, String email, String addressl1, String addressl2,
-			String landmark, String city, String district, String state, String bId, int pincode, long acnumber,
-			String pcnumber, int cid, int zid, int rid) {
+
+
+	public Date getsJoinDate() {
+		return sJoinDate;
+	}
+
+
+
+
+
+	public void setsJoinDate(Date sJoinDate) {
+		this.sJoinDate = sJoinDate;
+	}
+
+
+
+
+
+	public int getStatus() {
+		return status;
+	}
+
+
+
+
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+
+
+
+
+	public Staff(int id, String sname, String fname, String dob, String email, String contactNo, String addressl1,
+			String addressl2, String landmark, String city, String district, String state, String bId, int pincode,
+			long acnumber, String pcnumber, int cid, int zid, int rid, Date sJoinDate, int status) {
 		super();
 		this.id = id;
 		this.sname = sname;
 		this.fname = fname;
 		this.dob = dob;
 		this.email = email;
+		this.contactNo = contactNo;
 		this.addressl1 = addressl1;
 		this.addressl2 = addressl2;
 		this.landmark = landmark;
@@ -293,19 +428,29 @@ public class Staff {
 		this.cid = cid;
 		this.zid = zid;
 		this.rid = rid;
+		this.sJoinDate = sJoinDate;
+		this.status = status;
 	}
+
+
 
 
 
 	@Override
 	public String toString() {
 		return "Staff [id=" + id + ", sname=" + sname + ", fname=" + fname + ", dob=" + dob + ", email=" + email
-				+ ", addressl1=" + addressl1 + ", addressl2=" + addressl2 + ", landmark=" + landmark + ", city=" + city
-				+ ", district=" + district + ", state=" + state + ", bId=" + bId + ", pincode=" + pincode
-				+ ", acnumber=" + acnumber + ", pcnumber=" + pcnumber + ", cid=" + cid + ", zid=" + zid + ", rid=" + rid
-				+ "]";
+				+ ", contactNo=" + contactNo + ", addressl1=" + addressl1 + ", addressl2=" + addressl2 + ", landmark="
+				+ landmark + ", city=" + city + ", district=" + district + ", state=" + state + ", bId=" + bId
+				+ ", pincode=" + pincode + ", acnumber=" + acnumber + ", pcnumber=" + pcnumber + ", cid=" + cid
+				+ ", zid=" + zid + ", rid=" + rid + ", sJoinDate=" + sJoinDate + ", status=" + status + "]";
 	}
 	
+	
+	
+	
+ 		
+	
+	 	
 	
 	
 	

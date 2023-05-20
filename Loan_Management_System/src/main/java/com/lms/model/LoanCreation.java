@@ -46,8 +46,8 @@ public class LoanCreation {
 	@Column(name="lone_expences")
 	private String lexpences;
 	private String sourcedby;
-	 @Column(name="meetingDate", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	@CreationTimestamp
+	 @Column(name="meetingDate" )
+	 
 	private Date meetingDate;
 	
 	

@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.model.Role;
 import com.lms.model.Staff;
+import com.lms.model.StaffTransfer;
 import com.lms.model.User;
 import com.lms.model.UserRole;
 import com.lms.repo.RoleRepository;
 import com.lms.repo.StaffRepository;
+import com.lms.repo.StaffTransferRepository;
 import com.lms.repo.UserRepository;
 import com.lms.service.UserService; 
 
@@ -43,7 +45,8 @@ public class StaffController {
 	@Autowired
 	private RoleRepository roleRepository;
 	
-
+	@Autowired
+	private StaffTransferRepository staffTransferRepository;
 	@Autowired
 	private UserRepository userRepository; 
 	
@@ -59,7 +62,7 @@ public class StaffController {
 		
 		
 		User user = new User();
-		user.setUsername(staff.getSname());
+		user.setUsername(staff.getContactNo());
 		user.setEmail(staff.getEmail());
 		String fullName= staff.getSname();
 		String dob= staff.getDob();
@@ -89,6 +92,10 @@ public class StaffController {
 			  this.userRepository.save(user);
 			 
 		}
+		
+		staff.setStatus(1);
+		StaffTransfer staffTransfer= new StaffTransfer();
+//		staffTransfer.setEntryBy(user.getId());
 			
 		return staffRepository.save(staff);
 		  

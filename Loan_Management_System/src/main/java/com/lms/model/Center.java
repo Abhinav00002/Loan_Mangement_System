@@ -17,7 +17,7 @@ public class Center {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long ncid;
 	@Column(name="branch_name")
-	private String bname;
+	private Long bname;
 	@Column (name="center_meeting_day")
 	private String cmday;
 	@Column(name="center_sourced_by")
@@ -64,7 +64,7 @@ public class Center {
 
 
 
-	public String getBname() {
+	public Long getBname() {
 		return bname;
 	}
 
@@ -73,7 +73,7 @@ public class Center {
 
 
 
-	public void setBname(String bname) {
+	public void setBname(Long bname) {
 		this.bname = bname;
 	}
 
@@ -244,7 +244,7 @@ public class Center {
 
 
 
-	public Center(long ncid, String bname, String cmday, String sourcedby, String time, String addressl1,
+	public Center(long ncid, Long bname, String cmday, String sourcedby, String time, String addressl1,
 			String addressl2, String landmark, String state, String pincode, String city) {
 		super();
 		this.ncid = ncid;

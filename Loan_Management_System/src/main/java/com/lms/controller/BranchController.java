@@ -39,7 +39,7 @@ public class BranchController {
 	
 	//get Branch by Id
 	@GetMapping("/list/{branchId}")
-	public Branch getBranch(@PathVariable("branchId") Integer branchId) {
+	public Branch getBranch(@PathVariable("branchId") Long branchId) {
 		return this.branchRepository.getBranchById(branchId);
 		
 	}

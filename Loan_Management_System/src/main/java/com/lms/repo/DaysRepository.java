@@ -14,4 +14,6 @@ public interface DaysRepository extends JpaRepository<Days, Integer>{
 
 //	@Query(value="select  *  from days  dy ",nativeQuery=true)	
 	public List<Days> findAll();
+
+	public List<Days> getDayBydid(Integer dayId);
 }

@@ -17,8 +17,8 @@ public class Lead {
 	private int leadID;
 	private int borrowerID;
 	private int coBorrowerId; 
-	private String branchID;
-	private String centerID;
+	private Long branchID;
+	private Long centerID;
 	private String sourcedBy;
 	private String manageBy;
 	private String aplicationDate;
@@ -69,25 +69,25 @@ public class Lead {
 
 
 
-	public String getBranchID() {
+	public Long getBranchID() {
 		return branchID;
 	}
 
 
 
-	public void setBranchID(String string) {
+	public void setBranchID(Long string) {
 		this.branchID = string;
 	}
 
 
 
-	public String getCenterID() {
+	public Long getCenterID() {
 		return centerID;
 	}
 
 
 
-	public void setCenterID(String string) {
+	public void setCenterID(Long string) {
 		this.centerID = string;
 	}
 
@@ -141,7 +141,7 @@ public class Lead {
 
 
 
-	public Lead(int leadID, int borrowerID, int coBorrowerId, String branchID, String centerID, String sourcedBy,
+	public Lead(int leadID, int borrowerID, int coBorrowerId, Long branchID, Long centerID, String sourcedBy,
 			String manageBy, String aplicationDate, String entryBy) {
 		super();
 		this.leadID = leadID;

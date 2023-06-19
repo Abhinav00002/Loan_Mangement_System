@@ -30,6 +30,7 @@ public class Scheme {
 	private double insuranceamount;
 	private double pfamount;
 	private  double intrestrate;
+	private  double irr;
 	@Column(name="schemeDate", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	@CreationTimestamp
 	private LocalDate schemeDate;
@@ -38,12 +39,14 @@ public class Scheme {
 	
 	
 	
-	//getter setter
+	
+	
 	
 	public Scheme() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
 
 
 
@@ -59,9 +62,11 @@ public class Scheme {
 
 
 
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 
 
 
@@ -77,9 +82,11 @@ public class Scheme {
 
 
 
+
 	public void setSchemeName(String schemeName) {
 		this.schemeName = schemeName;
 	}
+
 
 
 
@@ -95,9 +102,11 @@ public class Scheme {
 
 
 
+
 	public void setLoneamount(double loneamount) {
 		this.loneamount = loneamount;
 	}
+
 
 
 
@@ -113,9 +122,11 @@ public class Scheme {
 
 
 
+
 	public void setEmitype(int emitype) {
 		this.emitype = emitype;
 	}
+
 
 
 
@@ -131,9 +142,11 @@ public class Scheme {
 
 
 
+
 	public void setEmi(double emi) {
 		this.emi = emi;
 	}
+
 
 
 
@@ -149,9 +162,11 @@ public class Scheme {
 
 
 
+
 	public void setTenor(double tenor) {
 		this.tenor = tenor;
 	}
+
 
 
 
@@ -167,9 +182,11 @@ public class Scheme {
 
 
 
+
 	public void setDuetype(int duetype) {
 		this.duetype = duetype;
 	}
+
 
 
 
@@ -185,9 +202,11 @@ public class Scheme {
 
 
 
+
 	public void setInsuranceamount(double insuranceamount) {
 		this.insuranceamount = insuranceamount;
 	}
+
 
 
 
@@ -203,9 +222,11 @@ public class Scheme {
 
 
 
+
 	public void setPfamount(double pfamount) {
 		this.pfamount = pfamount;
 	}
+
 
 
 
@@ -221,6 +242,7 @@ public class Scheme {
 
 
 
+
 	public void setIntrestrate(double intrestrate) {
 		this.intrestrate = intrestrate;
 	}
@@ -228,7 +250,23 @@ public class Scheme {
 
 
 
- 
+
+
+
+	public double getIrr() {
+		return irr;
+	}
+
+
+
+
+
+
+
+	public void setIrr(double irr) {
+		this.irr = irr;
+	}
+
 
 
 
@@ -244,9 +282,11 @@ public class Scheme {
 
 
 
+
 	public void setSchemeDate(LocalDate schemeDate) {
 		this.schemeDate = schemeDate;
 	}
+
 
 
 
@@ -262,6 +302,7 @@ public class Scheme {
 
 
 
+
 	public void setSchemeBy(long schemeBy) {
 		this.schemeBy = schemeBy;
 	}
@@ -271,8 +312,10 @@ public class Scheme {
 
 
 
+
 	public Scheme(long id, String schemeName, double loneamount, int emitype, double emi, double tenor, int duetype,
-			double insuranceamount, double pfamount, double intrestrate, LocalDate schemeDate, long schemeBy) {
+			double insuranceamount, double pfamount, double intrestrate, double irr, LocalDate schemeDate,
+			long schemeBy) {
 		super();
 		this.id = id;
 		this.schemeName = schemeName;
@@ -284,9 +327,11 @@ public class Scheme {
 		this.insuranceamount = insuranceamount;
 		this.pfamount = pfamount;
 		this.intrestrate = intrestrate;
+		this.irr = irr;
 		this.schemeDate = schemeDate;
 		this.schemeBy = schemeBy;
 	}
+
 
 
 
@@ -297,11 +342,14 @@ public class Scheme {
 	public String toString() {
 		return "Scheme [id=" + id + ", schemeName=" + schemeName + ", loneamount=" + loneamount + ", emitype=" + emitype
 				+ ", emi=" + emi + ", tenor=" + tenor + ", duetype=" + duetype + ", insuranceamount=" + insuranceamount
-				+ ", pfamount=" + pfamount + ", intrestrate=" + intrestrate + ", schemeDate=" + schemeDate
-				+ ", schemeBy=" + schemeBy + "]";
+				+ ", pfamount=" + pfamount + ", intrestrate=" + intrestrate + ", irr=" + irr + ", schemeDate="
+				+ schemeDate + ", schemeBy=" + schemeBy + "]";
 	}
-
-
+	
+	
+	
+	
+	 
 
 
  

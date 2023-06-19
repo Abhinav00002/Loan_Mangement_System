@@ -10,9 +10,9 @@ public class CustomerSave {
 	
 	 
 	 
-	private String branch;
+	private Long branch;
 	private String sourcedby;
-	private String centername;
+	private Long centername;
 	private String appdate;
 //	Borrower Details
 	private String bname;
@@ -79,7 +79,7 @@ public class CustomerSave {
 
 
 
-	public String getBranch() {
+	public Long getBranch() {
 		return branch;
 	}
 
@@ -90,7 +90,7 @@ public class CustomerSave {
 
 
 
-	public void setBranch(String branch) {
+	public void setBranch(Long branch) {
 		this.branch = branch;
 	}
 
@@ -123,7 +123,7 @@ public class CustomerSave {
 
 
 
-	public String getCentername() {
+	public Long getCentername() {
 		return centername;
 	}
 
@@ -134,7 +134,7 @@ public class CustomerSave {
 
 
 
-	public void setCentername(String centername) {
+	public void setCentername(Long centername) {
 		this.centername = centername;
 	}
 
@@ -930,7 +930,7 @@ public class CustomerSave {
 
 
 
-	public CustomerSave(  String branch, String sourcedby, String centername, String appdate, String bname,
+	public CustomerSave(  Long branch, String sourcedby, Long centername, String appdate, String bname,
 			String bfhname, String bcontectnum, String bpannum, String bkycname, String bkycnumber, Date bdob,
 			String beducation, String bemail, String baddressl1, String baddressl2, String blandmark, String bcity,
 			String bstate, String bdistrict, int bpincode, Date bentrydate, String bentryby, String cbname,

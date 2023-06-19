@@ -15,6 +15,7 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
 	//get all center
 	public List<Center> findAll();
 	//get Center by Id
+	public List<Center> getCenterByncid(Long centerID) ;
 	  public List<Center> getCenterByBname(Long branch_name) ;
 	
 }

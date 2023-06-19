@@ -22,18 +22,18 @@ public class LoanCreation {
 	private long id;
 	
 	@Column(name="lead_id")
-	private String leadid;
-	private String branchname;
-	private String centername;
+	private int leadid;
+	private int branchname;
+	private int centername;
 	private String name;
 	@Column(name="spouse_name")
 	private String sname;
 	private long scheme;
-	private String purpose;
+	private int purpose;
 	@Column(name="disbursement_date")
 	private Date ddate;
 	@Column(name="borower_co_borower_relation")
-	private String cbrelation;
+	private int cbrelation;
 	private String selfincome;
 	@Column(name="spouse_income")
 	private String sincome;
@@ -45,7 +45,7 @@ public class LoanCreation {
 	private String bexpences;
 	@Column(name="lone_expences")
 	private String lexpences;
-	private String sourcedby;
+	private int sourcedby;
 	 @Column(name="meetingDate" )
 	 
 	private Date meetingDate;
@@ -64,10 +64,18 @@ public class LoanCreation {
 
 
 
+ 
+
+
+
 
 	public long getId() {
 		return id;
 	}
+
+
+
+
 
 
 
@@ -83,7 +91,11 @@ public class LoanCreation {
 
 
 
-	public String getLeadid() {
+
+
+
+
+	public int getLeadid() {
 		return leadid;
 	}
 
@@ -92,7 +104,11 @@ public class LoanCreation {
 
 
 
-	public void setLeadid(String leadid) {
+
+
+
+
+	public void setLeadid(int leadid) {
 		this.leadid = leadid;
 	}
 
@@ -101,7 +117,11 @@ public class LoanCreation {
 
 
 
-	public String getBranchname() {
+
+
+
+
+	public int getBranchname() {
 		return branchname;
 	}
 
@@ -110,7 +130,11 @@ public class LoanCreation {
 
 
 
-	public void setBranchname(String branchname) {
+
+
+
+
+	public void setBranchname(int branchname) {
 		this.branchname = branchname;
 	}
 
@@ -119,7 +143,11 @@ public class LoanCreation {
 
 
 
-	public String getCentername() {
+
+
+
+
+	public int getCentername() {
 		return centername;
 	}
 
@@ -128,9 +156,17 @@ public class LoanCreation {
 
 
 
-	public void setCentername(String centername) {
+
+
+
+
+	public void setCentername(int centername) {
 		this.centername = centername;
 	}
+
+
+
+
 
 
 
@@ -146,9 +182,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+
+
 
 
 
@@ -164,9 +208,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setSname(String sname) {
 		this.sname = sname;
 	}
+
+
+
+
 
 
 
@@ -182,6 +234,10 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setScheme(long scheme) {
 		this.scheme = scheme;
 	}
@@ -191,7 +247,11 @@ public class LoanCreation {
 
 
 
-	public String getPurpose() {
+
+
+
+
+	public int getPurpose() {
 		return purpose;
 	}
 
@@ -200,9 +260,17 @@ public class LoanCreation {
 
 
 
-	public void setPurpose(String purpose) {
+
+
+
+
+	public void setPurpose(int purpose) {
 		this.purpose = purpose;
 	}
+
+
+
+
 
 
 
@@ -218,6 +286,10 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setDdate(Date ddate) {
 		this.ddate = ddate;
 	}
@@ -227,7 +299,11 @@ public class LoanCreation {
 
 
 
-	public String getCbrelation() {
+
+
+
+
+	public int getCbrelation() {
 		return cbrelation;
 	}
 
@@ -236,9 +312,17 @@ public class LoanCreation {
 
 
 
-	public void setCbrelation(String cbrelation) {
+
+
+
+
+	public void setCbrelation(int cbrelation) {
 		this.cbrelation = cbrelation;
 	}
+
+
+
+
 
 
 
@@ -254,9 +338,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setSelfincome(String selfincome) {
 		this.selfincome = selfincome;
 	}
+
+
+
+
 
 
 
@@ -272,9 +364,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setSincome(String sincome) {
 		this.sincome = sincome;
 	}
+
+
+
+
 
 
 
@@ -290,9 +390,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setOincome(String oincome) {
 		this.oincome = oincome;
 	}
+
+
+
+
 
 
 
@@ -308,9 +416,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setHexpences(String hexpences) {
 		this.hexpences = hexpences;
 	}
+
+
+
+
 
 
 
@@ -326,9 +442,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setBexpences(String bexpences) {
 		this.bexpences = bexpences;
 	}
+
+
+
+
 
 
 
@@ -344,6 +468,10 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setLexpences(String lexpences) {
 		this.lexpences = lexpences;
 	}
@@ -353,7 +481,11 @@ public class LoanCreation {
 
 
 
-	public String getSourcedby() {
+
+
+
+
+	public int getSourcedby() {
 		return sourcedby;
 	}
 
@@ -362,9 +494,17 @@ public class LoanCreation {
 
 
 
-	public void setSourcedby(String sourcedby) {
+
+
+
+
+	public void setSourcedby(int sourcedby) {
 		this.sourcedby = sourcedby;
 	}
+
+
+
+
 
 
 
@@ -380,6 +520,10 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setMeetingDate(Date meetingDate) {
 		this.meetingDate = meetingDate;
 	}
@@ -389,9 +533,13 @@ public class LoanCreation {
 
 
 
-	public LoanCreation(long id, String leadid, String branchname, String centername, String name, String sname,
-			long scheme, String purpose, Date ddate, String cbrelation, String selfincome, String sincome,
-			String oincome, String hexpences, String bexpences, String lexpences, String sourcedby, Date meetingDate) {
+
+
+
+
+	public LoanCreation(long id, int leadid, int branchname, int centername, String name, String sname, long scheme,
+			int purpose, Date ddate, int cbrelation, String selfincome, String sincome, String oincome,
+			String hexpences, String bexpences, String lexpences, int sourcedby, Date meetingDate) {
 		super();
 		this.id = id;
 		this.leadid = leadid;
@@ -412,6 +560,10 @@ public class LoanCreation {
 		this.sourcedby = sourcedby;
 		this.meetingDate = meetingDate;
 	}
+
+
+
+
 
 
 

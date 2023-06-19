@@ -1,19 +1,32 @@
 package com.lms.controller.customer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lms.model.Branch;
+import com.lms.model.Center;
 import com.lms.model.Customer;
 import com.lms.model.CustomerSave;
 import com.lms.model.Lead;
+import com.lms.model.address.Days;
+import com.lms.model.address.Time;
+import com.lms.repo.BranchRepository;
+import com.lms.repo.CenterRepository;
+import com.lms.repo.DaysRepository;
 import com.lms.repo.LeadRepository;
+import com.lms.repo.TimeRepository;
 import com.lms.repo.customer.CustomerRepository; 
 @RestController
 @CrossOrigin("*")
@@ -24,6 +37,14 @@ public class CustomerSaveController {
 	private CustomerRepository customerRepository;
 	@Autowired
 	private LeadRepository leadRepository;
+	@Autowired
+	private CenterRepository centerRepository;
+	@Autowired
+	private BranchRepository branchRepository;
+	@Autowired
+	private TimeRepository timeRepository;
+	@Autowired
+	private DaysRepository daysRepository;
 	
 	 
 	
@@ -99,5 +120,54 @@ public class CustomerSaveController {
 		
 	}
 	
-	 
+	@GetMapping("/lead-data/{leadId}")
+//    public List<Lead> getLeadData(@PathVariable Integer leadId) {
+//        List<Lead> leads = leadRepository.findByleadID(leadId);
+//        List<Customer> customers = new ArrayList<>();
+//
+//        if (!leads.isEmpty()) {
+//            Lead lead = leads.get(0);
+//            int borrowerId =  lead.getBorrowerID();
+//            customers = customerRepository.findBycid(borrowerId);
+//        }
+//
+//        // Perform any additional processing if needed
+//        
+//        return leads;
+//    }
+	public Map<String, Object> getLeadData(@PathVariable Integer leadId) {
+	    List<Lead> leads = leadRepository.findByleadID(leadId);
+	    Map<String, Object> result = new HashMap<>();
+
+	    if (!leads.isEmpty()) {
+	        Lead lead = leads.get(0);
+	      
+	        int borrowerId = lead.getBorrowerID();
+	        List<Customer> borrower = customerRepository.findBycid(borrowerId);
+	        int coborrowerId=lead.getCoBorrowerId();
+	        List<Customer> coBorrower=customerRepository.findBycid(coborrowerId);
+	        Long centerId=lead.getCenterID();
+	        List<Center> center=centerRepository.getCenterByncid(centerId);
+	        result.put("lead", lead);
+	        result.put("borrower", borrower);
+	        result.put("coBorrower",coBorrower);
+	        result.put("center", center);
+	        if (!center.isEmpty()) {
+	            Center centerData  = center.get(0); // Assuming there is only one center
+	            Long branchId = centerData.getBname();
+	            Optional<Branch> branch = branchRepository.findById(branchId);
+	            Integer timeId=centerData.getTime();
+		        List<Time> time=timeRepository.getTimeBytid(timeId);
+		        Integer dayId=centerData.getCmday();
+		        List<Days> day=daysRepository.getDayBydid(dayId);
+		        result.put("day", day);
+		        result.put("time", time);
+	            result.put("branch", branch);
+	        }
+	    }
+
+	    // Perform any additional processing if needed
+	    
+	    return result;
+	}
 }

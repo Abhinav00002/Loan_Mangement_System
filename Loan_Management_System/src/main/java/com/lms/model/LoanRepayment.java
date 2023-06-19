@@ -23,7 +23,7 @@ public class LoanRepayment {
 	
 	private long id;
 	@Column(name="loan_id")
-	private Long loanId;
+	private Integer loanId;
 	private LocalDate dueDate;
 	private long installmentNo;
 	private double emi;
@@ -34,6 +34,12 @@ public class LoanRepayment {
 	 
 	private LocalDate collectionDate;
 	private long collectionBy;
+	private int interestbook;
+	private int preclose;
+	@Column(name="branch_id")
+	private int branchId;
+	@Column(name = "center_id")
+	private int centerId;
 	
 	
 	
@@ -72,6 +78,26 @@ public class LoanRepayment {
 
 
 
+	public Integer getLoanId() {
+		return loanId;
+	}
+
+
+
+
+
+
+
+	public void setLoanId(Integer loanId) {
+		this.loanId = loanId;
+	}
+
+
+
+
+
+
+
 	public LocalDate getDueDate() {
 		return dueDate;
 	}
@@ -82,8 +108,8 @@ public class LoanRepayment {
 
 
 
-	public void setDueDate(LocalDate dueDate2) {
-		this.dueDate = dueDate2;
+	public void setDueDate(LocalDate dueDate) {
+		this.dueDate = dueDate;
 	}
 
 
@@ -122,8 +148,8 @@ public class LoanRepayment {
 
 
 
-	public void setEmi(double emi2) {
-		this.emi = emi2;
+	public void setEmi(double emi) {
+		this.emi = emi;
 	}
 
 
@@ -222,8 +248,8 @@ public class LoanRepayment {
 
 
 
-	public void setCollectionDate(LocalDate dueDate2) {
-		this.collectionDate = dueDate2;
+	public void setCollectionDate(LocalDate collectionDate) {
+		this.collectionDate = collectionDate;
 	}
 
 
@@ -242,8 +268,8 @@ public class LoanRepayment {
 
 
 
-	public void setCollectionBy(long schemeBy) {
-		this.collectionBy = schemeBy;
+	public void setCollectionBy(long collectionBy) {
+		this.collectionBy = collectionBy;
 	}
 
 
@@ -252,8 +278,8 @@ public class LoanRepayment {
 
 
 
-	public Long getLoanId() {
-		return loanId;
+	public int getInterestbook() {
+		return interestbook;
 	}
 
 
@@ -262,8 +288,8 @@ public class LoanRepayment {
 
 
 
-	public void setLoanId(Long loanId) {
-		this.loanId = loanId;
+	public void setInterestbook(int interestbook) {
+		this.interestbook = interestbook;
 	}
 
 
@@ -272,8 +298,69 @@ public class LoanRepayment {
 
 
 
-	public LoanRepayment(long id, Long loanId, LocalDate dueDate, long installmentNo, double emi, double openningAmount,
-			double principle, double intrest, long status, LocalDate collectionDate, long collectionBy) {
+	public int getPreclose() {
+		return preclose;
+	}
+
+
+
+
+
+
+
+	public void setPreclose(int preclose) {
+		this.preclose = preclose;
+	}
+
+
+
+
+
+
+
+	public int getBranchId() {
+		return branchId;
+	}
+
+
+
+
+
+
+
+	public void setBranchId(int branchId) {
+		this.branchId = branchId;
+	}
+
+
+
+
+
+
+
+	public int getCenterId() {
+		return centerId;
+	}
+
+
+
+
+
+
+
+	public void setCenterId(int centerId) {
+		this.centerId = centerId;
+	}
+
+
+
+
+
+
+
+	public LoanRepayment(long id, Integer loanId, LocalDate dueDate, long installmentNo, double emi,
+			double openningAmount, double principle, double intrest, long status, LocalDate collectionDate,
+			long collectionBy, int interestbook, int preclose, int branchId, int centerId) {
 		super();
 		this.id = id;
 		this.loanId = loanId;
@@ -286,6 +373,10 @@ public class LoanRepayment {
 		this.status = status;
 		this.collectionDate = collectionDate;
 		this.collectionBy = collectionBy;
+		this.interestbook = interestbook;
+		this.preclose = preclose;
+		this.branchId = branchId;
+		this.centerId = centerId;
 	}
 
 
@@ -299,29 +390,14 @@ public class LoanRepayment {
 		return "LoanRepayment [id=" + id + ", loanId=" + loanId + ", dueDate=" + dueDate + ", installmentNo="
 				+ installmentNo + ", emi=" + emi + ", openningAmount=" + openningAmount + ", principle=" + principle
 				+ ", intrest=" + intrest + ", status=" + status + ", collectionDate=" + collectionDate
-				+ ", collectionBy=" + collectionBy + "]";
-	} 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+				+ ", collectionBy=" + collectionBy + ", interestbook=" + interestbook + ", preclose=" + preclose
+				+ ", branchId=" + branchId + ", centerId=" + centerId + "]";
+	}
+
+
+
+
+
+
+ 	
 }

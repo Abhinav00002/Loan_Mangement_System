@@ -17,7 +17,7 @@ public class Branch {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="branch_id")
-	private int id;
+	private Long id;
 	@Column(name="branch_name")
 	private String name;
 	@Column(name="address_line1")
@@ -63,7 +63,7 @@ public class Branch {
 
 
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -71,7 +71,7 @@ public class Branch {
 
 
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -334,7 +334,7 @@ public class Branch {
 
 
 
-	public Branch(int id, String name, String addressl1, String addressl2, String landmark, String city,
+	public Branch(Long id, String name, String addressl1, String addressl2, String landmark, String city,
 			String district, String state, int pincode, Date bodate, int aid, int rid, int cid, int zid, int status,
 			Date datetime) {
 		super();

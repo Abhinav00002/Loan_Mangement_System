@@ -19,19 +19,17 @@ public class Center {
 	@Column(name="branch_name")
 	private Long bname;
 	@Column (name="center_meeting_day")
-	private String cmday;
+	private int cmday;
 	@Column(name="center_sourced_by")
 	private String sourcedby;
 	@Column(name="center_meeting_time")
-	private String time;
+	private int time;
 	private String addressl1;
 	private String addressl2;
 	private String landmark;
 	private String state;
 	private String pincode;
 	private String city;
-	
-	
 	
 	
 	
@@ -43,12 +41,18 @@ public class Center {
 
 
 
-
-
+	
+	
+	
+	
+	
 
 	public long getNcid() {
 		return ncid;
 	}
+
+
+
 
 
 
@@ -64,9 +68,15 @@ public class Center {
 
 
 
+
+
+
 	public Long getBname() {
 		return bname;
 	}
+
+
+
 
 
 
@@ -82,7 +92,10 @@ public class Center {
 
 
 
-	public String getCmday() {
+
+
+
+	public int getCmday() {
 		return cmday;
 	}
 
@@ -91,9 +104,15 @@ public class Center {
 
 
 
-	public void setCmday(String cmday) {
+
+
+
+	public void setCmday(int cmday) {
 		this.cmday = cmday;
 	}
+
+
+
 
 
 
@@ -109,6 +128,9 @@ public class Center {
 
 
 
+
+
+
 	public void setSourcedby(String sourcedby) {
 		this.sourcedby = sourcedby;
 	}
@@ -118,7 +140,10 @@ public class Center {
 
 
 
-	public String getTime() {
+
+
+
+	public int getTime() {
 		return time;
 	}
 
@@ -127,9 +152,15 @@ public class Center {
 
 
 
-	public void setTime(String time) {
+
+
+
+	public void setTime(int time) {
 		this.time = time;
 	}
+
+
+
 
 
 
@@ -145,9 +176,15 @@ public class Center {
 
 
 
+
+
+
 	public void setAddressl1(String addressl1) {
 		this.addressl1 = addressl1;
 	}
+
+
+
 
 
 
@@ -163,9 +200,15 @@ public class Center {
 
 
 
+
+
+
 	public void setAddressl2(String addressl2) {
 		this.addressl2 = addressl2;
 	}
+
+
+
 
 
 
@@ -181,9 +224,15 @@ public class Center {
 
 
 
+
+
+
 	public void setLandmark(String landmark) {
 		this.landmark = landmark;
 	}
+
+
+
 
 
 
@@ -199,9 +248,15 @@ public class Center {
 
 
 
+
+
+
 	public void setState(String state) {
 		this.state = state;
 	}
+
+
+
 
 
 
@@ -217,9 +272,15 @@ public class Center {
 
 
 
+
+
+
 	public void setPincode(String pincode) {
 		this.pincode = pincode;
 	}
+
+
+
 
 
 
@@ -235,6 +296,9 @@ public class Center {
 
 
 
+
+
+
 	public void setCity(String city) {
 		this.city = city;
 	}
@@ -244,8 +308,13 @@ public class Center {
 
 
 
-	public Center(long ncid, Long bname, String cmday, String sourcedby, String time, String addressl1,
-			String addressl2, String landmark, String state, String pincode, String city) {
+
+	
+	
+
+
+	public Center(long ncid, Long bname, int cmday, String sourcedby, int time, String addressl1, String addressl2,
+			String landmark, String state, String pincode, String city) {
 		super();
 		this.ncid = ncid;
 		this.bname = bname;
@@ -265,16 +334,21 @@ public class Center {
 
 
 
+
+
+
 	@Override
 	public String toString() {
-		return "CreateCenter [ncid=" + ncid + ", bname=" + bname + ", cmday=" + cmday + ", sourcedby=" + sourcedby
-				+ ", time=" + time + ", addressl1=" + addressl1 + ", addressl2=" + addressl2 + ", landmark=" + landmark
-				+ ", state=" + state + ", pincode=" + pincode + ", city=" + city + "]";
+		return "Center [ncid=" + ncid + ", bname=" + bname + ", cmday=" + cmday + ", sourcedby=" + sourcedby + ", time="
+				+ time + ", addressl1=" + addressl1 + ", addressl2=" + addressl2 + ", landmark=" + landmark + ", state="
+				+ state + ", pincode=" + pincode + ", city=" + city + "]";
 	}
-
 	
 	
 	
+	
+	
+	 	
 	
 	
 	

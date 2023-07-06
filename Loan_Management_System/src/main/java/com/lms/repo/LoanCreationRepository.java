@@ -12,4 +12,6 @@ public interface LoanCreationRepository extends JpaRepository<LoanCreation, Long
 	
 	public List<LoanCreation> findAll();
 
+	public List<LoanCreation> getLoanCreationByleadid(Integer leadid);
+
 }

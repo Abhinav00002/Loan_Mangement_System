@@ -20,12 +20,14 @@ import com.lms.model.Center;
 import com.lms.model.Customer;
 import com.lms.model.CustomerSave;
 import com.lms.model.Lead;
+import com.lms.model.LoanCreation;
 import com.lms.model.address.Days;
 import com.lms.model.address.Time;
 import com.lms.repo.BranchRepository;
 import com.lms.repo.CenterRepository;
 import com.lms.repo.DaysRepository;
 import com.lms.repo.LeadRepository;
+import com.lms.repo.LoanCreationRepository;
 import com.lms.repo.TimeRepository;
 import com.lms.repo.customer.CustomerRepository; 
 @RestController
@@ -45,7 +47,8 @@ public class CustomerSaveController {
 	private TimeRepository timeRepository;
 	@Autowired
 	private DaysRepository daysRepository;
-	
+	@Autowired
+	private LoanCreationRepository loanCreationRepository;
 	 
 	
 	@PostMapping("/save")
@@ -121,27 +124,17 @@ public class CustomerSaveController {
 	}
 	
 	@GetMapping("/lead-data/{leadId}")
-//    public List<Lead> getLeadData(@PathVariable Integer leadId) {
-//        List<Lead> leads = leadRepository.findByleadID(leadId);
-//        List<Customer> customers = new ArrayList<>();
-//
-//        if (!leads.isEmpty()) {
-//            Lead lead = leads.get(0);
-//            int borrowerId =  lead.getBorrowerID();
-//            customers = customerRepository.findBycid(borrowerId);
-//        }
-//
-//        // Perform any additional processing if needed
-//        
-//        return leads;
-//    }
+ 
 	public Map<String, Object> getLeadData(@PathVariable Integer leadId) {
 	    List<Lead> leads = leadRepository.findByleadID(leadId);
 	    Map<String, Object> result = new HashMap<>();
 
 	    if (!leads.isEmpty()) {
 	        Lead lead = leads.get(0);
-	      
+	      //retrive loan details
+        	List<LoanCreation> loan=loanCreationRepository.getLoanCreationByleadid( lead.getLeadID());
+        	 
+	       
 	        int borrowerId = lead.getBorrowerID();
 	        List<Customer> borrower = customerRepository.findBycid(borrowerId);
 	        int coborrowerId=lead.getCoBorrowerId();
@@ -152,6 +145,7 @@ public class CustomerSaveController {
 	        result.put("borrower", borrower);
 	        result.put("coBorrower",coBorrower);
 	        result.put("center", center);
+	        result.put("loan", loan);
 	        if (!center.isEmpty()) {
 	            Center centerData  = center.get(0); // Assuming there is only one center
 	            Long branchId = centerData.getBname();
@@ -166,7 +160,6 @@ public class CustomerSaveController {
 	        }
 	    }
 
-	    // Perform any additional processing if needed
 	    
 	    return result;
 	}

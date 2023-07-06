@@ -1,5 +1,6 @@
 package com.lms.model;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -31,7 +32,7 @@ public class LoanCreation {
 	private long scheme;
 	private int purpose;
 	@Column(name="disbursement_date")
-	private Date ddate;
+	private LocalDate ddate;
 	@Column(name="borower_co_borower_relation")
 	private int cbrelation;
 	private String selfincome;
@@ -46,15 +47,43 @@ public class LoanCreation {
 	@Column(name="lone_expences")
 	private String lexpences;
 	private int sourcedby;
-	 @Column(name="meetingDate" )
+	 @Column(name="meetingDay" )
 	 
-	private Date meetingDate;
+	private int meetingDay;
+	 @Column(name = "meeting_date")
+	private LocalDate meetingDate;
 	
 	
 	
 	
 	
 	
+	public LocalDate getMeetingDate() {
+		return meetingDate;
+	}
+
+
+
+
+
+
+
+
+
+
+	public void setMeetingDate(LocalDate meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+
+
+
+
+
+
+
+
+
 	public LoanCreation() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -276,33 +305,6 @@ public class LoanCreation {
 
 
 
-
-	public Date getDdate() {
-		return ddate;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setDdate(Date ddate) {
-		this.ddate = ddate;
-	}
-
-
-
-
-
-
-
-
-
-
 	public int getCbrelation() {
 		return cbrelation;
 	}
@@ -511,8 +513,8 @@ public class LoanCreation {
 
 
 
-	public Date getMeetingDate() {
-		return meetingDate;
+	public int getMeetingDay() {
+		return meetingDay;
 	}
 
 
@@ -524,8 +526,29 @@ public class LoanCreation {
 
 
 
-	public void setMeetingDate(Date meetingDate) {
-		this.meetingDate = meetingDate;
+	public void setMeetingDay(int meetingDay) {
+		this.meetingDay = meetingDay;
+	}
+
+
+
+
+
+	public LocalDate getDdate() {
+		return ddate;
+	}
+
+
+
+
+
+
+
+
+
+
+	public void setDdate(LocalDate ddate) {
+		this.ddate = ddate;
 	}
 
 
@@ -538,8 +561,9 @@ public class LoanCreation {
 
 
 	public LoanCreation(long id, int leadid, int branchname, int centername, String name, String sname, long scheme,
-			int purpose, Date ddate, int cbrelation, String selfincome, String sincome, String oincome,
-			String hexpences, String bexpences, String lexpences, int sourcedby, Date meetingDate) {
+			int purpose, LocalDate ddate, int cbrelation, String selfincome, String sincome, String oincome,
+			String hexpences, String bexpences, String lexpences, int sourcedby, int meetingDay,
+			LocalDate meetingDate) {
 		super();
 		this.id = id;
 		this.leadid = leadid;
@@ -558,6 +582,7 @@ public class LoanCreation {
 		this.bexpences = bexpences;
 		this.lexpences = lexpences;
 		this.sourcedby = sourcedby;
+		this.meetingDay = meetingDay;
 		this.meetingDate = meetingDate;
 	}
 
@@ -576,10 +601,17 @@ public class LoanCreation {
 				+ centername + ", name=" + name + ", sname=" + sname + ", scheme=" + scheme + ", purpose=" + purpose
 				+ ", ddate=" + ddate + ", cbrelation=" + cbrelation + ", selfincome=" + selfincome + ", sincome="
 				+ sincome + ", oincome=" + oincome + ", hexpences=" + hexpences + ", bexpences=" + bexpences
-				+ ", lexpences=" + lexpences + ", sourcedby=" + sourcedby + ", meetingDate=" + meetingDate + "]";
+				+ ", lexpences=" + lexpences + ", sourcedby=" + sourcedby + ", meetingDay=" + meetingDay
+				+ ", meetingDate=" + meetingDate + "]";
 	}
 
 
+
+
+
+
+
+	 
 
 
 

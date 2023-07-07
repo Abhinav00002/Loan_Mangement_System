@@ -41,8 +41,8 @@ public class RenewalLoanController {
 	private RenewalLoanRepository renewalLoanRepository; 
 	
 		
-	//get data for renewal update to loan id
-			@GetMapping("/renewal-data/{leadId}")
+	//Save data for renewal update to loan id
+			@GetMapping("/save/{leadId}")
 			 public Map<String, Object> getLeadData(@PathVariable Integer leadId) {
 				 // Retrieve the authentication object from the security context
 			    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -125,9 +125,27 @@ public class RenewalLoanController {
 			
 			
 //			
-//			@PostMapping("/save/renewal/")
-//			public RenewalLoan createRenewalSave(@RequestBody RenewalLoan saveRenewal) {
-//				return renewalLoanRepository.save(saveRenewal);
-//				
-//			}
+			@GetMapping("/list/renewal-data/{leadId}")
+			 public Map<String, Object> getLeadData1(@PathVariable Integer leadId) {
+			  
+		    List<Lead> leads = leadRepository.findByleadID(leadId);
+		    Map<String, Object> result = new HashMap<>();
+	
+		    if (!leads.isEmpty()) {
+		        Lead lead = leads.get(0);
+		      //retrive loan details
+	        	List<LoanCreation> loan=loanCreationRepository.getLoanCreationByleadid( lead.getLeadID());
+	        	 
+		       
+		        int borrowerId = lead.getBorrowerID();
+		        List<Customer> borrower = customerRepository.findBycid(borrowerId);
+		        int coborrowerId=lead.getCoBorrowerId();
+		        List<Customer> coBorrower=customerRepository.findBycid(coborrowerId);
+		        result.put("borrower", borrower);
+		        result.put("coBorrower",coBorrower);
+		        result.put("loan", loan);
+		        }
+			return result;
+			}
+	
 }

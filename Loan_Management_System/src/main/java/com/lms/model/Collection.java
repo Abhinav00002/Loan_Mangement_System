@@ -18,12 +18,13 @@ public class Collection {
 	@Id 
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private int loanId;
-	@CreationTimestamp
+	private int loanId; 
 	private LocalDate collDate;
 	private double collAmmount;
 	private int collType;
 	private int collBy;
+	@Column(name="entry_date", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	
 	@CreationTimestamp
 	private  LocalDate entryDate;
 	private int collStatus;

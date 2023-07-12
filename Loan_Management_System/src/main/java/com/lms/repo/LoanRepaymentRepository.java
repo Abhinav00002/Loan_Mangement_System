@@ -16,4 +16,5 @@ public interface LoanRepaymentRepository  extends JpaRepository<LoanRepayment, L
 	 public List<LoanRepayment> getLoanRepaymentByloanId(Integer loan_Id);
 	 List<LoanRepayment> findByDueDateAndBranchId(LocalDate dueDate, Integer branchId);
 
+	 List<LoanRepayment> findByDueDateBetween(LocalDate toDate, LocalDate fromDate);
 }

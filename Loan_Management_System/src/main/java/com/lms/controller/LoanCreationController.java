@@ -239,8 +239,8 @@ public class LoanCreationController {
 	
 	
 		//	print PASSBOOK PDF 
-			@GetMapping("/combined-data/{loanId}")
-			public ResponseEntity<byte[]> getCombinedDataByLoanId(@PathVariable("loanId") Integer loanId) {
+			@PostMapping("/combined-data/{loanId}")
+			public ResponseEntity<byte[]> postCombinedDataByLoanId(@PathVariable("loanId") Integer loanId) {
 				    	 
 				
 				// Fetch the loan repayment data based on due date and branch ID

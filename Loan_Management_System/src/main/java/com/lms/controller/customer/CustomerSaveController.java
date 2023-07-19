@@ -21,6 +21,7 @@ import com.lms.model.Customer;
 import com.lms.model.CustomerSave;
 import com.lms.model.Lead;
 import com.lms.model.LoanCreation;
+import com.lms.model.LoanRepayment;
 import com.lms.model.address.Days;
 import com.lms.model.address.Time;
 import com.lms.repo.BranchRepository;
@@ -28,6 +29,7 @@ import com.lms.repo.CenterRepository;
 import com.lms.repo.DaysRepository;
 import com.lms.repo.LeadRepository;
 import com.lms.repo.LoanCreationRepository;
+import com.lms.repo.LoanRepaymentRepository;
 import com.lms.repo.TimeRepository;
 import com.lms.repo.customer.CustomerRepository; 
 @RestController
@@ -49,7 +51,8 @@ public class CustomerSaveController {
 	private DaysRepository daysRepository;
 	@Autowired
 	private LoanCreationRepository loanCreationRepository;
-	 
+	@Autowired
+	private LoanRepaymentRepository loanRepaymentRepository;
 	
 	@PostMapping("/save")
 	public CustomerSave createCustomerSave(@RequestBody CustomerSave saveCustomer) throws Exception{
@@ -123,6 +126,9 @@ public class CustomerSaveController {
 		
 	}
 	
+	
+	
+// Get Lead Data for Passbook	
 	@GetMapping("/lead-data/{leadId}")
  
 	public Map<String, Object> getLeadData(@PathVariable Integer leadId) {
@@ -163,4 +169,50 @@ public class CustomerSaveController {
 	    
 	    return result;
 	}
+	
+	
+	
+	
+// Get All Customer Related Data to Loan ID
+	@GetMapping("/customer-data/{loanId}")
+
+	public Map<String, Object> getLoanData(@PathVariable Integer loanId) {
+		List<LoanCreation> loans=loanCreationRepository.getLoanCreationByleadid(loanId);
+		Map<String, Object> result= new HashMap<>();
+		if (!loans.isEmpty()) {
+			LoanCreation loan=loans.get(0);
+			
+			List<Lead> leads= leadRepository.findByleadID(loan.getLeadid());
+			result.put("lead", leads);
+
+			List<LoanRepayment> loanRepayments=loanRepaymentRepository.getLoanRepaymentByloanId(loan.getLeadid());
+			result.put("passbook", loanRepayments);
+			
+			if(!leads.isEmpty()) {
+				Lead lead=leads.get(0);
+				
+				 
+				List<Customer> borrower=customerRepository.findBycid(lead.getBorrowerID());
+				result.put("borrower", borrower);
+				List<Customer> coBorrower=customerRepository.findBycid(lead.getCoBorrowerId());
+				result.put("coBorrower", coBorrower);
+				List<Center> center=centerRepository.getCenterByncid(lead.getCenterID());
+				result.put("center", center);
+				if (!center.isEmpty()) {
+			            Center centerData  = center.get(0); // Assuming there is only one center
+			            Long branchId = centerData.getBname();
+			            Optional<Branch> branch = branchRepository.findById(branchId);
+			            Integer timeId=centerData.getTime();
+				        List<Time> time=timeRepository.getTimeBytid(timeId);
+				        Integer dayId=centerData.getCmday();
+				        List<Days> day=daysRepository.getDayBydid(dayId);
+				        result.put("day", day);
+				        result.put("time", time);
+			            result.put("branch", branch);
+			        }
+			}
+			
+		}
+		return result;
+	} 
 }

@@ -28,7 +28,7 @@ public class LeadController {
 	public List<Lead> getLeads(){
 		List<Lead> leadList=new ArrayList<Lead>();
 		leadList=leadRepository.findAll();
-		System.out.println(leadList);
+//		System.out.println(leadList);
 		return leadList;
 	}
 

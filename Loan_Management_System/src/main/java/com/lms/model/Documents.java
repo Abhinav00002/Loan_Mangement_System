@@ -22,7 +22,7 @@ public class Documents {
     private int docTypeId;
 
     @Lob
-    private byte[] document; // Storing the document as byte[] (BLOB)
+    private String document; // Storing the document as byte[] (BLOB)
 
     private int entryBy;
 
@@ -78,14 +78,14 @@ public class Documents {
 
 
 
-	public byte[] getDocument() {
+	public String getDocument() {
 		return document;
 	}
 
 
 
-	public void setDocument(byte[] document) {
-		this.document = document;
+	public void setDocument(String string) {
+		this.document = string;
 	}
 
 
@@ -134,7 +134,7 @@ public class Documents {
         this.fileName = fileName;
     }
 
-	public Documents(int id, int loanId, int docTypeId, byte[] document, int entryBy, LocalDate entryDate, int entryStatus) {
+	public Documents(int id, int loanId, int docTypeId, String document, int entryBy, LocalDate entryDate, int entryStatus) {
         this.id = id;
         this.loanId = loanId;
         this.docTypeId = docTypeId;
@@ -148,11 +148,13 @@ public class Documents {
 
 	@Override
 	public String toString() {
-		return "Documents [id=" + id + ", loanId=" + loanId + ", docTypeId=" + docTypeId + ", document="
-				+ Arrays.toString(document) + ", entryBy=" + entryBy + ", entryDate=" + entryDate + ", entryStatus="
-				+ entryStatus + ", fileName=" + fileName + "]";
+		return "Documents [id=" + id + ", loanId=" + loanId + ", docTypeId=" + docTypeId + ", document=" + document
+				+ ", entryBy=" + entryBy + ", entryDate=" + entryDate + ", entryStatus=" + entryStatus + ", fileName="
+				+ fileName + "]";
 	}
 
+
+ 
 
 
 	 

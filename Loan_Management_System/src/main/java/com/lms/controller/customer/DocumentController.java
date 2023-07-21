@@ -2,6 +2,7 @@ package com.lms.controller.customer;
  
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -60,8 +61,9 @@ public class DocumentController {
 	    Documents newDocument = new Documents();
 	    newDocument.setLoanId(loanId);
 	    newDocument.setDocTypeId(docTypeId);
-	    newDocument.setDocument(document.getBytes());
+//	    newDocument.setDocument(document.getBytes());
 	    newDocument.setEntryBy(userId);
+	    newDocument.setDocument(Base64.getEncoder().encodeToString(document.getBytes()));
 
 	    // Set the filename in the entity using the original filename from the multipart file
 	    newDocument.setFileName(document.getOriginalFilename());
@@ -84,13 +86,16 @@ public class DocumentController {
 	        return ResponseEntity.notFound().build();
 	    }
 
-	    byte[] documentData = document.getDocument();
+	    String documentData = document.getDocument();
+
+	    // Convert the Base64-encoded string back to a byte array
+	    byte[] documentBytes = Base64.getDecoder().decode(documentData);
 
 	    // Determine the file type based on the file extension
 	    String filename = document.getFileName(); // Use the actual filename from the entity
 	    if (filename == null || filename.isEmpty()) {
 	        filename = "filename.dat"; // Default filename if the filename is not available
-	    } 
+	    }
 	    // Get the file extension from the filename
 	    String fileExtension = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
 
@@ -120,9 +125,9 @@ public class DocumentController {
 
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(mediaType);
-	    headers.setContentDispositionFormData("attachment", filename); 
-	    return new ResponseEntity<>(documentData, headers, HttpStatus.OK);
-	}
+	    headers.setContentDispositionFormData("attachment", filename);
+	    return new ResponseEntity<>(documentBytes, headers, HttpStatus.OK);
+	}	
 	
 	
 	
@@ -141,25 +146,23 @@ public class DocumentController {
 	
 	
 	
-	
-	
-	@GetMapping("/document/{id}/download")
-    public ResponseEntity<Resource> downloadDocument(@PathVariable("id") Integer id) {
-        Documents document = documentsRepository.findById(id).orElse(null);
-
-        if (document == null || document.getDocument() == null) {
-            // Document not found or document data is null
-            return ResponseEntity.notFound().build();
-        }
-
-        // Prepare the response with the document data
-        ByteArrayResource resource = new ByteArrayResource(document.getDocument());
-
-        return ResponseEntity.ok()
-                .header( HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"document_" + id + ".pdf\"")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .contentLength(document.getDocument().length)
-                .body(resource);
-    }
+//	@GetMapping("/document/{id}/download")
+//    public ResponseEntity<Resource> downloadDocument(@PathVariable("id") Integer id) {
+//        Documents document = documentsRepository.findById(id).orElse(null);
+//
+//        if (document == null || document.getDocument() == null) {
+//            // Document not found or document data is null
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        // Prepare the response with the document data
+//        ByteArrayResource resource = new ByteArrayResource(document.getDocument());
+//
+//        return ResponseEntity.ok()
+//                .header( HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"document_" + id + ".pdf\"")
+//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//                .contentLength(document.getDocument().length)
+//                .body(resource);
+//    }
 	
 }

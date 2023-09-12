@@ -15,15 +15,12 @@ import com.lms.repo.DueRepository;
 @CrossOrigin("*")
 @RequestMapping("/due")
 public class DueController {
-	
-	
+
 	@Autowired
 	private DueRepository dueRepository;
-	
-	
-	
+
 	@GetMapping("/list")
-	public List<Due> getDues(){
+	public List<Due> getDues() {
 		return dueRepository.findAll();
 	}
 

@@ -16,14 +16,11 @@ import com.lms.repo.EmiRepository;
 @RequestMapping("/emi")
 public class EmiTypeController {
 
-	
-	
 	@Autowired
 	private EmiRepository emiRepository;
-	
-	
+
 	@GetMapping("/list")
-	public List<EmiType> geEmiTypes(){
+	public List<EmiType> geEmiTypes() {
 		return emiRepository.findAll();
 	}
 }

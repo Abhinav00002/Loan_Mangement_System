@@ -30,6 +30,10 @@ public class Center {
 	private String state;
 	private String pincode;
 	private String city;
+	private int centerId;
+	@Column(name = "center_type", columnDefinition = "INT DEFAULT 1")
+	private int centerType;
+	private int ceManageBy;
 	
 	
 	
@@ -41,20 +45,17 @@ public class Center {
 
 
 
-	
-	
-	
-	
-	
 
-	public long getNcid() {
-		return ncid;
+	public int getCenterId() {
+		return centerId;
 	}
 
 
 
 
-
+	public long getNcid() {
+		return ncid;
+	}
 
 
 
@@ -66,19 +67,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public Long getBname() {
 		return bname;
 	}
-
-
-
-
-
 
 
 
@@ -90,19 +81,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public int getCmday() {
 		return cmday;
 	}
-
-
-
-
-
 
 
 
@@ -114,19 +95,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public String getSourcedby() {
 		return sourcedby;
 	}
-
-
-
-
-
 
 
 
@@ -138,19 +109,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public int getTime() {
 		return time;
 	}
-
-
-
-
-
 
 
 
@@ -162,19 +123,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public String getAddressl1() {
 		return addressl1;
 	}
-
-
-
-
-
 
 
 
@@ -186,19 +137,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public String getAddressl2() {
 		return addressl2;
 	}
-
-
-
-
-
 
 
 
@@ -210,19 +151,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public String getLandmark() {
 		return landmark;
 	}
-
-
-
-
-
 
 
 
@@ -234,19 +165,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public String getState() {
 		return state;
 	}
-
-
-
-
-
 
 
 
@@ -258,19 +179,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public String getPincode() {
 		return pincode;
 	}
-
-
-
-
-
 
 
 
@@ -282,19 +193,9 @@ public class Center {
 
 
 
-
-
-
-
-
 	public String getCity() {
 		return city;
 	}
-
-
-
-
-
 
 
 
@@ -306,15 +207,43 @@ public class Center {
 
 
 
+	public int getCenterType() {
+		return centerType;
+	}
 
 
 
-	
-	
+
+	public void setCenterType(int centerType) {
+		this.centerType = centerType;
+	}
+
+
+
+
+	public int getCeManageBy() {
+		return ceManageBy;
+	}
+
+
+
+
+	public void setCeManageBy(int ceManageBy) {
+		this.ceManageBy = ceManageBy;
+	}
+
+
+
+
+	public void setCenterId(int centerId) {
+		this.centerId = centerId;
+	}
+
+
 
 
 	public Center(long ncid, Long bname, int cmday, String sourcedby, int time, String addressl1, String addressl2,
-			String landmark, String state, String pincode, String city) {
+			String landmark, String state, String pincode, String city, int centerId, int centerType, int ceManageBy) {
 		super();
 		this.ncid = ncid;
 		this.bname = bname;
@@ -327,12 +256,10 @@ public class Center {
 		this.state = state;
 		this.pincode = pincode;
 		this.city = city;
+		this.centerId = centerId;
+		this.centerType = centerType;
+		this.ceManageBy = ceManageBy;
 	}
-
-
-
-
-
 
 
 
@@ -341,11 +268,18 @@ public class Center {
 	public String toString() {
 		return "Center [ncid=" + ncid + ", bname=" + bname + ", cmday=" + cmday + ", sourcedby=" + sourcedby + ", time="
 				+ time + ", addressl1=" + addressl1 + ", addressl2=" + addressl2 + ", landmark=" + landmark + ", state="
-				+ state + ", pincode=" + pincode + ", city=" + city + "]";
+				+ state + ", pincode=" + pincode + ", city=" + city + ", centerId=" + centerId + ", centerType="
+				+ centerType + ", ceManageBy=" + ceManageBy + "]";
 	}
-	
-	
-	
+
+
+
+
+
+
+
+
+ 	
 	
 	
 	 	

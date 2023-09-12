@@ -10,32 +10,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.model.address.Region;
-import com.lms.repo.RegionRepository; 
-
-
+import com.lms.repo.RegionRepository;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/region")
 public class RegionController {
 
-	
-
 	@Autowired
-	private RegionRepository regionRepository; 
-	
+	private RegionRepository regionRepository;
 
-	//Get Region By Region Id
+	// Get Region By Region Id
 	@GetMapping("/list/{regionId}")
-	public  Region getRegion(@PathVariable("regionId") Integer regionId) {
+	public Region getRegion(@PathVariable("regionId") Integer regionId) {
 		return this.regionRepository.getRegionById(regionId);
-		}
-	
-	
-	
-	//Get Region
+	}
+
+	// Get Region
 	@GetMapping("/list")
-	public List<Region> getRegions(){
+	public List<Region> getRegions() {
 		return regionRepository.findAll();
 	}
 }

@@ -16,16 +16,11 @@ import com.lms.repo.RelationshipsRepository;
 @RequestMapping("/relationship")
 public class RelationshipsController {
 
-	
-	
 	@Autowired
 	private RelationshipsRepository relationshipsRepository;
-	
-	
-	
-	
+
 	@GetMapping("/list")
-	public List<Relationships> getRelationships(){
+	public List<Relationships> getRelationships() {
 		return relationshipsRepository.findAll();
 	}
 }

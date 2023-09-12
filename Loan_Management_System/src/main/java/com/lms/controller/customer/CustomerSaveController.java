@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.model.Branch;
@@ -54,6 +55,11 @@ public class CustomerSaveController {
 	@Autowired
 	private LoanRepaymentRepository loanRepaymentRepository;
 	
+	
+	
+	
+	
+	//save and Create New Customer
 	@PostMapping("/save")
 	public CustomerSave createCustomerSave(@RequestBody CustomerSave saveCustomer) throws Exception{
 		 
@@ -116,9 +122,7 @@ public class CustomerSaveController {
 			lead.setBranchID(saveCustomer.getBranch());
 			lead.setCenterID(saveCustomer.getCentername());
 			lead.setSourcedBy(saveCustomer.getSourcedby());
-			lead.setManageBy(saveCustomer.getSourcedby());
-			
-//															lead.s(coborrowerId)
+			lead.setManageBy(saveCustomer.getSourcedby()); 
 			leadRepository.save(lead);
 			
 			
@@ -185,7 +189,7 @@ public class CustomerSaveController {
 			List<Lead> leads= leadRepository.findByleadID(loan.getLeadid());
 			result.put("lead", leads);
 
-			List<LoanRepayment> loanRepayments=loanRepaymentRepository.getLoanRepaymentByloanId(loan.getLeadid());
+			List<Map<String, Object>> loanRepayments=loanRepaymentRepository.getLoanRepaymentByloanId(loan.getLeadid());
 			result.put("passbook", loanRepayments);
 			
 			if(!leads.isEmpty()) {
@@ -214,5 +218,30 @@ public class CustomerSaveController {
 			
 		}
 		return result;
-	} 
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	@GetMapping("/borrower_details/{loanID}")
+	public List<Customer> getBorrower(@PathVariable ("loanID") Integer loanID) {
+		return customerRepository.getCustomerByloanId(loanID);
+	}
+	
+	
+	
+	@GetMapping("/co_borrower_details/{loanID}")
+	public List<Customer> getCoBorrower(@PathVariable ("loanID") Integer loanID) {
+		return customerRepository.getCoBorrowerByloanId(loanID);
+	}
+	
+	@GetMapping("/borrowerDetails/")
+	public Customer getCustomerDeteils(@RequestParam("borrowerId") Integer borrowerId) {
+		System.out.println("BORROWER ID : "+borrowerId);
+		return customerRepository.getCustomerBycid(borrowerId);
+	}
 }

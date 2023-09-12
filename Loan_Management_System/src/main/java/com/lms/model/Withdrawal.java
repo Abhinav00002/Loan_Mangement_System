@@ -13,10 +13,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "deposit_master")
-public class Deposit {
+@Table(name = "withdrawal_master")
+public class Withdrawal {
 
-	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,12 +39,10 @@ public class Deposit {
 	
 	
 	
-	
-	public Deposit() {
+	public Withdrawal() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-
 
 
 
@@ -55,11 +52,9 @@ public class Deposit {
 
 
 
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 
 
 
@@ -69,11 +64,9 @@ public class Deposit {
 
 
 
-
 	public void setBranchId(int branchId) {
 		this.branchId = branchId;
 	}
-
 
 
 
@@ -83,11 +76,9 @@ public class Deposit {
 
 
 
-
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
 	}
-
 
 
 
@@ -97,11 +88,9 @@ public class Deposit {
 
 
 
-
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
-
 
 
 
@@ -111,11 +100,9 @@ public class Deposit {
 
 
 
-
 	public void setBankId(int bankId) {
 		this.bankId = bankId;
 	}
-
 
 
 
@@ -125,11 +112,9 @@ public class Deposit {
 
 
 
-
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
 	}
-
 
 
 
@@ -139,11 +124,9 @@ public class Deposit {
 
 
 
-
 	public void setBankType(String bankType) {
 		this.bankType = bankType;
 	}
-
 
 
 
@@ -153,11 +136,9 @@ public class Deposit {
 
 
 
-
 	public void setEntryDate(LocalDate entryDate) {
 		this.entryDate = entryDate;
 	}
-
 
 
 
@@ -167,11 +148,9 @@ public class Deposit {
 
 
 
-
 	public void setClearStatus(int clearStatus) {
 		this.clearStatus = clearStatus;
 	}
-
 
 
 
@@ -181,11 +160,9 @@ public class Deposit {
 
 
 
-
 	public void setDcrDate(Date dcrDate) {
 		this.dcrDate = dcrDate;
 	}
-
 
 
 
@@ -195,11 +172,9 @@ public class Deposit {
 
 
 
-
 	public void setDepositDate(Date depositDate) {
 		this.depositDate = depositDate;
 	}
-
 
 
 
@@ -209,11 +184,9 @@ public class Deposit {
 
 
 
-
 	public void setEntryBy(int entryBy) {
 		this.entryBy = entryBy;
 	}
-
 
 
 
@@ -223,11 +196,9 @@ public class Deposit {
 
 
 
-
 	public void setClearBy(int clearBy) {
 		this.clearBy = clearBy;
 	}
-
 
 
 
@@ -237,11 +208,9 @@ public class Deposit {
 
 
 
-
 	public void setClearDate(Date clearDate) {
 		this.clearDate = clearDate;
 	}
-
 
 
 
@@ -251,17 +220,15 @@ public class Deposit {
 
 
 
-
 	public void setAccountId(int accountId) {
 		this.accountId = accountId;
 	}
 
 
 
-
-	public Deposit(int id, int branchId, String branchName, Double amount, int bankId, String bankName, String bankType,
-			LocalDate entryDate, int clearStatus, Date dcrDate, Date depositDate, int entryBy, int clearBy,
-			Date clearDate, int accountId) {
+	public Withdrawal(int id, int branchId, String branchName, Double amount, int bankId, String bankName,
+			String bankType, LocalDate entryDate, int clearStatus, Date dcrDate, Date depositDate, int entryBy,
+			int clearBy, Date clearDate, int accountId) {
 		super();
 		this.id = id;
 		this.branchId = branchId;
@@ -282,17 +249,17 @@ public class Deposit {
 
 
 
-
 	@Override
 	public String toString() {
-		return "Deposit [id=" + id + ", branchId=" + branchId + ", branchName=" + branchName + ", amount=" + amount
+		return "Withdrawal [id=" + id + ", branchId=" + branchId + ", branchName=" + branchName + ", amount=" + amount
 				+ ", bankId=" + bankId + ", bankName=" + bankName + ", bankType=" + bankType + ", entryDate="
 				+ entryDate + ", clearStatus=" + clearStatus + ", dcrDate=" + dcrDate + ", depositDate=" + depositDate
 				+ ", entryBy=" + entryBy + ", clearBy=" + clearBy + ", clearDate=" + clearDate + ", accountId="
 				+ accountId + "]";
 	}
+	
+	
 
-
-
- 	
+	
+	
 }

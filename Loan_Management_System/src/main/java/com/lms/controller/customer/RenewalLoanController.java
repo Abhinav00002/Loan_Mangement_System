@@ -46,19 +46,15 @@ public class RenewalLoanController {
 	public Map<String, Object> saveLeadData(@PathVariable Integer leadId) {
 	    // Retrieve the authentication object from the security context
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	    // Get the user details from the authentication object
-	    User userDetails = (User) authentication.getPrincipal();
-	    // Get the current user's ID as a Long
-	    Integer userId = (int) userDetails.getId();
-	    // Get the current user's name
-	    String username = userDetails.getUsername();
+	      User userDetails = (User) authentication.getPrincipal();
+	      Integer userId = (int) userDetails.getId();
+	     String username = userDetails.getUsername();
 
 	    List<Lead> leads = leadRepository.findByleadID(leadId);
 	    Map<String, Object> result = new HashMap<>();
 
 	    if (!leads.isEmpty()) {
 	        Lead lead = leads.get(0);
-	        // Retrieve loan details
 	        List<LoanCreation> loan = loanCreationRepository.getLoanCreationByleadid(lead.getLeadID());
 
 	        int borrowerId = lead.getBorrowerID();
@@ -66,8 +62,7 @@ public class RenewalLoanController {
 	        int coborrowerId = lead.getCoBorrowerId();
 	        List<Customer> coBorrower = customerRepository.findBycid(coborrowerId);
 
-	        // Check if a renewal loan already exists for the given lead ID
-	        boolean renewalLoanExists = renewalLoanRepository.existsByloanID(leadId);
+	         boolean renewalLoanExists = renewalLoanRepository.existsByloanID(leadId);
 	        if (renewalLoanExists) {
 	            result.put("error", "Renewal loan already created for this lead ID");
 	            return result;

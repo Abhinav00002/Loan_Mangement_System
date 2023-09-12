@@ -16,56 +16,52 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.model.Role;
 import com.lms.model.User;
-import com.lms.model.UserRole; 
+import com.lms.model.UserRole;
 import com.lms.service.UserService;
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("*")
-public class UserController   {
+public class UserController {
 
-	
 	@Autowired
 	private UserService userService;
- 
-	
+
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-	
-	
-//	
-//	//creating user
-//	@PostMapping("/")
-//	public User createUser(@RequestBody User user) throws Exception {
-//		
-//		//Encoding Password using Password Encoder
-//		user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
-//		
-//		Set<UserRole> roles=new HashSet<>();
-//		
-//		Role role=new Role();
-//		role.setRoleId(45L);
-//		role.setRoleName("Normal");
-//		
-//		
-//		UserRole userRole=new UserRole();
-//		userRole.setUser(user);
-//		userRole.setRole(role);
-//		
-//		roles.add(userRole);
-//		
-//		return this.userService.createUser(user,roles);
-//	}
-	
-	//get user by username
+
+	//
+	// //creating user
+	// @PostMapping("/")
+	// public User createUser(@RequestBody User user) throws Exception {
+	//
+	// //Encoding Password using Password Encoder
+	// user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+	//
+	// Set<UserRole> roles=new HashSet<>();
+	//
+	// Role role=new Role();
+	// role.setRoleId(45L);
+	// role.setRoleName("Normal");
+	//
+	//
+	// UserRole userRole=new UserRole();
+	// userRole.setUser(user);
+	// userRole.setRole(role);
+	//
+	// roles.add(userRole);
+	//
+	// return this.userService.createUser(user,roles);
+	// }
+
+	// get user by username
 	@GetMapping("/{username}")
 	public User getUser(@PathVariable("username") String username) {
 		return this.userService.getUser(username);
-		
+
 	}
-	
-	
-	//delete the user by id
+
+	// delete the user by id
 	@DeleteMapping("/{userId}")
 	public void deleteUser(@PathVariable("userId") Long userId) {
 		this.userService.deleteUser(userId);

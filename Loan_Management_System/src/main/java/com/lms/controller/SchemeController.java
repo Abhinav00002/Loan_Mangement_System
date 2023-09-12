@@ -17,21 +17,18 @@ import com.lms.repo.SchemeRepository;
 
 public class SchemeController {
 
-	
 	@Autowired
 	private SchemeRepository schemeRepository;
-	
-	
+
 	@PostMapping("/scheme/save")
-	
-      public Scheme createScheme(@RequestBody Scheme scheme) throws Exception{
-          schemeRepository.save(scheme);
-          return  scheme;
-		}
-	 
-	
+
+	public Scheme createScheme(@RequestBody Scheme scheme) throws Exception {
+		schemeRepository.save(scheme);
+		return scheme;
+	}
+
 	@GetMapping("/scheme/list")
-	public List<Scheme> getSchemes(){
+	public List<Scheme> getSchemes() {
 		return schemeRepository.findAll();
-		}
+	}
 }

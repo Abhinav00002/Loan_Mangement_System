@@ -20,7 +20,6 @@ public class LoanRepayment {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	
 	private long id;
 	@Column(name="loan_id")
 	private Integer loanId;
@@ -40,7 +39,8 @@ public class LoanRepayment {
 	private int branchId;
 	@Column(name = "center_id")
 	private int centerId;
-	
+	 @Column(name = "coll_amount", columnDefinition = "DOUBLE DEFAULT 0.0")
+	    private double collAmount;
 	
 	
 	
@@ -358,9 +358,29 @@ public class LoanRepayment {
 
 
 
+	public double getCollAmount() {
+		return collAmount;
+	}
+
+
+
+
+
+
+
+	public void setCollAmount(double collAmount) {
+		this.collAmount = collAmount;
+	}
+
+
+
+
+
+
+
 	public LoanRepayment(long id, Integer loanId, LocalDate dueDate, long installmentNo, double emi,
 			double openningAmount, double principle, double intrest, long status, LocalDate collectionDate,
-			long collectionBy, int interestbook, int preclose, int branchId, int centerId) {
+			long collectionBy, int interestbook, int preclose, int branchId, int centerId, double collAmount) {
 		super();
 		this.id = id;
 		this.loanId = loanId;
@@ -377,6 +397,7 @@ public class LoanRepayment {
 		this.preclose = preclose;
 		this.branchId = branchId;
 		this.centerId = centerId;
+		this.collAmount = collAmount;
 	}
 
 
@@ -391,10 +412,15 @@ public class LoanRepayment {
 				+ installmentNo + ", emi=" + emi + ", openningAmount=" + openningAmount + ", principle=" + principle
 				+ ", intrest=" + intrest + ", status=" + status + ", collectionDate=" + collectionDate
 				+ ", collectionBy=" + collectionBy + ", interestbook=" + interestbook + ", preclose=" + preclose
-				+ ", branchId=" + branchId + ", centerId=" + centerId + "]";
+				+ ", branchId=" + branchId + ", centerId=" + centerId + ", collAmount=" + collAmount + "]";
 	}
 
 
+
+
+
+
+ 
 
 
 

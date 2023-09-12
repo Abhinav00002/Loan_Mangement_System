@@ -21,9 +21,8 @@ public class Documents {
 
     private int docTypeId;
 
-    @Lob
-    private String document; // Storing the document as byte[] (BLOB)
-
+ 
+    private String document;  
     private int entryBy;
 
     @Column(name = "entry_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

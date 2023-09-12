@@ -52,38 +52,13 @@ public class LoanCreation {
 	private int meetingDay;
 	 @Column(name = "meeting_date")
 	private LocalDate meetingDate;
+	 @Column(name = "status", columnDefinition = "int DEFAULT 0")
+	private int status;
 	
 	
 	
 	
 	
-	
-	public LocalDate getMeetingDate() {
-		return meetingDate;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setMeetingDate(LocalDate meetingDate) {
-		this.meetingDate = meetingDate;
-	}
-
-
-
-
-
-
-
-
-
-
 	public LoanCreation() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -93,19 +68,9 @@ public class LoanCreation {
 
 
 
- 
-
-
-
-
 	public long getId() {
 		return id;
 	}
-
-
-
-
-
 
 
 
@@ -119,19 +84,9 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public int getLeadid() {
 		return leadid;
 	}
-
-
-
-
-
 
 
 
@@ -145,19 +100,9 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public int getBranchname() {
 		return branchname;
 	}
-
-
-
-
-
 
 
 
@@ -171,19 +116,9 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public int getCentername() {
 		return centername;
 	}
-
-
-
-
-
 
 
 
@@ -197,19 +132,9 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public String getName() {
 		return name;
 	}
-
-
-
-
-
 
 
 
@@ -223,19 +148,9 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public String getSname() {
 		return sname;
 	}
-
-
-
-
-
 
 
 
@@ -249,19 +164,9 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public long getScheme() {
 		return scheme;
 	}
-
-
-
-
-
 
 
 
@@ -275,11 +180,6 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public int getPurpose() {
 		return purpose;
 	}
@@ -288,246 +188,8 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public void setPurpose(int purpose) {
 		this.purpose = purpose;
-	}
-
-
-
-
-
-
-
-
-
-	public int getCbrelation() {
-		return cbrelation;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setCbrelation(int cbrelation) {
-		this.cbrelation = cbrelation;
-	}
-
-
-
-
-
-
-
-
-
-
-	public String getSelfincome() {
-		return selfincome;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setSelfincome(String selfincome) {
-		this.selfincome = selfincome;
-	}
-
-
-
-
-
-
-
-
-
-
-	public String getSincome() {
-		return sincome;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setSincome(String sincome) {
-		this.sincome = sincome;
-	}
-
-
-
-
-
-
-
-
-
-
-	public String getOincome() {
-		return oincome;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setOincome(String oincome) {
-		this.oincome = oincome;
-	}
-
-
-
-
-
-
-
-
-
-
-	public String getHexpences() {
-		return hexpences;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setHexpences(String hexpences) {
-		this.hexpences = hexpences;
-	}
-
-
-
-
-
-
-
-
-
-
-	public String getBexpences() {
-		return bexpences;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setBexpences(String bexpences) {
-		this.bexpences = bexpences;
-	}
-
-
-
-
-
-
-
-
-
-
-	public String getLexpences() {
-		return lexpences;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setLexpences(String lexpences) {
-		this.lexpences = lexpences;
-	}
-
-
-
-
-
-
-
-
-
-
-	public int getSourcedby() {
-		return sourcedby;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setSourcedby(int sourcedby) {
-		this.sourcedby = sourcedby;
-	}
-
-
-
-
-
-
-
-
-
-
-	public int getMeetingDay() {
-		return meetingDay;
-	}
-
-
-
-
-
-
-
-
-
-
-	public void setMeetingDay(int meetingDay) {
-		this.meetingDay = meetingDay;
 	}
 
 
@@ -542,11 +204,6 @@ public class LoanCreation {
 
 
 
-
-
-
-
-
 	public void setDdate(LocalDate ddate) {
 		this.ddate = ddate;
 	}
@@ -555,6 +212,177 @@ public class LoanCreation {
 
 
 
+	public int getCbrelation() {
+		return cbrelation;
+	}
+
+
+
+
+
+	public void setCbrelation(int cbrelation) {
+		this.cbrelation = cbrelation;
+	}
+
+
+
+
+
+	public String getSelfincome() {
+		return selfincome;
+	}
+
+
+
+
+
+	public void setSelfincome(String selfincome) {
+		this.selfincome = selfincome;
+	}
+
+
+
+
+
+	public String getSincome() {
+		return sincome;
+	}
+
+
+
+
+
+	public void setSincome(String sincome) {
+		this.sincome = sincome;
+	}
+
+
+
+
+
+	public String getOincome() {
+		return oincome;
+	}
+
+
+
+
+
+	public void setOincome(String oincome) {
+		this.oincome = oincome;
+	}
+
+
+
+
+
+	public String getHexpences() {
+		return hexpences;
+	}
+
+
+
+
+
+	public void setHexpences(String hexpences) {
+		this.hexpences = hexpences;
+	}
+
+
+
+
+
+	public String getBexpences() {
+		return bexpences;
+	}
+
+
+
+
+
+	public void setBexpences(String bexpences) {
+		this.bexpences = bexpences;
+	}
+
+
+
+
+
+	public String getLexpences() {
+		return lexpences;
+	}
+
+
+
+
+
+	public void setLexpences(String lexpences) {
+		this.lexpences = lexpences;
+	}
+
+
+
+
+
+	public int getSourcedby() {
+		return sourcedby;
+	}
+
+
+
+
+
+	public void setSourcedby(int sourcedby) {
+		this.sourcedby = sourcedby;
+	}
+
+
+
+
+
+	public int getMeetingDay() {
+		return meetingDay;
+	}
+
+
+
+
+
+	public void setMeetingDay(int meetingDay) {
+		this.meetingDay = meetingDay;
+	}
+
+
+
+
+
+	public LocalDate getMeetingDate() {
+		return meetingDate;
+	}
+
+
+
+
+
+	public void setMeetingDate(LocalDate meetingDate) {
+		this.meetingDate = meetingDate;
+	}
+
+
+
+
+
+	public int getStatus() {
+		return status;
+	}
+
+
+
+
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 
 
@@ -562,8 +390,8 @@ public class LoanCreation {
 
 	public LoanCreation(long id, int leadid, int branchname, int centername, String name, String sname, long scheme,
 			int purpose, LocalDate ddate, int cbrelation, String selfincome, String sincome, String oincome,
-			String hexpences, String bexpences, String lexpences, int sourcedby, int meetingDay,
-			LocalDate meetingDate) {
+			String hexpences, String bexpences, String lexpences, int sourcedby, int meetingDay, LocalDate meetingDate,
+			int status) {
 		super();
 		this.id = id;
 		this.leadid = leadid;
@@ -584,12 +412,8 @@ public class LoanCreation {
 		this.sourcedby = sourcedby;
 		this.meetingDay = meetingDay;
 		this.meetingDate = meetingDate;
+		this.status = status;
 	}
-
-
-
-
-
 
 
 
@@ -602,12 +426,18 @@ public class LoanCreation {
 				+ ", ddate=" + ddate + ", cbrelation=" + cbrelation + ", selfincome=" + selfincome + ", sincome="
 				+ sincome + ", oincome=" + oincome + ", hexpences=" + hexpences + ", bexpences=" + bexpences
 				+ ", lexpences=" + lexpences + ", sourcedby=" + sourcedby + ", meetingDay=" + meetingDay
-				+ ", meetingDate=" + meetingDate + "]";
+				+ ", meetingDate=" + meetingDate + ", status=" + status + "]";
 	}
 
 
 
 
+
+ 
+
+
+
+ 
 
 
 

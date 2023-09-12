@@ -1,14 +1,15 @@
 package com.lms.controller.customer;
  
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
+import java.util.Optional;
+ 
+import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,14 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.PostMapping; 
+import org.springframework.web.bind.annotation.RequestParam; 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.lms.model.Branch;
+ 
 import com.lms.model.Documents;
 import com.lms.model.User;
 import com.lms.model.address.DocumentType;
@@ -41,6 +39,8 @@ public class DocumentController {
 	@Autowired
 	private DocumentsRepository documentsRepository; 
 	
+	
+	//Get Document type
 	@GetMapping("/document_type/list/")
 	public List<DocumentType> getDocumentTypes() {
 		List<DocumentType> documentTypes=new ArrayList<DocumentType>();
@@ -48,7 +48,7 @@ public class DocumentController {
 		return documentTypes;
 		}
 	
-	
+	//save Document
 	@PostMapping("/document/save/")
 	public Documents createDocuments(@RequestParam("document") MultipartFile document,
 	                                 @RequestParam("loanId") int loanId,
@@ -56,113 +56,428 @@ public class DocumentController {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    User userDetails = (User) authentication.getPrincipal();
 	    Integer userId = (int) userDetails.getId();
-	    System.out.println("Document: " + document.getOriginalFilename() + ", LoanId: " + loanId + ", DocTypeId: " + docTypeId);
+//	    System.out.println("Document: " + document.getOriginalFilename() + ", LoanId: " + loanId + ", DocTypeId: " + docTypeId);
 
 	    Documents newDocument = new Documents();
 	    newDocument.setLoanId(loanId);
 	    newDocument.setDocTypeId(docTypeId);
-//	    newDocument.setDocument(document.getBytes());
 	    newDocument.setEntryBy(userId);
-	    newDocument.setDocument(Base64.getEncoder().encodeToString(document.getBytes()));
-
-	    // Set the filename in the entity using the original filename from the multipart file
 	    newDocument.setFileName(document.getOriginalFilename());
 
+	    // Save the file to the target location
+	    Path targetLocation = Paths.get("/home/docFile/clientDocs/" + document.getOriginalFilename());
+	    Files.createDirectories(targetLocation.getParent());  
+	    document.transferTo(targetLocation);
+
+	   
+	    newDocument.setDocument(targetLocation.toString());
+ 
 	    return documentsRepository.save(newDocument);
 	}
 
 
 	
 	
-	
-	
-	
-	@GetMapping("/document/{id}")
-	public ResponseEntity<byte[]> getDocument(@PathVariable("id") Integer id) throws IOException {
-	    // Fetch the document from the database based on the given ID
-	    Documents document = documentsRepository.findById(id).orElse(null);
+	@GetMapping("/document_details/{loanId}")
+	public ResponseEntity<?> getDocumentById(@PathVariable int loanId) throws IOException {
+	    Optional<Documents> optionalDocument = documentsRepository.getByloanId3(loanId);
 
-	    if (document == null || document.getDocument() == null) {
+	    if (optionalDocument.isPresent()) {
+	        Documents document = optionalDocument.get();
+	        String filePath = document.getDocument();
+
+	        // Read the file content into a byte array
+	        Path fileLocation = Paths.get(filePath);
+	        byte[] fileContent = Files.readAllBytes(fileLocation);
+
+	        // Determine the appropriate Content-Type based on the file's extension
+	        MediaType mediaType;
+	        String fileName = document.getFileName();
+	        if (fileName.toLowerCase().endsWith(".pdf")) {
+	            mediaType = MediaType.APPLICATION_PDF;
+	        } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg")) {
+	            mediaType = MediaType.IMAGE_JPEG;
+	        } else if (fileName.toLowerCase().endsWith(".png")) {
+	            mediaType = MediaType.IMAGE_PNG;
+	        } else {
+	            // If the file type is unknown, set it as application/octet-stream
+	            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+	        }
+
+	        // Prepare the HTTP headers
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType);
+	        // Set the file name in the Content-Disposition header for download
+	        headers.setContentDispositionFormData("attachment", fileName);
+
+	        // Return the file content as a ResponseEntity with appropriate headers
+	        return ResponseEntity.ok().headers(headers).body(fileContent);
+	    } else {
+	        // If the document with the given ID doesn't exist, return a 404 Not Found response
 	        return ResponseEntity.notFound().build();
 	    }
+	}
 
-	    String documentData = document.getDocument();
+	@GetMapping("/document_details1/{loanId}")
+	public ResponseEntity<?> getDocumentById1(@PathVariable int loanId) throws IOException {
+	    Optional<Documents> optionalDocument = documentsRepository.getByloanId1(loanId);
 
-	    // Convert the Base64-encoded string back to a byte array
-	    byte[] documentBytes = Base64.getDecoder().decode(documentData);
+	    if (optionalDocument.isPresent()) {
+	        Documents document = optionalDocument.get();
+	        String filePath = document.getDocument();
+ 
+	        Path fileLocation = Paths.get(filePath);
+	        byte[] fileContent = Files.readAllBytes(fileLocation);
+ 
+	        MediaType mediaType;
+	        String fileName = document.getFileName(); 
 
-	    // Determine the file type based on the file extension
-	    String filename = document.getFileName(); // Use the actual filename from the entity
-	    if (filename == null || filename.isEmpty()) {
-	        filename = "filename.dat"; // Default filename if the filename is not available
-	    }
-	    // Get the file extension from the filename
-	    String fileExtension = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
-
-	    // Set the appropriate media type based on the file extension
-	    MediaType mediaType;
-	    switch (fileExtension) {
-	        case "png":
-	            mediaType = MediaType.IMAGE_PNG;
-	            break;
-	        case "jpg":
-	        case "jpeg":
-	            mediaType = MediaType.IMAGE_JPEG;
-	            break;
-	        case "pdf":
+	        if (fileName.toLowerCase().endsWith(".pdf")) {
 	            mediaType = MediaType.APPLICATION_PDF;
-	            break;
-	        case "mp4":
+	        } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg")) {
+	            mediaType = MediaType.IMAGE_JPEG;
+	        } else if (fileName.toLowerCase().endsWith(".png")) {
+	            mediaType = MediaType.IMAGE_PNG;
+	        } else if (fileName.toLowerCase().endsWith(".gif")) {
+	            mediaType = MediaType.IMAGE_GIF;
+	        } else if (fileName.toLowerCase().endsWith(".txt")) {
+	            mediaType = MediaType.TEXT_PLAIN;
+	        } else if (fileName.toLowerCase().endsWith(".mp4")) {
 	            mediaType = MediaType.valueOf("video/mp4");
-	            break;
-	        case "mkv":
-	            mediaType = MediaType.valueOf("video/x-matroska");
-	            break;
-	        default:
-	            mediaType = MediaType.APPLICATION_OCTET_STREAM; // Use this as a fallback for unknown file types
-	            break;
-	    }
+	        } else if (fileName.toLowerCase().endsWith(".avi")) {
+	            mediaType = MediaType.valueOf("video/x-msvideo");
+	        } else if (fileName.toLowerCase().endsWith(".mov")) {
+	            mediaType = MediaType.valueOf("video/quicktime");
+	        } else if (fileName.toLowerCase().endsWith(".mp3")) {
+	            mediaType = MediaType.valueOf("audio/mpeg");
+	        } else if (fileName.toLowerCase().endsWith(".wav")) {
+	            mediaType = MediaType.valueOf("audio/wav");
+	        } else if (fileName.toLowerCase().endsWith(".ogg")) {
+	            mediaType = MediaType.valueOf("audio/ogg");
+	        } else {
+	            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+	        }
 
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(mediaType);
-	    headers.setContentDispositionFormData("attachment", filename);
-	    return new ResponseEntity<>(documentBytes, headers, HttpStatus.OK);
-	}	
+ 
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType); 
+	        headers.setContentDispositionFormData("attachment", fileName);
+ 
+	        return ResponseEntity.ok().headers(headers).body(fileContent);
+	    } else { 
+	        return ResponseEntity.notFound().build();
+	    }
+	}
 	
+	@GetMapping("/document_details2/{loanId}")
+	public ResponseEntity<?> getDocumentById2(@PathVariable int loanId) throws IOException {
+	    Optional<Documents> optionalDocument = documentsRepository.getByloanId2(loanId);
+
+	    if (optionalDocument.isPresent()) {
+	        Documents document = optionalDocument.get();
+	        String filePath = document.getDocument();
+ 
+	        Path fileLocation = Paths.get(filePath);
+	        byte[] fileContent = Files.readAllBytes(fileLocation);
+ 
+	        MediaType mediaType;
+	        String fileName = document.getFileName(); 
+
+	        if (fileName.toLowerCase().endsWith(".pdf")) {
+	            mediaType = MediaType.APPLICATION_PDF;
+	        } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg")) {
+	            mediaType = MediaType.IMAGE_JPEG;
+	        } else if (fileName.toLowerCase().endsWith(".png")) {
+	            mediaType = MediaType.IMAGE_PNG;
+	        } else if (fileName.toLowerCase().endsWith(".gif")) {
+	            mediaType = MediaType.IMAGE_GIF;
+	        } else if (fileName.toLowerCase().endsWith(".txt")) {
+	            mediaType = MediaType.TEXT_PLAIN;
+	        } else if (fileName.toLowerCase().endsWith(".mp4")) {
+	            mediaType = MediaType.valueOf("video/mp4");
+	        } else if (fileName.toLowerCase().endsWith(".avi")) {
+	            mediaType = MediaType.valueOf("video/x-msvideo");
+	        } else if (fileName.toLowerCase().endsWith(".mov")) {
+	            mediaType = MediaType.valueOf("video/quicktime");
+	        } else if (fileName.toLowerCase().endsWith(".mp3")) {
+	            mediaType = MediaType.valueOf("audio/mpeg");
+	        } else if (fileName.toLowerCase().endsWith(".wav")) {
+	            mediaType = MediaType.valueOf("audio/wav");
+	        } else if (fileName.toLowerCase().endsWith(".ogg")) {
+	            mediaType = MediaType.valueOf("audio/ogg");
+	        } else {
+	            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+	        }
+
+ 
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType); 
+	        headers.setContentDispositionFormData("attachment", fileName);
+ 
+	        return ResponseEntity.ok().headers(headers).body(fileContent);
+	    } else { 
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
 	
+	@GetMapping("/document_details3/{loanId}")
+	public ResponseEntity<?> getDocumentById3(@PathVariable int loanId) throws IOException {
+	    Optional<Documents> optionalDocument = documentsRepository.getByloanId3(loanId);
+
+	    if (optionalDocument.isPresent()) {
+	        Documents document = optionalDocument.get();
+	        String filePath = document.getDocument();
+ 
+	        Path fileLocation = Paths.get(filePath);
+	        byte[] fileContent = Files.readAllBytes(fileLocation);
+ 
+	        MediaType mediaType;
+	        String fileName = document.getFileName(); 
+
+	        if (fileName.toLowerCase().endsWith(".pdf")) {
+	            mediaType = MediaType.APPLICATION_PDF;
+	        } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg")) {
+	            mediaType = MediaType.IMAGE_JPEG;
+	        } else if (fileName.toLowerCase().endsWith(".png")) {
+	            mediaType = MediaType.IMAGE_PNG;
+	        } else if (fileName.toLowerCase().endsWith(".gif")) {
+	            mediaType = MediaType.IMAGE_GIF;
+	        } else if (fileName.toLowerCase().endsWith(".txt")) {
+	            mediaType = MediaType.TEXT_PLAIN;
+	        } else if (fileName.toLowerCase().endsWith(".mp4")) {
+	            mediaType = MediaType.valueOf("video/mp4");
+	        } else if (fileName.toLowerCase().endsWith(".avi")) {
+	            mediaType = MediaType.valueOf("video/x-msvideo");
+	        } else if (fileName.toLowerCase().endsWith(".mov")) {
+	            mediaType = MediaType.valueOf("video/quicktime");
+	        } else if (fileName.toLowerCase().endsWith(".mp3")) {
+	            mediaType = MediaType.valueOf("audio/mpeg");
+	        } else if (fileName.toLowerCase().endsWith(".wav")) {
+	            mediaType = MediaType.valueOf("audio/wav");
+	        } else if (fileName.toLowerCase().endsWith(".ogg")) {
+	            mediaType = MediaType.valueOf("audio/ogg");
+	        } else {
+	            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+	        }
+
+ 
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType); 
+	        headers.setContentDispositionFormData("attachment", fileName);
+ 
+	        return ResponseEntity.ok().headers(headers).body(fileContent);
+	    } else { 
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+	@GetMapping("/document_details4/{loanId}")
+	public ResponseEntity<?> getDocumentById4(@PathVariable int loanId) throws IOException {
+	    Optional<Documents> optionalDocument = documentsRepository.getByloanId4(loanId);
+
+	    if (optionalDocument.isPresent()) {
+	        Documents document = optionalDocument.get();
+	        String filePath = document.getDocument();
+ 
+	        Path fileLocation = Paths.get(filePath);
+	        byte[] fileContent = Files.readAllBytes(fileLocation);
+ 
+	        MediaType mediaType;
+	        String fileName = document.getFileName(); 
+
+	        if (fileName.toLowerCase().endsWith(".pdf")) {
+	            mediaType = MediaType.APPLICATION_PDF;
+	        } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg")) {
+	            mediaType = MediaType.IMAGE_JPEG;
+	        } else if (fileName.toLowerCase().endsWith(".png")) {
+	            mediaType = MediaType.IMAGE_PNG;
+	        } else if (fileName.toLowerCase().endsWith(".gif")) {
+	            mediaType = MediaType.IMAGE_GIF;
+	        } else if (fileName.toLowerCase().endsWith(".txt")) {
+	            mediaType = MediaType.TEXT_PLAIN;
+	        } else if (fileName.toLowerCase().endsWith(".mp4")) {
+	            mediaType = MediaType.valueOf("video/mp4");
+	        } else if (fileName.toLowerCase().endsWith(".avi")) {
+	            mediaType = MediaType.valueOf("video/x-msvideo");
+	        } else if (fileName.toLowerCase().endsWith(".mov")) {
+	            mediaType = MediaType.valueOf("video/quicktime");
+	        } else if (fileName.toLowerCase().endsWith(".mp3")) {
+	            mediaType = MediaType.valueOf("audio/mpeg");
+	        } else if (fileName.toLowerCase().endsWith(".wav")) {
+	            mediaType = MediaType.valueOf("audio/wav");
+	        } else if (fileName.toLowerCase().endsWith(".ogg")) {
+	            mediaType = MediaType.valueOf("audio/ogg");
+	        } else {
+	            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+	        }
+
+ 
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType); 
+	        headers.setContentDispositionFormData("attachment", fileName);
+ 
+	        return ResponseEntity.ok().headers(headers).body(fileContent);
+	    } else { 
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
 	
+	@GetMapping("/document_details5/{loanId}")
+	public ResponseEntity<?> getDocumentById5(@PathVariable int loanId) throws IOException {
+	    Optional<Documents> optionalDocument = documentsRepository.getByloanId5(loanId);
+
+	    if (optionalDocument.isPresent()) {
+	        Documents document = optionalDocument.get();
+	        String filePath = document.getDocument();
+ 
+	        Path fileLocation = Paths.get(filePath);
+	        byte[] fileContent = Files.readAllBytes(fileLocation);
+ 
+	        MediaType mediaType;
+	        String fileName = document.getFileName(); 
+
+	        if (fileName.toLowerCase().endsWith(".pdf")) {
+	            mediaType = MediaType.APPLICATION_PDF;
+	        } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg")) {
+	            mediaType = MediaType.IMAGE_JPEG;
+	        } else if (fileName.toLowerCase().endsWith(".png")) {
+	            mediaType = MediaType.IMAGE_PNG;
+	        } else if (fileName.toLowerCase().endsWith(".gif")) {
+	            mediaType = MediaType.IMAGE_GIF;
+	        } else if (fileName.toLowerCase().endsWith(".txt")) {
+	            mediaType = MediaType.TEXT_PLAIN;
+	        } else if (fileName.toLowerCase().endsWith(".mp4")) {
+	            mediaType = MediaType.valueOf("video/mp4");
+	        } else if (fileName.toLowerCase().endsWith(".avi")) {
+	            mediaType = MediaType.valueOf("video/x-msvideo");
+	        } else if (fileName.toLowerCase().endsWith(".mov")) {
+	            mediaType = MediaType.valueOf("video/quicktime");
+	        } else if (fileName.toLowerCase().endsWith(".mp3")) {
+	            mediaType = MediaType.valueOf("audio/mpeg");
+	        } else if (fileName.toLowerCase().endsWith(".wav")) {
+	            mediaType = MediaType.valueOf("audio/wav");
+	        } else if (fileName.toLowerCase().endsWith(".ogg")) {
+	            mediaType = MediaType.valueOf("audio/ogg");
+	        } else {
+	            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+	        }
+
+ 
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType); 
+	        headers.setContentDispositionFormData("attachment", fileName);
+ 
+	        return ResponseEntity.ok().headers(headers).body(fileContent);
+	    } else { 
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
+
+	@GetMapping("/document_details6/{loanId}")
+	public ResponseEntity<?> getDocumentById6(@PathVariable int loanId) throws IOException {
+	    Optional<Documents> optionalDocument = documentsRepository.getByloanId6(loanId);
+
+	    if (optionalDocument.isPresent()) {
+	        Documents document = optionalDocument.get();
+	        String filePath = document.getDocument();
+ 
+	        Path fileLocation = Paths.get(filePath);
+	        byte[] fileContent = Files.readAllBytes(fileLocation);
+ 
+	        MediaType mediaType;
+	        String fileName = document.getFileName(); 
+
+	        if (fileName.toLowerCase().endsWith(".pdf")) {
+	            mediaType = MediaType.APPLICATION_PDF;
+	        } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg")) {
+	            mediaType = MediaType.IMAGE_JPEG;
+	        } else if (fileName.toLowerCase().endsWith(".png")) {
+	            mediaType = MediaType.IMAGE_PNG;
+	        } else if (fileName.toLowerCase().endsWith(".gif")) {
+	            mediaType = MediaType.IMAGE_GIF;
+	        } else if (fileName.toLowerCase().endsWith(".txt")) {
+	            mediaType = MediaType.TEXT_PLAIN;
+	        } else if (fileName.toLowerCase().endsWith(".mp4")) {
+	            mediaType = MediaType.valueOf("video/mp4");
+	        } else if (fileName.toLowerCase().endsWith(".avi")) {
+	            mediaType = MediaType.valueOf("video/x-msvideo");
+	        } else if (fileName.toLowerCase().endsWith(".mov")) {
+	            mediaType = MediaType.valueOf("video/quicktime");
+	        } else if (fileName.toLowerCase().endsWith(".mp3")) {
+	            mediaType = MediaType.valueOf("audio/mpeg");
+	        } else if (fileName.toLowerCase().endsWith(".wav")) {
+	            mediaType = MediaType.valueOf("audio/wav");
+	        } else if (fileName.toLowerCase().endsWith(".ogg")) {
+	            mediaType = MediaType.valueOf("audio/ogg");
+	        } else {
+	            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+	        }
+
+ 
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType); 
+	        headers.setContentDispositionFormData("attachment", fileName);
+ 
+	        return ResponseEntity.ok().headers(headers).body(fileContent);
+	    } else { 
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	@GetMapping("/document/{id}/download")
-//    public ResponseEntity<Resource> downloadDocument(@PathVariable("id") Integer id) {
-//        Documents document = documentsRepository.findById(id).orElse(null);
-//
-//        if (document == null || document.getDocument() == null) {
-//            // Document not found or document data is null
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        // Prepare the response with the document data
-//        ByteArrayResource resource = new ByteArrayResource(document.getDocument());
-//
-//        return ResponseEntity.ok()
-//                .header( HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"document_" + id + ".pdf\"")
-//                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-//                .contentLength(document.getDocument().length)
-//                .body(resource);
-//    }
+	@GetMapping("/document_details7/{loanId}")
+	public ResponseEntity<?> getDocumentById7(@PathVariable int loanId) throws IOException {
+	    Optional<Documents> optionalDocument = documentsRepository.getByloanId7(loanId);
+
+	    if (optionalDocument.isPresent()) {
+	        Documents document = optionalDocument.get();
+	        String filePath = document.getDocument();
+ 
+	        Path fileLocation = Paths.get(filePath);
+	        byte[] fileContent = Files.readAllBytes(fileLocation);
+ 
+	        MediaType mediaType;
+	        String fileName = document.getFileName(); 
+
+	        if (fileName.toLowerCase().endsWith(".pdf")) {
+	            mediaType = MediaType.APPLICATION_PDF;
+	        } else if (fileName.toLowerCase().endsWith(".jpg") || fileName.toLowerCase().endsWith(".jpeg")) {
+	            mediaType = MediaType.IMAGE_JPEG;
+	        } else if (fileName.toLowerCase().endsWith(".png")) {
+	            mediaType = MediaType.IMAGE_PNG;
+	        } else if (fileName.toLowerCase().endsWith(".gif")) {
+	            mediaType = MediaType.IMAGE_GIF;
+	        } else if (fileName.toLowerCase().endsWith(".txt")) {
+	            mediaType = MediaType.TEXT_PLAIN;
+	        } else if (fileName.toLowerCase().endsWith(".mp4")) {
+	            mediaType = MediaType.valueOf("video/mp4");
+	        } else if (fileName.toLowerCase().endsWith(".avi")) {
+	            mediaType = MediaType.valueOf("video/x-msvideo");
+	        } else if (fileName.toLowerCase().endsWith(".mov")) {
+	            mediaType = MediaType.valueOf("video/quicktime");
+	        } else if (fileName.toLowerCase().endsWith(".mp3")) {
+	            mediaType = MediaType.valueOf("audio/mpeg");
+	        } else if (fileName.toLowerCase().endsWith(".wav")) {
+	            mediaType = MediaType.valueOf("audio/wav");
+	        } else if (fileName.toLowerCase().endsWith(".ogg")) {
+	            mediaType = MediaType.valueOf("audio/ogg");
+	        } else {
+	            mediaType = MediaType.APPLICATION_OCTET_STREAM;
+	        }
+
+ 
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(mediaType); 
+	        headers.setContentDispositionFormData("attachment", fileName);
+ 
+	        return ResponseEntity.ok().headers(headers).body(fileContent);
+	    } else { 
+	        return ResponseEntity.notFound().build();
+	    }
+	}
+
 	
 }

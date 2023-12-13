@@ -1,22 +1,26 @@
 package com.lms.controller;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.lms.model.Account;
 import com.lms.model.Bank;
 import com.lms.model.Branch;
@@ -87,11 +91,42 @@ public class DepositController {
 	
 	
 	
+	 @PutMapping("/update/{id}")
+	    public ResponseEntity<Map<String, String>> updateDeposit(@PathVariable Integer id) {
+	        Optional<Deposit> optionalDeposit = depositRepository.findById(id);
+	        
+	        System.out.println(optionalDeposit);
+	     // Retrieve the authentication object from the security context
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); 
+			User userDetails = (User) authentication.getPrincipal(); 
+			Integer userId = (int) userDetails.getId();
+			System.out.println(userId+"" +"" +userDetails); 
+	        
+	        if (optionalDeposit.isPresent()) {
+	            Deposit deposit = optionalDeposit.get();
+	            deposit.setClearStatus(1);
+	            deposit.setClearDate(new Date());
+	            deposit.setClearBy(userId);
+	            depositRepository.save(deposit);
+
+	            return ResponseEntity.ok(Map.of("Status: ", "Deposit Deleted Successfully !!!"));
+
+	        } else {
+	            return ResponseEntity.notFound().build();
+	        }
+	    }
 	
 	
 	
 	
-	
+	 //Get Client Details in Live center
+	 @GetMapping("/clientDetails/{branchId}/{centerId}/{centerType}")
+	 public List<Map<String, Object>>  getClientDetailsInLiveCenter(@PathVariable("centerId") Integer centerId,
+			 @PathVariable("branchId") Integer branchId,
+			 @PathVariable("centerType") Integer centerType){
+		 List<Map<String, Object>> clientDetails=depositRepository.getCenterClientDetails(centerType, centerId, branchId);
+		 return clientDetails;
+	 }
 	
        
  

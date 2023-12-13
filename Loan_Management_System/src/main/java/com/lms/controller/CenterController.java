@@ -1,5 +1,6 @@
 package com.lms.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -108,4 +111,13 @@ public class CenterController {
 	public List<Map<String, Object>> getCenterByCenterId(@PathVariable("centerid") Integer centerid){
 		return centerRepository.getCenterBycenterId(centerid);
 	}
+	
+	//GET CLIENT DETAILS IN LIVE CENTER
+	@GetMapping("/clientDetails/")
+	public List<Map<String, Object>> getClientOfCenterByCenterId(@RequestParam("centerId") Integer centerId,@RequestParam("centerType") Integer centerType,@RequestParam("branchId") Integer branchId){
+		return centerRepository.getCenterClientData(branchId,centerType,centerId);
+	}
+	
+	
+	 
 }

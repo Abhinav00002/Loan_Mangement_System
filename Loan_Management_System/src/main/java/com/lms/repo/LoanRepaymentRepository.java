@@ -12,33 +12,35 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lms.model.LoanRepayment;
+import com.lms.model.PrintCDS;
 
 
 @Repository
 public interface LoanRepaymentRepository  extends JpaRepository<LoanRepayment, Long>{
 
+	@Query(value = "SELECT * FROM loan_repayment_master where loan_id=:loanId",nativeQuery = true)
+	public List<LoanRepayment> findByLoanId(@Param("loanId") Integer loanid);
 	
 	
+ 
 	 //get LoanRepayment By loan id
 	@Query(value="SELECT  "
 			+ "    lrm.*, "
 			+ "    CASE "
 			+ "        WHEN lrm.collection_date IS NOT NULL AND lrm.collection_by IS NOT NULL THEN lrm.collection_date "
-			+ "        ELSE NULL "// -- or another default value 
+			+ "        ELSE NULL " 
 			+ "    END AS ReciptDate, "
 			+ "    CASE "
 			+ "        WHEN lrm.collection_date IS NOT NULL AND lrm.collection_by IS NOT NULL THEN sf.staff_id "
-			+ "        ELSE NULL  " //-- or another default value
+			+ "        ELSE NULL  " 
 			+ "    END AS ReciptById, "
 			+ "    CASE "
 			+ "        WHEN lrm.collection_date IS NOT NULL AND lrm.collection_by IS NOT NULL THEN sf.staff_name "
-			+ "        ELSE NULL  "//-- or another default value
+			+ "        ELSE NULL  " 
 			+ "    END AS ReciptByName "
 			+ "FROM loan_repayment_master as lrm "
 			+ "LEFT JOIN staff_master sf ON sf.staff_id = lrm.collection_by "
-			+ "WHERE lrm.loan_id IN "
-			+ "(SELECT ld.leadid FROM lead_master as ld WHERE ld.leadid IN "
-			+ "(SELECT lm.lead_id FROM loan_master as lm WHERE lm.loan_id =:loanid))"
+			+ "WHERE lrm.loan_id =:loanid "
 			, nativeQuery = true)
 	 public List<Map<String, Object>> getLoanRepaymentByloanId(@Param("loanid") Integer loanid);
 	
@@ -94,7 +96,7 @@ public interface LoanRepaymentRepository  extends JpaRepository<LoanRepayment, L
 	 
 	 
 	 
-	 
+	 //CDS data (Collection Data)
 	 
 	 @Query(value = "SELECT lrm.emi, "
 	 		+ "    lc.loan_id AS loanId, "
@@ -113,17 +115,27 @@ public interface LoanRepaymentRepository  extends JpaRepository<LoanRepayment, L
 	 		+ "JOIN lead_master le ON le.leadid = lrm.loan_id "
 	 		+ "LEFT JOIN customer_master borrower ON borrower.customer_id = le.borrowerid "
 	 		+ "LEFT JOIN customer_master coBorrower ON coBorrower.customer_id = le.co_borrower_id "
-	 		+ "JOIN center_master c ON c.center_id = le.centerid "
-	 		+ "LEFT JOIN branch_master b ON b.branch_id = :branchId "
+	 		+ "JOIN center_master c ON c.center_id = le.centerid and c.branch_name=le.branchid "
+	 		+ "Inner JOIN branch_master b ON b.branch_id=le.branchid and b.branch_id = :branchId "
 	 		+ "LEFT JOIN time ON time.time_id = c.center_meeting_time "
 	 		+ "LEFT JOIN days ON days.days_id = c.center_meeting_day "
 	 		+ "WHERE lrm.due_date = :dueDate "
-	 		+ "    AND lrm.branch_id = :branchId ", nativeQuery = true)
+	 		+ " and lrm.preclose=0 and lrm.collection_date is NULL   AND lrm.branch_id = :branchId ", nativeQuery = true)
 	 List<Map<String, Object>> findBydueDateAndBranchId(@Param("dueDate") LocalDate dueDate, @Param("branchId") Integer branchId);
 	 
 	 
 	 
 //	 select sum(amount) from deposit_master where branch_id=2 and entry_date='2023-08-07';// for sum of deposit
     //
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	
 
 }

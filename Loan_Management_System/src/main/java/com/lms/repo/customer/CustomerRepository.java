@@ -1,5 +1,6 @@
 package com.lms.repo.customer;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,12 +17,30 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 		
 		
 		
-		 @Query(value = "SELECT * FROM customer_master cm WHERE cm.customer_id IN (SELECT lm.borrowerid FROM lead_master lm WHERE lm.leadid IN (SELECT lom.lead_id FROM loan_master lom WHERE lom.loan_id = :loanId))", nativeQuery = true)
-		   List<Customer> getCustomerByloanId(@Param("loanId") Integer loanId);
+		 @Query(value = " SELECT cm.customer_id AS clientId, cm.customer_name AS Name, cm.fname_hname AS fatherName,"
+		 		+ " cm.mobile_number AS contect, "
+		 		+ " cm.date_of_birth AS dob, cm.education AS educaion,cm.address_line2 AS addl1,cm.address_line2 AS addl2, "
+		 		+ "cm.landmark AS landmark, "
+		 		+ " cm.city, cm.pincode , dm.district_name AS district, sm.state_name AS state FROM customer_master cm "
+		 		+ " INNER JOIN district_master dm ON dm.district_id=cm.district "
+		 		+ " INNER JOIN state_master sm ON sm.state_id=cm.state"
+		 		+ " WHERE cm.customer_id IN "
+		 		+ "(SELECT lm.borrowerid FROM lead_master lm WHERE lm.leadid IN "
+		 		+ "(SELECT lom.lead_id FROM loan_master lom WHERE lom.loan_id = :loanId))", nativeQuery = true)
+		   List<Map<String, Object>> getCustomerByloanId(@Param("loanId") Integer loanId);
 
 		 
-		 @Query(value = "SELECT * FROM customer_master cm WHERE cm.customer_id IN (SELECT lm.co_borrower_id FROM lead_master lm WHERE lm.leadid IN (SELECT lom.lead_id FROM loan_master lom WHERE lom.loan_id = :loanId))", nativeQuery = true)
-		   List<Customer> getCoBorrowerByloanId(@Param("loanId") Integer loanId);
+		 @Query(value = " SELECT cm.customer_id AS clientId, cm.customer_name AS Name, cm.fname_hname AS fatherName,"
+			 		+ " cm.mobile_number AS contect, "
+			 		+ " cm.date_of_birth AS dob, cm.education AS educaion,cm.address_line2 AS addl1,cm.address_line2 AS addl2, "
+			 		+ "cm.landmark AS landmark, "
+			 		+ " cm.city, cm.pincode , dm.district_name AS district, sm.state_name AS state FROM customer_master cm "
+			 		+ " INNER JOIN district_master dm ON dm.district_id=cm.district "
+			 		+ " INNER JOIN state_master sm ON sm.state_id=cm.state"
+			 		+ " WHERE cm.customer_id IN "
+			 		+ "(SELECT lm.co_borrower_id FROM lead_master lm WHERE lm.leadid IN "
+			 		+ "(SELECT lom.lead_id FROM loan_master lom WHERE lom.loan_id = :loanId))", nativeQuery = true)
+		  List<Map<String, Object>> getCoBorrowerByloanId(@Param("loanId") Integer loanId);
 
 		@Query(value = "SELECT * FROM customer_master WHERE customer_id=:borrowerId", nativeQuery = true)
 		public Customer getCustomerBycid(@Param("borrowerId") Integer borrowerId);

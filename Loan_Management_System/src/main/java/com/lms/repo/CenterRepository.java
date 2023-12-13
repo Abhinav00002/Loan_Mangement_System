@@ -54,5 +54,28 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
 	  
 	  @Query(value = "SELECT * FROM center_master WHERE center_id=:centerid", nativeQuery = true)
 	  List<Map<String, Object>> getCenterBycenterId(@Param("centerid") Integer centerid);
-
+	  
+	  
+	  
+	  
+	  @Query(value = "SELECT    dp.loan_id as loanId "
+	  		+ ",com.customer_id AS clientId,cm.center_id as centerId, bm.branch_id as branchId, bm.branch_name as branchName,   com.customer_name AS Name, com.fname_hname AS fatherName,  "
+	  		+ "com.mobile_number AS contect, com.date_of_birth AS dob, com.education AS educaion,com.address_line2 AS addl1, "
+	  		+ "com.address_line2 AS addl2,  com.landmark AS landmark,   "
+	  		+ "com.city, cm.pincode , dm.district_name AS district, sm.state_name AS state   "
+	  		+ "FROM center_master cm "
+	  		+ "INNER JOIN portfolio_day dp ON dp.branchid = cm.branch_name AND cm.center_id = dp.centerid "
+	  		+ "INNER JOIN branch_master bm ON bm.branch_id = cm.branch_name "
+	  		+ "INNER JOIN loan_master lm ON lm.loan_id = dp.loan_id "
+	  		+ "INNER JOIN lead_master lem ON lem.leadid = lm.loan_id "
+	  		+ "INNER JOIN customer_master com ON com.customer_id = lem.borrowerid "
+	  		+ " INNER JOIN district_master dm ON dm.district_id=com.district   "
+	  		+ "INNER JOIN state_master sm ON sm.state_id=com.state  "
+	  		+ "WHERE cm.branch_name = :branchId AND cm.center_type =:centerType AND center_id =:centerId ",nativeQuery = true)
+	  public  List<Map<String, Object>> getCenterClientData(@Param("branchId") Integer branchId, @Param("centerType") Integer centerType, @Param("centerId") Integer centerId);
+	  
+	  
+	  
+	  
+	  
 }

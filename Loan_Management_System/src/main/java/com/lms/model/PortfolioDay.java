@@ -14,6 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @Table(name = " portfolio_day")
 public class PortfolioDay {
+	
 	@Id 
 	private int loanId;
 	private Date  dueDate;
@@ -30,10 +31,25 @@ public class PortfolioDay {
 	@Column(name = "entrydate", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	@CreationTimestamp
 	private Date entrydate;
+	private int dpd;
 	
 	
 	
 	
+	public int getDpd() {
+		return dpd;
+	}
+
+
+
+
+	public void setDpd(int dpd) {
+		this.dpd = dpd;
+	}
+
+
+
+
 	public PortfolioDay() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -226,7 +242,7 @@ public class PortfolioDay {
 
 	public PortfolioDay(int loanId, Date dueDate, Double openningAmount, Date disbursementDate, Double emipending,
 			int pendinginst, int branchid, int leadid, int centerid, int borrowerid, int coBorrowerId, int manageBy,
-			Date entrydate) {
+			Date entrydate, int dpd) {
 		super();
 		this.loanId = loanId;
 		this.dueDate = dueDate;
@@ -241,6 +257,7 @@ public class PortfolioDay {
 		this.coBorrowerId = coBorrowerId;
 		this.manageBy = manageBy;
 		this.entrydate = entrydate;
+		this.dpd = dpd;
 	}
 
 
@@ -252,10 +269,13 @@ public class PortfolioDay {
 				+ ", disbursementDate=" + disbursementDate + ", emipending=" + emipending + ", pendinginst="
 				+ pendinginst + ", branchid=" + branchid + ", leadid=" + leadid + ", centerid=" + centerid
 				+ ", borrowerid=" + borrowerid + ", coBorrowerId=" + coBorrowerId + ", manageBy=" + manageBy
-				+ ", entrydate=" + entrydate + "]";
+				+ ", entrydate=" + entrydate + ", dpd=" + dpd + "]";
 	}
-	
-	
+
+
+
+
+	 	
 	
 	
 	

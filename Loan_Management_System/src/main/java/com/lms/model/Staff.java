@@ -1,5 +1,6 @@
 package com.lms.model;
  
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -17,7 +18,7 @@ public class Staff {
 
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="staff_id")
 	private int id;
 	@Column(name="staff_name")
@@ -50,12 +51,15 @@ public class Staff {
 	private int zid;
 	@Column(name="region_id")
 	private int rid;
-	@Column(name="staff_joinning_date", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-	@CreationTimestamp
+	@Column(name="staff_joinning_date")
 	private Date sJoinDate;
 	@Column(name="staff_status" ,columnDefinition="integer default 1")
 	private int status;
-	
+	@Column(name="staff_left_date")
+	private LocalDate sLeftDate;
+	private float salary;
+	@Column(name = "`rank`")
+	private int rank;
 	
 	
 	
@@ -405,9 +409,61 @@ public class Staff {
 
 
 
+	public LocalDate getsLeftDate() {
+		return sLeftDate;
+	}
+
+
+
+
+
+	public void setsLeftDate(LocalDate leftDate) {
+		this.sLeftDate = leftDate;
+	}
+
+
+
+
+
+	public float getSalary() {
+		return salary;
+	}
+
+
+
+
+
+	public void setSalary(float salary) {
+		this.salary = salary;
+	}
+
+
+
+
+	
+	
+	
+
+	public int getRank() {
+		return rank;
+	}
+
+
+
+
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
+
+
+
+
 	public Staff(int id, String sname, String fname, String dob, String email, String contactNo, String addressl1,
 			String addressl2, String landmark, String city, String district, String state, String bId, int pincode,
-			long acnumber, String pcnumber, int cid, int zid, int rid, Date sJoinDate, int status) {
+			long acnumber, String pcnumber, int cid, int zid, int rid, Date sJoinDate, int status, LocalDate sLeftDate,
+			float salary, int rank) {
 		super();
 		this.id = id;
 		this.sname = sname;
@@ -430,6 +486,9 @@ public class Staff {
 		this.rid = rid;
 		this.sJoinDate = sJoinDate;
 		this.status = status;
+		this.sLeftDate = sLeftDate;
+		this.salary = salary;
+		this.rank = rank;
 	}
 
 
@@ -442,10 +501,16 @@ public class Staff {
 				+ ", contactNo=" + contactNo + ", addressl1=" + addressl1 + ", addressl2=" + addressl2 + ", landmark="
 				+ landmark + ", city=" + city + ", district=" + district + ", state=" + state + ", bId=" + bId
 				+ ", pincode=" + pincode + ", acnumber=" + acnumber + ", pcnumber=" + pcnumber + ", cid=" + cid
-				+ ", zid=" + zid + ", rid=" + rid + ", sJoinDate=" + sJoinDate + ", status=" + status + "]";
+				+ ", zid=" + zid + ", rid=" + rid + ", sJoinDate=" + sJoinDate + ", status=" + status + ", sLeftDate="
+				+ sLeftDate + ", salary=" + salary + ", rank=" + rank + "]";
 	}
-	
-	
+
+
+
+
+ 
+
+ 	
 	
 	
  		

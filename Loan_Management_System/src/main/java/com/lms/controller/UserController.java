@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lms.model.Role;
 import com.lms.model.User;
 import com.lms.model.UserRole;
+import com.lms.repo.UserRepository;
 import com.lms.service.UserService;
 
 @RestController
@@ -26,6 +28,8 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -66,4 +70,10 @@ public class UserController {
 	public void deleteUser(@PathVariable("userId") Long userId) {
 		this.userService.deleteUser(userId);
 	}
+	
+	 @Scheduled(cron = "0 0 * * * *") // Run daily at midnight  
+	    public Integer runDailyProcedure() {
+	        userRepository.dailyRunPortfolio();  
+	        return 1;
+	    }
 }

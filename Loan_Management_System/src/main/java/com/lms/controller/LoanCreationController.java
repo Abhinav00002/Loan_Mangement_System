@@ -97,10 +97,14 @@ public class LoanCreationController {
 
 	@PostMapping("/")
 	public LoanCreation createLoanCreation(@RequestBody LoanCreation loanCreation) throws Exception {
-		System.out.println("Loancreation l " + loanCreation);
-		System.out.println("Loancreation ");
+		System.out.println("Loancreation l: " + loanCreation); 
+//change to loanId
 
-		Integer leadId = loanCreation.getLeadid();
+		LoanCreation loan = loanCreationRepository.save(loanCreation);
+
+		System.out.println("LOAN:"+loan);
+		System.out.println("LOAN ID: "+ loan.getId() );
+		Integer loanId =  (int) loan.getId();
 		Integer centerId = loanCreation.getCentername();
 		Integer branchId = loanCreation.getBranchname();
 		// System.out.println("lead id ===== "+leadId);
@@ -149,7 +153,7 @@ public class LoanCreationController {
 			double principal = emi - Interest;
 
 			LoanRepayment loanRepayment = new LoanRepayment();
-			loanRepayment.setLoanId(leadId);
+			loanRepayment.setLoanId(loanId);
 			loanRepayment.setIntrest(Interest);
 			loanRepayment.setEmi(emi);
 			loanRepayment.setCollectionBy(schemeBy);
@@ -162,15 +166,13 @@ public class LoanCreationController {
 			loanRepayment.setBranchId(branchId);
 			loanRepayment.setCenterId(centerId);
 			liLoanRepayments.add(loanRepayment);
-
+System.out.println(loanRepayment);
 			remainingAmount = remainingAmount - principal;
-		} /* for loop close */
-		System.out.println(liLoanRepayments);
-		loanRepaymentRepository.saveAll(liLoanRepayments);
+		} /* for loop close */ 
 
-		LoanCreation loan = loanCreationRepository.save(loanCreation);
+System.out.println("LOAN REPAYMENT: "+ liLoanRepayments); 
+		loanRepaymentRepository.saveAll(liLoanRepayments); 
 
-		System.out.println(loan);
 		return loan;
 
 	}
@@ -600,29 +602,11 @@ System.out.println(loanRepayments);
 	@GetMapping("/loanrepayment/{loanid}")
 	public List<Map<String, Object>> getloanRepayment(@PathVariable("loanid") Integer loanid) {
 		List<Map<String, Object>> loanRepaymentData= loanRepaymentRepository.getLoanRepaymentByloanId(loanid);
-		for (Map<String, Object> loanrepayment : loanRepaymentData) {
-			System.out.println("ENTRY : ");
-			for (Map.Entry<String, Object> entry : loanrepayment.entrySet()) {
-				String key = entry.getKey();
-				Object value = entry.getValue();
-				System.out.println(key + " = " + value);
-
-			}
-			System.out.println("---------------==================---------------------------===================------------------=======================-------------------============");
-		}
+ 
 		return loanRepaymentData;
 
 	}
 
-	// get loanrepayment Data to collectiondate and branchId
-	@GetMapping("/advancePaymentData/")
-	public List<LoanRepayment> getAdvancePayment(
-			@RequestParam("collectionDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate collectionDate,
-			@RequestParam("branchId") Integer branchId) {
-		System.out.println(collectionDate + ".......  and...........  " + branchId);
-		List<LoanRepayment> result = loanRepaymentRepository.getLoanRepaymentsBycollectionDateandbranchId(collectionDate, branchId);
-		System.out.println(result);
-		return result;
-	}
+	
 
 }

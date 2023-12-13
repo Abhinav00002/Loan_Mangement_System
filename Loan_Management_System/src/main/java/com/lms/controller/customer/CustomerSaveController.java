@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ import com.lms.model.LoanCreation;
 import com.lms.model.LoanRepayment;
 import com.lms.model.address.Days;
 import com.lms.model.address.Time;
+import com.lms.model.error.ErrorResponse;
 import com.lms.repo.BranchRepository;
 import com.lms.repo.CenterRepository;
 import com.lms.repo.DaysRepository;
@@ -61,9 +64,29 @@ public class CustomerSaveController {
 	
 	//save and Create New Customer
 	@PostMapping("/save")
-	public CustomerSave createCustomerSave(@RequestBody CustomerSave saveCustomer) throws Exception{
+	public ResponseEntity<?> createCustomerSave(@RequestBody CustomerSave saveCustomer) throws Exception{
 		 
 		System.out.println(saveCustomer);
+		   if(saveCustomer.getBname()==null || saveCustomer.getBname().isEmpty()) {
+		    	 String errorMessage = "Borrower Name is required.";
+		    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+			 }else if (saveCustomer.getBcontectnum() == null || saveCustomer.getBcontectnum().length() != 10) {
+				  String errorMessage = "Invalid Borrower Contact Number. Contact Number must be at least 10 characters long.";
+			        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+			     }else if(saveCustomer.getBdob()==null || saveCustomer.getBdob().toString().isEmpty()) {
+			    	 String errorMessage = "Borrower Date of birth is required.";
+			    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+				 }
+		  if (saveCustomer.getCbcontectnum() == null || saveCustomer.getCbcontectnum().length() != 10) {
+			  String errorMessage = "Invalid Co_Borrower Contact Number. Contact Number must be at least 10 characters long.";
+		        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+		     }else if(saveCustomer.getCbdob()==null ||  saveCustomer.getCbdob().toString().isEmpty()) {
+		    	 String errorMessage = "Co_Borrower Date of birth is required.";
+		    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+			 }else if(saveCustomer.getCbname()==null || saveCustomer.getCbname().isEmpty()) {
+		    	 String errorMessage = "Co_Borrower Name is required.";
+		    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+			 }
 		//Borrower save
 		Customer customer=new Customer();
 			customer.setCname(saveCustomer.getBname());
@@ -126,7 +149,8 @@ public class CustomerSaveController {
 			leadRepository.save(lead);
 			
 			
-		return saveCustomer;
+			return ResponseEntity.ok(saveCustomer);
+
 		
 	}
 	
@@ -228,14 +252,14 @@ public class CustomerSaveController {
 	
 	
 	@GetMapping("/borrower_details/{loanID}")
-	public List<Customer> getBorrower(@PathVariable ("loanID") Integer loanID) {
+	public   List<Map<String, Object>> getBorrower(@PathVariable ("loanID") Integer loanID) {
 		return customerRepository.getCustomerByloanId(loanID);
 	}
 	
 	
 	
 	@GetMapping("/co_borrower_details/{loanID}")
-	public List<Customer> getCoBorrower(@PathVariable ("loanID") Integer loanID) {
+	public   List<Map<String, Object>> getCoBorrower(@PathVariable ("loanID") Integer loanID) {
 		return customerRepository.getCoBorrowerByloanId(loanID);
 	}
 	

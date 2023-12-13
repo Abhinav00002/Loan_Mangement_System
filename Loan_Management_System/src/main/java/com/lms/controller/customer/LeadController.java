@@ -2,6 +2,7 @@ package com.lms.controller.customer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,9 +26,8 @@ public class LeadController {
 	private LeadRepository leadRepository;
 	
 	@GetMapping("/list")
-	public List<Lead> getLeads(){
-		List<Lead> leadList=new ArrayList<Lead>();
-		leadList=leadRepository.findAll();
+	public List<Map<String, Object>> getLeads(){
+		List<Map<String, Object>> leadList=  leadRepository.findlead();
 //		System.out.println(leadList);
 		return leadList;
 	}

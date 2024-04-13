@@ -1,24 +1,14 @@
-package com.lms.model;
+package com.lms.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.CreationTimestamp;
-
 @Entity
-@Table(name="loan_master")
-public class LoanCreation {
-	
-	
+public class LoanDTO {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	 
 	@Column(name="loan_id")
 	private long id;
 	
@@ -38,6 +28,7 @@ public class LoanCreation {
 	private String selfincome;
 	@Column(name="spouse_income")
 	private String sincome;
+	
 	@Column(name="other_income")
 	private String oincome;
 	@Column(name="home_expences")
@@ -49,21 +40,33 @@ public class LoanCreation {
 	private int sourcedby;
 	 @Column(name="meetingDay" )
 	 
-	private int meetingDay;
-	 @Column(name = "meeting_date")
-	private LocalDate meetingDate;
-	 @Column(name = "status", columnDefinition = "int DEFAULT 1")
+	private int meetingDay; 
+	private LocalDate meetingDate; 
 	private int status;
-	 private int caution;
+	
+	 private String sourcedByName ;
+	    private String meetingDays ;
+	    private String branchNames ;
+	    private String purposeName;
+	    private String relationName;
+	    private String schemeName;
+		
+	    
+	    
 	
 	
 	
-	
-	
-	public LoanCreation() {
+	 
+
+
+    public LoanDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+
+
+
 
 
 
@@ -77,9 +80,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
+
+
+
 
 
 
@@ -93,9 +104,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setLeadid(int leadid) {
 		this.leadid = leadid;
 	}
+
+
+
+
 
 
 
@@ -109,9 +128,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setBranchname(int branchname) {
 		this.branchname = branchname;
 	}
+
+
+
+
 
 
 
@@ -125,9 +152,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setCentername(int centername) {
 		this.centername = centername;
 	}
+
+
+
+
 
 
 
@@ -141,9 +176,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+
+
 
 
 
@@ -157,9 +200,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setSname(String sname) {
 		this.sname = sname;
 	}
+
+
+
+
 
 
 
@@ -173,9 +224,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setScheme(long scheme) {
 		this.scheme = scheme;
 	}
+
+
+
+
 
 
 
@@ -189,9 +248,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setPurpose(int purpose) {
 		this.purpose = purpose;
 	}
+
+
+
+
 
 
 
@@ -205,9 +272,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setDdate(LocalDate ddate) {
 		this.ddate = ddate;
 	}
+
+
+
+
 
 
 
@@ -221,9 +296,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setCbrelation(int cbrelation) {
 		this.cbrelation = cbrelation;
 	}
+
+
+
+
 
 
 
@@ -237,9 +320,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setSelfincome(String selfincome) {
 		this.selfincome = selfincome;
 	}
+
+
+
+
 
 
 
@@ -253,9 +344,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setSincome(String sincome) {
 		this.sincome = sincome;
 	}
+
+
+
+
 
 
 
@@ -269,9 +368,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setOincome(String oincome) {
 		this.oincome = oincome;
 	}
+
+
+
+
 
 
 
@@ -285,9 +392,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setHexpences(String hexpences) {
 		this.hexpences = hexpences;
 	}
+
+
+
+
 
 
 
@@ -301,9 +416,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setBexpences(String bexpences) {
 		this.bexpences = bexpences;
 	}
+
+
+
+
 
 
 
@@ -317,9 +440,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setLexpences(String lexpences) {
 		this.lexpences = lexpences;
 	}
+
+
+
+
 
 
 
@@ -333,9 +464,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setSourcedby(int sourcedby) {
 		this.sourcedby = sourcedby;
 	}
+
+
+
+
 
 
 
@@ -349,9 +488,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setMeetingDay(int meetingDay) {
 		this.meetingDay = meetingDay;
 	}
+
+
+
+
 
 
 
@@ -365,9 +512,17 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setMeetingDate(LocalDate meetingDate) {
 		this.meetingDate = meetingDate;
 	}
+
+
+
+
 
 
 
@@ -381,6 +536,10 @@ public class LoanCreation {
 
 
 
+
+
+
+
 	public void setStatus(int status) {
 		this.status = status;
 	}
@@ -389,26 +548,179 @@ public class LoanCreation {
 
 
 
-	public int getCaution() {
-		return caution;
+
+
+
+
+	public String getSourcedByName() {
+		return sourcedByName;
 	}
 
 
 
 
 
-	public void setCaution(int caution) {
-		this.caution = caution;
+
+
+
+
+	public void setSourcedByName(String sourcedByName) {
+		this.sourcedByName = sourcedByName;
 	}
 
 
 
 
 
-	public LoanCreation(long id, int leadid, int branchname, int centername, String name, String sname, long scheme,
+
+
+
+
+	public String getMeetingDays() {
+		return meetingDays;
+	}
+
+
+
+
+
+
+
+
+
+	public void setMeetingDays(String meetingDays) {
+		this.meetingDays = meetingDays;
+	}
+
+
+
+
+
+
+
+
+
+	public String getBranchNames() {
+		return branchNames;
+	}
+
+
+
+
+
+
+
+
+
+	public void setBranchNames(String branchNames) {
+		this.branchNames = branchNames;
+	}
+
+
+
+
+
+
+
+
+
+	public String getPurposeName() {
+		return purposeName;
+	}
+
+
+
+
+
+
+
+
+
+	public void setPurposeName(String purposeName) {
+		this.purposeName = purposeName;
+	}
+
+
+
+
+
+
+
+
+
+	public String getRelationName() {
+		return relationName;
+	}
+
+
+
+
+
+
+
+
+
+	public void setRelationName(String relationName) {
+		this.relationName = relationName;
+	}
+
+
+
+
+
+
+
+
+
+	public String getSchemeName() {
+		return schemeName;
+	}
+
+
+
+
+
+
+
+
+
+	public void setSchemeName(String schemeName) {
+		this.schemeName = schemeName;
+	}
+
+
+
+
+
+
+
+
+
+	@Override
+	public String toString() {
+		return "LoanDTO [id=" + id + ", leadid=" + leadid + ", branchname=" + branchname + ", centername=" + centername
+				+ ", name=" + name + ", sname=" + sname + ", scheme=" + scheme + ", purpose=" + purpose + ", ddate="
+				+ ddate + ", cbrelation=" + cbrelation + ", selfincome=" + selfincome + ", sincome=" + sincome
+				+ ", oincome=" + oincome + ", hexpences=" + hexpences + ", bexpences=" + bexpences + ", lexpences="
+				+ lexpences + ", sourcedby=" + sourcedby + ", meetingDay=" + meetingDay + ", meetingDate=" + meetingDate
+				+ ", status=" + status + ", sourcedByName=" + sourcedByName + ", meetingDays=" + meetingDays + ", branchNames="
+				+ branchNames + ", purposeName=" + purposeName + ", relationName=" + relationName + ", schemeName="
+				+ schemeName + "]";
+	}
+
+
+
+
+
+
+
+
+
+	public LoanDTO(long id, int leadid, int branchname, int centername, String name, String sname, long scheme,
 			int purpose, LocalDate ddate, int cbrelation, String selfincome, String sincome, String oincome,
 			String hexpences, String bexpences, String lexpences, int sourcedby, int meetingDay, LocalDate meetingDate,
-			int status, int caution) {
+			int status, String sourcedByName, String meetingDays, String branchNames, String purposeName,
+			String relationName, String schemeName) {
 		super();
 		this.id = id;
 		this.leadid = leadid;
@@ -430,38 +742,12 @@ public class LoanCreation {
 		this.meetingDay = meetingDay;
 		this.meetingDate = meetingDate;
 		this.status = status;
-		this.caution = caution;
+		sourcedByName = sourcedByName;
+		this.meetingDays = meetingDays;
+		branchNames = branchNames;
+		this.purposeName = purposeName;
+		this.relationName = relationName;
+		this.schemeName = schemeName;
 	}
 
-
-
-
-
-	@Override
-	public String toString() {
-		return "LoanCreation [id=" + id + ", leadid=" + leadid + ", branchname=" + branchname + ", centername="
-				+ centername + ", name=" + name + ", sname=" + sname + ", scheme=" + scheme + ", purpose=" + purpose
-				+ ", ddate=" + ddate + ", cbrelation=" + cbrelation + ", selfincome=" + selfincome + ", sincome="
-				+ sincome + ", oincome=" + oincome + ", hexpences=" + hexpences + ", bexpences=" + bexpences
-				+ ", lexpences=" + lexpences + ", sourcedby=" + sourcedby + ", meetingDay=" + meetingDay
-				+ ", meetingDate=" + meetingDate + ", status=" + status + ", caution=" + caution + "]";
-	}
-
-
-
-
-  
-
-
-
- 
-
-
-
-	 
-
-
-
-
- 
-}
+ }

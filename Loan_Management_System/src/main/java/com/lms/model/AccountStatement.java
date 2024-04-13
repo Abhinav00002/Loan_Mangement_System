@@ -28,6 +28,7 @@ public class AccountStatement {
 	    private int salaryId;
 	    private Date salaryDate;
 	    private Date salaryEntryDate;
+	    private String remark;
 	    @Transient
 	    private double balance;
 	
@@ -180,10 +181,19 @@ public class AccountStatement {
 		this.balance = balance;
 	}
 
-	public AccountStatement(int id, Double depositAmount, Double withdrawalAmount, Date dcrDate, Date depositDate,
+	
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public AccountStatement(long id, Double depositAmount, Double withdrawalAmount, Date dcrDate, Date depositDate,
 			String branchName, int accountId, String accountName, Integer accountBankId, String accountBankName,
-			String accountBankCity, String accountBankType, int accountBankStatus, int salaryAmount, int salaryId,
-			Date salaryDate, Date salaryEntryDate, double balance) {
+			String accountBankCity, String accountBankType, int accountBankStatus, long salaryAmount, int salaryId,
+			Date salaryDate, Date salaryEntryDate, String remark, double balance) {
 		super();
 		this.id = id;
 		this.depositAmount = depositAmount;
@@ -202,6 +212,7 @@ public class AccountStatement {
 		this.salaryId = salaryId;
 		this.salaryDate = salaryDate;
 		this.salaryEntryDate = salaryEntryDate;
+		this.remark = remark;
 		this.balance = balance;
 	}
 
@@ -213,9 +224,10 @@ public class AccountStatement {
 				+ accountBankId + ", accountBankName=" + accountBankName + ", accountBankCity=" + accountBankCity
 				+ ", accountBankType=" + accountBankType + ", accountBankStatus=" + accountBankStatus
 				+ ", salaryAmount=" + salaryAmount + ", salaryId=" + salaryId + ", salaryDate=" + salaryDate
-				+ ", salaryEntryDate=" + salaryEntryDate + ", balance=" + balance + "]";
+				+ ", salaryEntryDate=" + salaryEntryDate + ", remark=" + remark + ", balance=" + balance + "]";
 	}
 
+	 
 	 
 	
 	

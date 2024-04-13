@@ -63,4 +63,44 @@ public class UserServiceImpl implements UserService {
 		this .userRepository.deleteById(userId);
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 @Override
+	    public Integer getUserBranchId(String username) {
+	        return userRepository.getBranchIdForUser(username);
+	    }
+
+	    @Override
+	    public int getUserRank(String username) {
+
+	        return userRepository.getRankForUser(username);
+	    }
+
+	    @Override
+	    public boolean isUserAuthorized(String username, int requiredRank, int branchId) {
+	        // Implement logic to check if the user is authorized based on their rank and branch
+	        int userRank = getUserRank(username);
+	        System.out.println("UserrRank: "+userRank);
+	        if (userRank == 3) {
+	            return false; // User with rank 3 is not permitted to login
+	        }
+	        if (requiredRank == 1) {
+	            return true; // User with rank 1 has access to all data
+	        }
+	        // For rank 2, check if the user's branch matches the required branch
+	        return userRank == 2 && getUserBranchId(username) == branchId;
+	    }
 }

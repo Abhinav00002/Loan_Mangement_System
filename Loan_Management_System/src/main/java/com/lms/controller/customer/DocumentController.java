@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
  
 import org.springframework.beans.factory.annotation.Autowired; 
@@ -482,5 +483,10 @@ public class DocumentController {
 	    }
 	}
 
+	
+	@GetMapping("/getallLoanId/forloanAgreement/")
+	public List<Map<String, Object>> getAll() {
+		return documentsRepository.getAllLoanIdForLoanAgreement();
+	}
 	
 }

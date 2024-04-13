@@ -93,9 +93,11 @@ public class CenterController {
 	}
 
 	// Get Center For Client Details
-	@GetMapping("/center/{loanId}")
-	public List<Map<String, Object>> getCenter(@PathVariable("loanId") Integer loanId) {
-		return centerRepository.getCenterDataByLoanId(loanId);
+	@GetMapping("/centerByLoan/{loanId}")
+	public List<Map<String, Object>> getCenterByLoanId(@PathVariable("loanId") Integer loanId) {
+		List<Map<String, Object>> center= centerRepository.getCenterDataByLoanId(loanId);
+		System.out.println(center);
+		return center;
 	}
 	
 	
@@ -113,11 +115,85 @@ public class CenterController {
 	}
 	
 	//GET CLIENT DETAILS IN LIVE CENTER
-	@GetMapping("/clientDetails/")
-	public List<Map<String, Object>> getClientOfCenterByCenterId(@RequestParam("centerId") Integer centerId,@RequestParam("centerType") Integer centerType,@RequestParam("branchId") Integer branchId){
-		return centerRepository.getCenterClientData(branchId,centerType,centerId);
+//	@GetMapping("/clientDetails/")
+//	public List<Map<String, Object>> getClientOfCenterByCenterId(@RequestParam("branchId") Integer branchId,@RequestParam("centerType") Integer centerType,@RequestParam("centerId") Integer centerId){
+//		
+//		System.out.println("ceterId :"+centerId+" centerType : "+centerType+" branchId"+branchId);
+//		return centerRepository.getCenterClientData(branchId,centerType,centerId);
+//	}
+//	
+	
+//update center Manage by (Center Type : Group & Individual)
+	@PostMapping("/update-center-manageby/")
+	public ResponseEntity<Map<String, String>> updateCenterManageBy(
+	    @RequestParam("ceManageBy") Integer ceManageBy,
+	    @RequestParam("centerId") Integer centerId,
+	    @RequestParam("bname") Long bname, 
+	    @RequestParam(name = "leadId", required = false)  Integer leadId
+			) {
+		 Map<String, String> response = new HashMap<>();
+			    try {
+			        if (bname == null) {
+			            throw new IllegalArgumentException("bname cannot be null");
+			        }
+                    
+			        String manageBy = Integer.toString(ceManageBy);
+
+			        centerRepository.updatecenterManageBy(ceManageBy, centerId, bname);
+
+			        if (leadId == null) {
+			            leadRepository.updateManageBy(manageBy, (long) centerId, bname);
+			        } else {
+			            leadRepository.updateManageBy1(manageBy, (long) centerId, bname, leadId);
+			        }
+			      
+	        response.put("message", "Center ManageBy updated successfully");
+                    
+	        return ResponseEntity.ok(response);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+	    }
+	} 
+	
+	//update center Manage by (Center Type : Group & Individual)
+	@PostMapping("/update-center-time/")
+	public ResponseEntity<Map<String, String>> updateCentertime(
+			  @RequestParam("centerId") Integer centerId,
+			    @RequestParam("bname") Long bname,
+			    @RequestParam("time") Integer time )   {
+				 Map<String, String> response = new HashMap<>();
+					    try {
+					        if (bname == null) {
+					            throw new IllegalArgumentException("bname cannot be null");
+					        }
+		                    if(time!=null) {
+		                    	centerRepository.updatecenterTime(time, centerId, bname);
+
+		      			      
+		            	        response.put("message", "Center time updated successfully");
+		                    } return ResponseEntity.ok(response);
+					    } catch (Exception e) {
+					    	e.printStackTrace();
+					    	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+					    }
+					    
 	}
-	
-	
+	 //Get Client Details in Live center
+	 @GetMapping("/clientDetails/{branchId}/{centerId}/{centerType}")
+	 public List<Map<String, Object>>  getClientDetailsInLiveCenter(@PathVariable("centerId") Integer centerId,
+			 @PathVariable("branchId") Integer branchId,
+			 @PathVariable("centerType") Integer centerType){
+		 List<Map<String, Object>> clientDetails=centerRepository.getCenterClientDetails(centerType, centerId, branchId);
+		 return clientDetails;
+	 }
 	 
+	 
+	 //Get Center by BranchID and centerType
+	 @GetMapping("/center_by_branch_and_centerType/{branchId}/{centerType}")
+	 public List<Map<String, Object>> getCenterBybranchIdAndcenterType( @PathVariable("branchId") Integer branchId,
+			 @PathVariable("centerType") Integer centerType){
+		 List<Map<String, Object>> center=centerRepository.centerBybranchIdAndcenterId(branchId, centerType);
+		 return center;
+	 }
 }

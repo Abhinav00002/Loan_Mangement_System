@@ -98,8 +98,18 @@ public class StaffController {
 	    } else {
 			// user create
 
-			this.userRepository.save(user);
+	    	 // Save the user
+	        User savedUser = this.userRepository.save(user);
 
+	        // Assign role to the user
+	        Role role = roleRepository.findByRoleName("Normal"); // Assuming "ROLE_STAFF" is the role you want to assign
+	        UserRole userRole = new UserRole();
+	        userRole.setUser(savedUser);
+	        userRole.setRole(role);
+	        
+	        // Save UserRole directly
+	        savedUser.getUserRoles().add(userRole);
+	        userRepository.save(savedUser);
 		}
 
 		staff.setStatus(1);
@@ -154,3 +164,55 @@ public class StaffController {
 		return staff;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+//public void updateUserRole(String username, String newRoleName) {
+//    User user = userRepository.findByUsername(username);
+//    if (user != null) {
+//        Role newRole = roleRepository.findByRoleName(newRoleName);
+//        if (newRole != null) {
+//            // Remove all existing roles
+//            user.getUserRoles().clear();
+//            // Add the new role
+//            UserRole userRole = new UserRole();
+//            userRole.setUser(user);
+//            userRole.setRole(newRole);
+//            user.getUserRoles().add(userRole);
+//            // Save the updated user
+//            userRepository.save(user);
+//        } else {
+//            // Handle case where new role does not exist
+//            throw new IllegalArgumentException("Role does not exist: " + newRoleName);
+//        }
+//    } else {
+//        // Handle case where user does not exist
+//        throw new IllegalArgumentException("User does not exist: " + username);
+//    }
+//}

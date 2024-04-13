@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -46,11 +47,13 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.ColumnText;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPRow;
@@ -58,6 +61,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.codec.Base64.InputStream;
+import com.lms.dto.repository.LoanDTORepository;
 import com.lms.model.Account;
 import com.lms.model.Branch;
 import com.lms.model.Center;
@@ -90,6 +94,7 @@ import com.lms.repo.TimeRepository;
 import com.lms.repo.UserRepository;
 import com.lms.repo.WithdrawalRepository;
 import com.lms.repo.customer.CustomerRepository;
+import com.lms.service.impl.UserServiceImpl;
 
 @CrossOrigin("*")
 @RestController
@@ -127,381 +132,416 @@ public class CollectionController {
 	private DepositRepository depositRepository;
 	@Autowired
 	private PrintCDSRepository printCDSRepository;
-
+	@Autowired
+	private  UserServiceImpl userServiceImpl;
 	// Get Collection Data
 	@GetMapping("/collection-data/")
 	public ResponseEntity<List<PrintCDS>> getData(
 			@RequestParam("dueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueDate,
-			@RequestParam("branchId") Integer branchId) {
+			@RequestParam("branchId") Integer branchId,  Principal principal) {
 
+        String username = principal.getName();
+        Integer branchId1 = userServiceImpl.getUserBranchId(username);
+        int userRank = userServiceImpl.getUserRank(username);
+        System.out.println("branchid : "+branchId1);
+        System.out.println("RRank : "+userRank);
+        if(userRank==1 && branchId1 == 1) {
+        	branchId1=branchId;
+        }
+
+
+        if (!userServiceImpl.isUserAuthorized(username, userRank, branchId1)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+ 
 		// Fetch the loan repayment data based on due date and branch ID
-		List<PrintCDS> cdsData = printCDSRepository.getCDSData(dueDate, branchId);
-
+		List<PrintCDS> cdsData = printCDSRepository.getCDSData(dueDate, branchId1);
+		for(PrintCDS Data:cdsData) {
+			System.out.println("CDSDATA:" +Data);}
 		return ResponseEntity.ok(cdsData);
 	}
 
 	 
-	// Print Pdf of Collection Data (CDS Print)
+ 
 	@RequestMapping(value = { "/CDS/" }, method = RequestMethod.POST, produces = MediaType.APPLICATION_PDF_VALUE)
 	public ResponseEntity<InputStreamResource> getByteTC(
-			@RequestParam("dueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueDate,
-			@RequestParam("branchId") Integer branchId) throws IOException, DocumentException, ParseException {
-		System.out.println(dueDate);
-		List<PrintCDS> cdsData = printCDSRepository.getCDSData(dueDate, branchId);
-
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Document document = new Document();
-
-		 document.setPageSize(PageSize.A4.rotate());
-		PdfWriter writer = PdfWriter.getInstance(document, out);
-
-		// Create a custom footer event handler
-		PdfPageEventHelper eventHandler = new PdfPageEventHelper() {
-			public void onEndPage(PdfWriter writer, Document document) {
-
-				// Add the footer to the bottom of the page
-				PdfContentByte canvas = writer.getDirectContent();
-				// ...
-
-				canvas.beginText();
-				try {
-					canvas.setFontAndSize(BaseFont.createFont(), 10);
-				} catch (DocumentException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				String footerLine1 = "MEXWELL MICRO FOUNDATION";
-				String footerLine2 = "Registered Office: Dhiraj Singh Nabada, Bulandshar Uttar Pradesh 203203 ";
-				String footerLine3 = "Email: mexwellmicrofoundation@gmail.com";
-
-				// Calculate the width of the longest line to align them properly
-				float maxTextWidth = Math.max(canvas.getEffectiveStringWidth(footerLine1, false),
-						Math.max(canvas.getEffectiveStringWidth(footerLine2, false),
-								canvas.getEffectiveStringWidth(footerLine3, false)));
-
-				// Calculate the x-position to center the text
-				float x = (document.right() + document.left() - maxTextWidth) / 2;
-				float y = document.bottomMargin(); // Set the y-position to the bottom margin of the page
-
-				// Show each line of the footer text separately
-				canvas.showTextAligned(Element.ALIGN_LEFT, footerLine1, x + 100, y, 0);
-				canvas.showTextAligned(Element.ALIGN_LEFT, footerLine2, x, y - 12, 0); // Adjust the vertical
-
-				canvas.showTextAligned(Element.ALIGN_LEFT, footerLine3, x + 90, y - 24, 0); // Adjust the vertical
-
-				canvas.endText();
-
-				// Create a custom Header Image event handler
-				// Add the logo at the top of the page
-				try {
-					Image logoImage = Image.getInstance("vitarma.jpeg");
-					logoImage.scaleToFit(100, 100);
-					logoImage.setAlignment(Element.ALIGN_CENTER);
-					logoImage.setBackgroundColor(BaseColor.WHITE);
-
-					float logoWidth = logoImage.getScaledWidth();
-					float logoHeight = logoImage.getScaledHeight();
-					float pageWidth = document.right() - document.left();
-					float x1 = (pageWidth - logoWidth) / 2;
-					float y1 = document.top() - 30;
-
-					logoImage.setAbsolutePosition(x1, y1);
-					document.add(logoImage);
-
-					 float spaceHeight = 25f;
-					    float contentY = y1 - spaceHeight;
-					    Paragraph space = new Paragraph();
-					    space.setSpacingBefore(spaceHeight);
-					    document.add(space);
-
-				} catch (DocumentException | IOException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-
-		// Set the footer event handler for the writer
-		writer.setPageEvent(eventHandler);
-
-		document.open();
-
-		 document.setPageSize(PageSize.A4.rotate());
-
-		Integer checkCenterId = 0;
-		Integer totalCollection = 0;
-		Integer serialNumber = 1;
-
-		PdfPTable table = new PdfPTable(11);
-		float[] columnWidths = { 1f, 1.5f, 3f, 3f, 2f, 5f, 1f, 1f, 1f, 1f, 5f };
-		table.setWidths(columnWidths);
-		table.setWidthPercentage(100);
-		table.setSpacingAfter(10);
-		table.setSpacingBefore(50);
-		table.setTotalWidth(530);
-		// table.setSpacingBefore(10f);
-		// table.setSpacingAfter(10f);
-
-		// Set table header style
-		Font headerFont = new Font(Font.FontFamily.TIMES_ROMAN, 9, Font.BOLD, new BaseColor(0, 0, 0));
-		Font cellFont = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.NORMAL, new BaseColor(0, 0, 0));
-
-		 
-		for (PrintCDS collectionData : cdsData) {
-			Integer EMI = collectionData.getEmi();
-			Integer centerId = collectionData.getCenterid();
-			String branchName = collectionData.getBranchName();
-			String day=collectionData.getDaysName();
-			float time=collectionData.getTime();
-			int centerType=collectionData.getCenterType();
-			Date date1=collectionData.getDuedate();
-			String printDate = new SimpleDateFormat("dd-MM-yy").format(date1); 
-
-			if (checkCenterId != collectionData.getCenterid()) {
-
-				if (checkCenterId != 0) {
-//					total
-					// Add the total collection row for the previous center
-					PdfPCell totalCell = new PdfPCell(new Phrase("Total Collection:", headerFont));
-					totalCell.setColspan(6);
-					totalCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-					table.addCell(totalCell);
-
-					// Create a new row for the total collection for the previous center
-					PdfPCell totalCollectionCell = new PdfPCell(new Phrase(String.valueOf(totalCollection), cellFont));
-					totalCollectionCell.setColspan(5);
-					table.addCell(totalCollectionCell);
-
-					// Reset the totalCollection variable for the new center
-					totalCollection = 0;
-					document.add(table);
-					document.newPage();
-					table = new PdfPTable(11);
-//					  columnWidths = { 2f, 4f, 2.5f, 3.8f, 3.5f, 4f, 4f, 4.5f, 4.5f };
-					table.setWidths(columnWidths);
-					table.setWidthPercentage(100);
-					table.setSpacingAfter(10);
-					table.setSpacingBefore(50);
-					table.setTotalWidth(530);
-				}
-
-				Paragraph para = new Paragraph("\n");
-//				para.setAlignment(Element.ALIGN_CENTER);
-				document.add(para);
-
-				// Update the current center ID and reset the serial number
-				checkCenterId = centerId;
-				serialNumber = 1;
-
-				// Header
-
-				PdfPCell headerCell = new PdfPCell();
-				headerCell.setNoWrap(true);
-				headerCell.setMinimumHeight(20f);
-
-				 
-				 
-				// Create the cell for the header text
-				headerCell = new PdfPCell();
-				// headerCell.setNoWrap(true);
-				headerCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPaddingBottom(10f);
-				headerCell.setPaddingLeft(10f);
-				headerCell.setNoWrap(true);
-				headerCell.setUseAscender(true);
-				headerCell.setUseDescender(true);
-				headerCell.setFixedHeight(30f);
-				headerCell.setLeading(12f, 0f);
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				String printHeader="";
-				if(centerType==1) {
-					printHeader= "CDS "+ branchName+" as on " + printDate + " Day "+day;
-				}else {
-					printHeader= "CDS "+ branchName+" as on " + printDate + " Centre No "+centerId+ " Day "+day+" Time "+time+" AM ";
-				}
-				headerCell = new PdfPCell(new Phrase(printHeader, headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				headerCell.setColspan(11);
-				table.addCell(headerCell);
-
-				 
-				 // Set remaining header cells
-				headerCell = new PdfPCell();
-				// headerCell.setNoWrap(true);
-				headerCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPaddingBottom(10f);
-				headerCell.setPaddingLeft(10f);
-				headerCell.setNoWrap(true);
-				headerCell.setUseAscender(true);
-				headerCell.setUseDescender(true);
-				headerCell.setFixedHeight(30f);
-				headerCell.setLeading(12f, 0f);
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				headerCell = new PdfPCell(new Phrase("S. NO.", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-				headerCell = new PdfPCell(new Phrase("Loan Id", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-				headerCell = new PdfPCell(new Phrase("Borrower Name", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-				headerCell = new PdfPCell(new Phrase("Co Borrower Name", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-				headerCell = new PdfPCell(new Phrase("Mobile No", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-				headerCell = new PdfPCell(new Phrase("Address", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-				headerCell = new PdfPCell(new Phrase("Due Amt.", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-				
-				headerCell = new PdfPCell(new Phrase("Total INST.", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-				
-				headerCell = new PdfPCell(new Phrase("P. INST.", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-				headerCell = new PdfPCell(new Phrase("P. Amt. ", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-			
-
-				headerCell = new PdfPCell(new Phrase("Client Sign", headerFont)); 
-				headerCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-				headerCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
-				headerCell.setPadding(5f);
-				table.addCell(headerCell);
-
-			}
-//			cell
-			// Add table row
-			PdfPCell cell = new PdfPCell(new Phrase(String.valueOf(serialNumber), cellFont));
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(cell);
-
-			cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getLoanId()), cellFont));
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(cell);
-
-			cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getCustomerName()), cellFont)); 
-			table.addCell(cell);
-
-			cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getCoBorrowerName()), cellFont)); 
-			table.addCell(cell);
-
-			cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getMobileNumber()), cellFont));
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(cell);
-
-			cell = new PdfPCell(new Phrase(
-					String.valueOf(collectionData.getAddressLine1() + " " + collectionData.getAddressLine2()),
-					cellFont)); 
-			table.addCell(cell);
-
-			cell = new PdfPCell(new Phrase(String.valueOf((int) Math.floor(EMI)), cellFont));
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(cell);
-			
-
-			cell = new PdfPCell(new Phrase(String.valueOf(collectionData.gettenor()), cellFont));
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(cell);
-
-			cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getPendinginst()), cellFont));
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(cell);
-
-			cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getEmipending()), cellFont));
-			cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.addCell(cell);
-
-
-			table.addCell("");
-
-			serialNumber++;
-
-			// Calculate total collection
-			totalCollection += EMI; 
-			
-			// Check if it's the last record
-		    if (cdsData.indexOf(collectionData) == cdsData.size() - 1) {
-		        // This is the last record, so add the total collection for the last center.
-		        PdfPCell totalCell = new PdfPCell(new Phrase("Total Collection:", headerFont));
-		        totalCell.setColspan(6);
-		        totalCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-		        table.addCell(totalCell);
-
-		        PdfPCell totalCollectionCell = new PdfPCell(new Phrase(String.valueOf(totalCollection), cellFont));
-		        totalCollectionCell.setColspan(5);
-		        table.addCell(totalCollectionCell);
-		    }
+		    @RequestParam("dueDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueDate,
+		    @RequestParam("branchId") Integer branchId 	,  Principal principal) throws IOException, DocumentException, ParseException {
 		    
-		    checkCenterId = centerId;
+	  
+
+	        String username = principal.getName();
+	        Integer branchId1 = userServiceImpl.getUserBranchId(username);
+	        int userRank = userServiceImpl.getUserRank(username);
+	        System.out.println("branchid : "+branchId1);
+	        System.out.println("RRank : "+userRank);
+	        if(userRank==1 && branchId1 == 1) {
+	        	branchId1=branchId;
+	        }
+
+
+	        if (!userServiceImpl.isUserAuthorized(username, userRank, branchId1)) {
+	            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	        }
+
+		
+		
+		    List<PrintCDS> cdsData = printCDSRepository.getCDSData(dueDate, branchId1);
 		    
-		    // Check if it's the last record, and close the table and document if it is
-		    if (cdsData.indexOf(collectionData) == cdsData.size() - 1) {
+		    try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+		        Document document = new Document(PageSize.A4.rotate());
+		        PdfWriter writer = PdfWriter.getInstance(document, out);
+		        
+		        // Add header and footer
+		        HeaderFooterPageEvent event = new HeaderFooterPageEvent();
+		        writer.setPageEvent(event);
+		        
+		        
+		        
+		        document.open();
+		        PdfPTable table = createPdfTable();
+		        int totalCollection = 0;
+		        int previousCenterId = -1;  
+		        int previousCenterType = -1;  
+		        Paragraph space = new Paragraph();
+	            space.setSpacingBefore(10f);  
+	            document.add(space);
+	           
+//    addColumnHeaders(table,printHeader);
+
+	            int serialNumber = 1;  
+	            for (int i = 0; i < cdsData.size(); i++) {
+	                PrintCDS collectionData = cdsData.get(i);
+	                if (i == 0) {
+	                    addColumnHeaders(table, collectionData );
+	                }
+	                if (collectionData.getCenterid() != previousCenterId || collectionData.getCenterType() != previousCenterType) {
+	                    if (previousCenterId != -1) {
+	                        addTotalRow(table, totalCollection,collectionData);  
+	                        document.add(table);
+	                        document.newPage();  
+	                        space.setSpacingAfter(10f);  
+	                        document.add(space);
+	                        
+	                        table = createPdfTable();  
+	                        if (i < cdsData.size()) {
+	                            addColumnHeaders(table, collectionData );
+	                        }
+	                        
+	                        serialNumber = 1;
+	                    }
+	                    totalCollection = 0; 
+	                    previousCenterId = collectionData.getCenterid();
+	                    previousCenterType = collectionData.getCenterType();
+	                }
+	                addTableRow(table, collectionData, serialNumber++);  
+	                totalCollection += collectionData.getEmi();
+	            }
+
+		        addTotalRow(table, totalCollection,  cdsData.get(cdsData.size() - 1));  
 		        document.add(table);
+		       
 		        document.close();
+		        
+		        ByteArrayInputStream bis = new ByteArrayInputStream(out.toByteArray());
+		        HttpHeaders headers = new HttpHeaders();
+		        headers.add("Content-Disposition", "inline; filename=" + branchId + ".pdf");
+		        return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+		            .body(new InputStreamResource(bis));
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		    }
-			 
-
 		}
 
-		 
-
 	 
-		ByteArrayInputStream bis = new ByteArrayInputStream(out.toByteArray());
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Content-Disposition", "inline; filename=" + branchId + ".pdf");
-		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
-				.body(new InputStreamResource(bis));
+
+	private PdfPTable createPdfTable() throws DocumentException {
+	    PdfPTable table = new PdfPTable(12);
+	    float[] columnWidths = { 1f, 1.5f, 3f, 3f, 3f, 2f, 5f, 1f, 1f, 1f, 1f, 5f };
+	    table.setWidths(columnWidths);
+	    table.setWidthPercentage(100);
+	    table.setSpacingAfter(10);
+	    table.setSpacingBefore(50);
+	    table.setTotalWidth(530);
+	    return table;
 	}
 	
-	
+	class HeaderFooterPageEvent extends PdfPageEventHelper {
+	    public void onStartPage(PdfWriter writer, Document document) {
+	        try {
+	            // Add logo
+	            Image logo = Image.getInstance("vitarma.jpeg");
+	            logo.scaleToFit(100, 100);
+	            logo.setAlignment(Element.ALIGN_CENTER);
+	            logo.setBackgroundColor(BaseColor.WHITE);
+
+	            float logoWidth = logo.getScaledWidth();
+	            float logoHeight = logo.getScaledHeight();
+	            float pageWidth = document.right() - document.left();
+	            float x1 = (pageWidth - logoWidth) / 2;
+	            float y1 = document.top() - 30;
+
+	            logo.setAbsolutePosition(x1, y1);
+	            document.add(logo);
+
+	             
+	            
+	            
+	         
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    public void onEndPage(PdfWriter writer, Document document) {
+	        try {
+	        	 Font footerFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 8, BaseColor.BLACK);
+	        	 
+	        	PdfContentByte canvas = writer.getDirectContent();
+	        	canvas.beginText();
+	        	try {
+	        	    canvas.setFontAndSize(BaseFont.createFont(), 10);
+	        	} catch (DocumentException e) {
+	        	    e.printStackTrace();
+	        	} catch (IOException e) {
+	        	    e.printStackTrace();
+	        	}
+
+	        	String footerLine1 = "MEXWELL MICRO FOUNDATION";
+	        	String footerLine2 = "Registered Office: Dhiraj Singh Nabada, Bulandshar Uttar Pradesh 203203 ";
+	        	String footerLine3 = "Email: mexwellmicrofoundation@gmail.com";
+
+	        	float maxTextWidth = Math.max(canvas.getEffectiveStringWidth(footerLine1, false),
+	        	        Math.max(canvas.getEffectiveStringWidth(footerLine2, false),
+	        	                canvas.getEffectiveStringWidth(footerLine3, false)));
+
+	        	float x = (document.right() + document.left() - maxTextWidth) / 2;
+	        	float y = document.bottomMargin();  
+ 
+	        	canvas.setFontAndSize(footerFont.getBaseFont(), footerFont.getSize());
+
+	        	canvas.showTextAligned(Element.ALIGN_LEFT, footerLine1, x + 100, y, 0);
+	        	canvas.showTextAligned(Element.ALIGN_LEFT, footerLine2, x+50, y - 12, 0);
+	        	canvas.showTextAligned(Element.ALIGN_LEFT, footerLine3, x + 90, y - 24, 0);
+
+	        	canvas.endText();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }    
+	}
+
+	     
+	private void addColumnHeaders(PdfPTable table, PrintCDS collectionData  ) {
+		Integer EMI = collectionData.getEmi();
+		Integer centerId = collectionData.getCenterid();
+		String branchName = collectionData.getBranchName();
+		String day=collectionData.getDaysName();
+		float time=collectionData.getTime();
+		int centerType=collectionData.getCenterType();
+		String staffName=collectionData.getStaffName();
+		Date date1=collectionData.getDuedate();
+		String printDate = new SimpleDateFormat("dd-MM-yy").format(date1); 
+		
+	    PdfPCell cell;
+	    String printHeader="";
+	    if(collectionData.getCenterType()==1) {
+			printHeader= "CDS "+ branchName+" as on " + printDate + " Day "+day;
+		}else {
+			printHeader= "CDS "+ branchName+" as on " + printDate + " Centre No "+centerId+ " Day "+day+" Time "+time+" AM "+  " RO: " + staffName;
+		}
+	    Font headerFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 9, Font.BOLD, BaseColor.BLACK);
+	    cell = new PdfPCell(new Phrase(printHeader, headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    cell.setColspan(12);
+	    table.addCell(cell);
+
+	    // Serial Number
+	    cell = new PdfPCell(new Phrase("S. NO.", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Loan Id
+	    cell = new PdfPCell(new Phrase("Loan Id", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // RO (if applicable)
+	    if (collectionData.getCenterType() == 1) {
+	        cell = new PdfPCell(new Phrase("RO", headerFont));
+	        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	        cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	        cell.setPadding(5f);
+	        table.addCell(cell);
+	     }
+
+	    // Borrower Name
+	    cell = new PdfPCell(new Phrase("Borrower Name", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Co Borrower Name
+	    cell = new PdfPCell(new Phrase("Co Borrower Name", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Mobile Number
+	    cell = new PdfPCell(new Phrase("Mobile No", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Address
+	    cell = new PdfPCell(new Phrase("Address", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Due Amount
+	    cell = new PdfPCell(new Phrase("Due Amt.", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Total Instalments
+	    cell = new PdfPCell(new Phrase("Total INST.", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Pending Instalments
+	    cell = new PdfPCell(new Phrase("P. INST.", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Pending Amount
+	    cell = new PdfPCell(new Phrase("P. Amt.", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    table.addCell(cell);
+
+	    // Client Sign (spanning two columns for certain center types)
+	    cell = new PdfPCell(new Phrase("Client Sign", headerFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    cell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+	    cell.setPadding(5f);
+	    
+	    if (  collectionData.getCenterType()  != 1) {
+	    	cell.setColspan(   2    );
+	    	 table.addCell(cell);
+ 		}else {
+	     table.addCell(cell);
+	     }
+	}
+
+	 
+
+	private void addTableRow(PdfPTable table, PrintCDS collectionData, int serialNumber) {
+	    PdfPCell cell;
+
+	    Font cellFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 8, BaseColor.BLACK);
+
+	     
+	    cell = new PdfPCell(new Phrase(String.valueOf(serialNumber), cellFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    table.addCell(cell);
+
+	     
+	    cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getLoanId()), cellFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    table.addCell(cell);
+
+	     
+	    if (collectionData.getCenterType() == 1) {
+	        cell = new PdfPCell(new Phrase(collectionData.getStaffName(), cellFont));
+	        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	        table.addCell(cell);
+	    } else {
+	         
+	    }
+
+	   
+	    cell = new PdfPCell(new Phrase(collectionData.getCustomerName(), cellFont));
+	    table.addCell(cell);
+
+	     
+	    cell = new PdfPCell(new Phrase(collectionData.getCoBorrowerName(), cellFont));
+	    table.addCell(cell);
+
+	     
+	    cell = new PdfPCell(new Phrase(collectionData.getMobileNumber(), cellFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    table.addCell(cell);
+
+	    
+	    cell = new PdfPCell(new Phrase(collectionData.getAddressLine1()+" "+collectionData.getAddressLine2(), cellFont));
+	    table.addCell(cell);
+
+	     
+	    cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getEmi()), cellFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    table.addCell(cell);
+
+	     
+	    cell = new PdfPCell(new Phrase(String.valueOf(collectionData.gettenor()), cellFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    table.addCell(cell);
+
+	     
+	    cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getPendinginst()), cellFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    table.addCell(cell);
+
+	     
+	    cell = new PdfPCell(new Phrase(String.valueOf(collectionData.getEmipending()), cellFont));
+	    cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    table.addCell(cell);
+
+
+	    if (collectionData.getCenterType() != 1) {
+	        PdfPCell mergedCell = new PdfPCell();
+	        mergedCell.setColspan(2); 
+	        table.addCell(mergedCell);
+	    } else {
+	        table.addCell("");
+	    }
+	}
+
+	private void addTotalRow(PdfPTable table, int totalCollection,PrintCDS collectionData) {
+
+	    Font headerFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 9, Font.BOLD, BaseColor.BLACK);
+	    Font cellFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 8, BaseColor.BLACK);
+
+
+	    PdfPCell totalCell = new PdfPCell(new Phrase("Total Collection:", headerFont));
+	    totalCell.setColspan(collectionData.getCenterType() != 1 ? 7:6); 
+	    totalCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+	    table.addCell(totalCell);
+
+
+	    PdfPCell totalCollectionCell = new PdfPCell(new Phrase(String.valueOf(totalCollection), cellFont));
+	    totalCollectionCell.setColspan(5);  
+	    table.addCell(totalCollectionCell);
+	}
+
 	
 	
 
@@ -603,15 +643,44 @@ public class CollectionController {
 		}
 		return results;
 	}
-
-	// get Disbursement register
+	
+	
+	
 	@GetMapping("/list/")
 	public ResponseEntity<List<Map<String, Object>>> findBytoDateTofromDate(
-			@RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-			@RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate) {
-		List<Map<String, Object>> loan = loanCreationRepository.findByddateBetween(toDate, fromDate);
-		return ResponseEntity.ok(loan);
+	        @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+	        @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+	        Principal principal) {
+
+	    String username = principal.getName();
+	    Integer userBranchId = userServiceImpl.getUserBranchId(username);
+	    int userRank = userServiceImpl.getUserRank(username);
+	    System.out.println("User Branch Id: " + userBranchId);
+	    System.out.println("User Rank: " + userRank);
+
+	     if (!userServiceImpl.isUserAuthorized(username, userRank, userBranchId)) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+
+	     if (userRank == 1 && userBranchId == 1) {
+	        List<Map<String, Object>> loan = loanCreationRepository.findByddateBetween(toDate, fromDate);
+	        return ResponseEntity.ok(loan);
+	    }
+
+	     if (userRank == 2 || (userBranchId != 1 && userRank == 1)) {
+	        List<Map<String, Object>> loan = loanCreationRepository.findByBranchIdAndDdateBetween(userBranchId, toDate, fromDate);
+	        return ResponseEntity.ok(loan);
+	    }
+
+	    // If user rank is 3, they are not permitted to access disbursement data
+	    if (userRank == 3) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+
+	    // For any other cases, return forbidden status
+	    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 	}
+
 
 	// Advance Payment
 	@PostMapping("/advance_payment/")
@@ -678,26 +747,44 @@ public class CollectionController {
 		return collectionRepository.getCollectionReport(collDate, branchId);
 	}
 
-	// Disbursement status Update
 	@PutMapping("/updateDisStatus/")
 	public ResponseEntity<String> updateDisStatus(
-			@RequestParam("disDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate disDate,
-			@RequestParam long loanId) {
-		Optional<LoanCreation> optionalLoan = loanCreationRepository.findByIdanddisDate((int) loanId);
-//		 System.out.println("LOAN DETAILS = "+loans);
-//	         = loanCreationRepository.findById(loanId);
-		System.out.println(optionalLoan);
+	        @RequestParam("disDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate disDate,
+	        @RequestParam long loanId,
+	        @RequestParam int status) {
+		
+	    Optional<LoanCreation> optionalLoan = loanCreationRepository.findByIdanddisDate((int) loanId);
 
-		if (optionalLoan.isPresent()) {
-			LoanCreation loan = optionalLoan.get();
-			Integer status = 2;
-			loan.setDdate(disDate);
-			loan.setStatus(status);
-			loanCreationRepository.save(loan);
-			return ResponseEntity.ok("Loan status updated successfully.");
-		} else {
-			return ResponseEntity.notFound().build();
-		}
+	    if (optionalLoan.isPresent()) {
+	        LoanCreation loan = optionalLoan.get();
+
+	        // Set common fields
+	        loan.setDdate(disDate);
+	        loan.setStatus(status);
+
+	        
+	        String message;
+	        switch (status) {
+	            case 2:
+	                message = "Loan Approved successfully.";
+	                break;
+	            case 3:
+	                message = "Loan is Hold.";
+	                break;
+	            case 4:
+	                message = "Loan Reject successfully.";
+	                break;
+	            default:
+	                return ResponseEntity.badRequest().body("Invalid status provided.");
+	        }
+
+	        
+	        loanCreationRepository.save(loan);
+
+	        return ResponseEntity.ok(message);
+	    } else {
+	        return ResponseEntity.notFound().build();
+	    }
 	}
 
 	// GET CASE IN HAND DATA

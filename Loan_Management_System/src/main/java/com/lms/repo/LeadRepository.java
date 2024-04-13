@@ -34,8 +34,17 @@ public interface LeadRepository extends JpaRepository<Lead, Integer>{
 	
 	 @Modifying
 	    @Transactional
-	    @Query("UPDATE Lead l SET l.centerID = :newCenterId WHERE l.leadID IN (SELECT lm.leadid FROM LoanCreation lm WHERE lm.id = :leadID)")
+	    @Query( "UPDATE Lead l SET l.centerID = :newCenterId WHERE l.leadID IN (SELECT lm.leadid FROM LoanCreation lm WHERE lm.id = :leadID)"  )
 	 void updatecenterIDByLeadID(@Param("leadID") long leadID, @Param("newCenterId") Long newCenterId);
 
-	
+	 
+	  @Modifying
+	  @Transactional
+	  @Query( "UPDATE  Lead lm SET lm.manageBy = :ceManageBy WHERE lm.branchID = :bname AND lm.centerID= :centerId" )
+	  void updateManageBy(@Param("ceManageBy") String ceManageBy, @Param("centerId") Long centerId, @Param("bname") Long bname);
+	  @Modifying
+	    @Transactional
+	    @Query( "UPDATE Lead l SET l.manageBy = :ceManageBy WHERE l.leadID = :leadId AND l.branchID = :bname AND l.centerID= :centerId " )
+	 void updateManageBy1(@Param("ceManageBy") String ceManageBy, @Param("centerId") Long centerId, @Param("bname") Long bname, @Param("leadId") int leadId);
+
  }

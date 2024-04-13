@@ -49,14 +49,59 @@ public class Customer {
 	@CreationTimestamp
 	private Date entrydate;
 	private String entryby;
+	private int caution;
+	private String voterid;
+	
+	
+	
+	
+	
+	
+	
+	public String getVoterid() {
+		return voterid;
+	}
 
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+	public void setVoterid(String voterid) {
+		this.voterid = voterid;
+	}
+
+
+
+
+
+
+
+
+	public int getCaution() {
+		return caution;
+	}
+
+
+
+
+
+
+
+
+	public void setCaution(int caution) {
+		this.caution = caution;
+	}
+
+
+
+
+
+
+
+
 	public Customer() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -489,7 +534,8 @@ public class Customer {
 
 	public Customer(int cid, String cname, String fname, String mobnumber, Date dob, String education, String addl1,
 			String addl2, String landmark, String city, String district, String state, int pincode, String pannum,
-			String kycname, String kycnum, String sourcedBy, Date entrydate, String entryby) {
+			String kycname, String kycnum, String sourcedBy, Date entrydate, String entryby, int caution,
+			String voterid) {
 		super();
 		this.cid = cid;
 		this.cname = cname;
@@ -510,6 +556,8 @@ public class Customer {
 		this.sourcedBy = sourcedBy;
 		this.entrydate = entrydate;
 		this.entryby = entryby;
+		this.caution = caution;
+		this.voterid = voterid;
 	}
 
 
@@ -519,8 +567,26 @@ public class Customer {
 
 
 
-	 
+	@Override
+	public String toString() {
+		return "Customer [cid=" + cid + ", cname=" + cname + ", fname=" + fname + ", mobnumber=" + mobnumber + ", dob="
+				+ dob + ", education=" + education + ", addl1=" + addl1 + ", addl2=" + addl2 + ", landmark=" + landmark
+				+ ", city=" + city + ", district=" + district + ", state=" + state + ", pincode=" + pincode
+				+ ", pannum=" + pannum + ", kycname=" + kycname + ", kycnum=" + kycnum + ", sourcedBy=" + sourcedBy
+				+ ", entrydate=" + entrydate + ", entryby=" + entryby + ", caution=" + caution + ", voterid=" + voterid
+				+ "]";
+	}
 
+
+
+
+
+
+ 
+
+
+
+ 
 
 	 	
 }

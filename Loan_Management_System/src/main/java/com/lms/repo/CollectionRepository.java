@@ -108,5 +108,16 @@ public interface CollectionRepository extends JpaRepository<Collection, Integer>
 		   public void payment_remove(@Param("loanId") int loanId,@Param("paymentDate") LocalDate paymentDate, @Param("deletedBy") int deletedBy);
 		   
 		
+		  
+		  
+		  
+		  //Total due and Collection to by branch Id and between due date
+		  @Query(value = "SELECT "
+		  		+ " lm.loan_id,  lm.coll_amount AS totalCollAmount, "
+		  		+ " CASE  WHEN lm.coll_amount = 0 THEN lm.emi "
+		  		+ " ELSE 0  "
+		  		+ " END AS due"
+		  		+ " FROM loan_repayment_master lm WHERE lm.branch_id = 2",nativeQuery = true)
+		  public List<Map<String, Object>>getTotaldueAndCollection(@Param("branchId") Integer beanchId, @Param("toDate") LocalDate todate,@Param("fromDate") LocalDate fromDate);
 	
 }

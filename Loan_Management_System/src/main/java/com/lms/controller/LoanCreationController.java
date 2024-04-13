@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -49,7 +50,10 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.lms.dto.LoanDTO;
+import com.lms.dto.repository.LoanDTORepository;
 import com.lms.model.Branch;
 import com.lms.model.Center;
 import com.lms.model.Customer;
@@ -68,6 +72,7 @@ import com.lms.repo.LoanRepaymentRepository;
 import com.lms.repo.SchemeRepository;
 import com.lms.repo.TimeRepository;
 import com.lms.repo.customer.CustomerRepository;
+import com.lms.service.impl.UserServiceImpl;
 
 @RestController
 @CrossOrigin("*")
@@ -92,14 +97,19 @@ public class LoanCreationController {
 	private LoanRepaymentRepository loanRepaymentRepository;
 	@Autowired
 	private CenterRepository centerRepository;
+	 @Autowired
+	 private LoanDTORepository  loanDTORepository;
+     @Autowired	
+     private UserServiceImpl userServiceImpl;
+
 
 	// Save Loan
 
 	@PostMapping("/")
 	public LoanCreation createLoanCreation(@RequestBody LoanCreation loanCreation) throws Exception {
-		System.out.println("Loancreation l: " + loanCreation); 
-//change to loanId
 
+// coutions check
+        loanCreation.setStatus(1);
 		LoanCreation loan = loanCreationRepository.save(loanCreation);
 
 		System.out.println("LOAN:"+loan);
@@ -179,30 +189,76 @@ System.out.println("LOAN REPAYMENT: "+ liLoanRepayments);
 
 	// Get all Loan
 	@GetMapping("/list")
-	public List<LoanCreation> getLoanCreations(Integer schemeno) {
-		List<LoanCreation> loanCreations = new ArrayList<LoanCreation>();
-		loanCreations = loanCreationRepository.findAll();
-		return loanCreations;
+	public ResponseEntity<List<LoanCreation>> getLoanCreations(
+	        Integer schemeno,
+	        Principal principal) {
+
+	    String username = principal.getName();
+	    Integer userBranchId = userServiceImpl.getUserBranchId(username);
+	    int userRank = userServiceImpl.getUserRank(username);
+	    System.out.println("User Branch Id: " + userBranchId);
+	    System.out.println("User Rank: " + userRank);
+ 
+	    if (!userServiceImpl.isUserAuthorized(username, userRank, userBranchId)) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+ 
+	    if (userRank == 1 && userBranchId == 1) {
+	        List<LoanCreation> loanCreations = loanCreationRepository.findAll();
+	        return ResponseEntity.ok(loanCreations);
+	    }
+ 
+	    if (userRank == 2 || (userBranchId != 1 && userRank == 1)) {
+	        List<LoanCreation> loanCreations = loanCreationRepository.findByBranchname(userBranchId);
+	        return ResponseEntity.ok(loanCreations);
+	    }
+ 
+	    if (userRank == 3) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+ 
+	    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 	}
 
-	// Get Passbook
+
 	@GetMapping("/list/passbook/{loan_Id}")
-	public List<Map<String, Object>> getLoanByloanId(@PathVariable("loan_Id") Integer loanId) {
-		
-		System.out.println(loanId);
-		List<Map<String, Object>> passbookData = loanRepaymentRepository.getCombinedDataByid(loanId);
+	public ResponseEntity<List<Map<String, Object>>> getLoanByloanId(
+	        @PathVariable("loan_Id") Integer loanId,
+	        Principal principal) {
 
-		for (Map<String, Object> passBook : passbookData) {
-			System.out.println("ENTRY : ");
-			for (Map.Entry<String, Object> entry : passBook.entrySet()) {
-				String key = entry.getKey();
-				Object value = entry.getValue();
-				System.out.println(key + " = " + value);
+	    String username = principal.getName();
+	    Integer userBranchId = userServiceImpl.getUserBranchId(username);
+	    int userRank = userServiceImpl.getUserRank(username);
+	    System.out.println("User Branch Id: " + userBranchId);
+	    System.out.println("User Rank: " + userRank);
 
-			}
-		}
-		return passbookData;
+	     if (!userServiceImpl.isUserAuthorized(username, userRank, userBranchId)) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+
+	     if (userRank == 1 && userBranchId == 1) {
+	        List<Map<String, Object>> passbookData = loanRepaymentRepository.getCombinedDataByid(loanId);
+	        return ResponseEntity.ok(passbookData);
+	    }
+
+	     if (userRank == 2 || (userBranchId != 1 && userRank == 1)) {
+	         if (loanRepaymentRepository.existsByLoanIdAndBranchId(loanId, userBranchId)) {
+	            List<Map<String, Object>> passbookData = loanRepaymentRepository.getCombinedDataByid(loanId);
+	            return ResponseEntity.ok(passbookData);
+	        } else {
+	             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	        }
+	    }
+
+	    // If user rank is 3, they are not permitted to access passbook data
+	    if (userRank == 3) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+
+	    // For any other cases, return forbidden status
+	    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 	}
+
 
 	// get loan details by LoanID
 	@GetMapping("/loan_details/{loanId}")
@@ -302,14 +358,14 @@ System.out.println(loanRepayments);
 			table.setWidths(columnWidths);
 			table.setWidthPercentage(100);
 			table.setSpacingAfter(10);
-			table.setSpacingBefore(50);
+			table.setSpacingBefore(30);
 			table.setTotalWidth(530);
 			// table.setSpacingBefore(10f);
 			// table.setSpacingAfter(10f);
 
 			// Set table header style
-			Font headerFont = new Font(Font.FontFamily.TIMES_ROMAN, 11, Font.BOLD, new BaseColor(0, 0, 0));
-			Font cellFont = new Font(Font.FontFamily.TIMES_ROMAN, 11, Font.NORMAL, new BaseColor(0, 0, 0));
+			Font headerFont = new Font(Font.FontFamily.TIMES_ROMAN, 8, Font.BOLD, new BaseColor(0, 0, 0));
+			Font cellFont = new Font(Font.FontFamily.TIMES_ROMAN, 9, Font.NORMAL, new BaseColor(0, 0, 0));
 
 			// Add the header row only once
 			boolean headerAdded = false;
@@ -341,8 +397,7 @@ System.out.println(loanRepayments);
 					headerCell.setMinimumHeight(20f);
 					table.addCell(headerCell);
 
-					// Add more cells here based on your requirements
-
+				 
 					// Row 2: Id, Branch, Meeting Day
 					headerCell = new PdfPCell(
 							new Phrase("Loan Id: " + String.valueOf(loanRepaymentData.get("loanId")), headerFont));
@@ -365,7 +420,7 @@ System.out.println(loanRepayments);
 					headerCell = new PdfPCell(new Phrase("Spouse: " + loanRepaymentData.get("spouseName"), headerFont));
 					headerCell.setColspan(2);
 					table.addCell(headerCell);
-					headerCell = new PdfPCell(new Phrase("Manage By: ", headerFont));
+					headerCell = new PdfPCell(new Phrase("Manage By: "+ loanRepaymentData.get("manageBy"), headerFont));
 					headerCell.setColspan(2);
 					table.addCell(headerCell);
 
@@ -407,7 +462,7 @@ System.out.println(loanRepayments);
 
 					// Row 5: Client Address
 					headerCell = new PdfPCell(new Phrase("Client Address: " + loanRepaymentData.get("addressLine1")
-							+ " " + loanRepaymentData.get("addressLine2"), headerFont));
+							+ " " + loanRepaymentData.get("addressLine2")+ ", " + loanRepaymentData.get("city")+ ", " + loanRepaymentData.get("district_name")+ ", " + loanRepaymentData.get("state_name")+ ", " + loanRepaymentData.get("landmark")+ ", " + loanRepaymentData.get("pincode"), headerFont));
 					headerCell.setColspan(6);
 					table.addCell(headerCell);
 
@@ -598,15 +653,56 @@ System.out.println(loanRepayments);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 	}
 
+	
+	
+	
 	// get loanRepayment(Passbook) Data for loanId
 	@GetMapping("/loanrepayment/{loanid}")
-	public List<Map<String, Object>> getloanRepayment(@PathVariable("loanid") Integer loanid) {
-		List<Map<String, Object>> loanRepaymentData= loanRepaymentRepository.getLoanRepaymentByloanId(loanid);
- 
-		return loanRepaymentData;
+	public ResponseEntity<List<Map<String, Object>>> getloanRepayment(
+	        @PathVariable("loanid") Integer loanid,
+	        Principal principal) {
 
+	    String username = principal.getName();
+	    Integer userBranchId = userServiceImpl.getUserBranchId(username);
+	    int userRank = userServiceImpl.getUserRank(username);
+	    System.out.println("User Branch Id: " + userBranchId);
+	    System.out.println("User Rank: " + userRank);
+
+	    if (!userServiceImpl.isUserAuthorized(username, userRank, userBranchId)) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+
+	     if (userRank == 1 && userBranchId == 1) {
+	        List<Map<String, Object>> loanRepaymentData = loanRepaymentRepository.getLoanRepaymentByloanId(loanid);
+	        return ResponseEntity.ok(loanRepaymentData);
+	    }
+
+	     if (userRank == 2 || (userBranchId != 1 && userRank == 1)) {
+	         if (loanRepaymentRepository.existsByLoanIdAndBranchId(loanid, userBranchId)) {
+	            List<Map<String, Object>> loanRepaymentData = loanRepaymentRepository.getLoanRepaymentByloanId(loanid);
+	            return ResponseEntity.ok(loanRepaymentData);
+	        } else {
+	            // Loan ID not present in the user's branch
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+	        }
+	    }
+
+	    // If user rank is 3, they are not permitted to access loan repayment data
+	    if (userRank == 3) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+	    }
+
+	    // For any other cases, return forbidden status
+	    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 	}
 
+	
+	
+	//get All loan data by status
+	@GetMapping("/status1data/")
+	public List<Map<String,  Object>> getAllLoans() {
+        return loanDTORepository.getLoanDTOs();
+    }
 	
 
 }

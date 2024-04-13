@@ -36,7 +36,7 @@ public class Withdrawal {
 	private int clearBy;
 	private Date clearDate;
 	private int accountId;
-	
+	private String remark;
 	
 	
 	public Withdrawal() {
@@ -226,9 +226,21 @@ public class Withdrawal {
 
 
 
+	public String getRemark() {
+		return remark;
+	}
+
+
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+
+
 	public Withdrawal(int id, int branchId, String branchName, Double amount, int bankId, String bankName,
 			String bankType, LocalDate entryDate, int clearStatus, Date dcrDate, Date depositDate, int entryBy,
-			int clearBy, Date clearDate, int accountId) {
+			int clearBy, Date clearDate, int accountId, String remark) {
 		super();
 		this.id = id;
 		this.branchId = branchId;
@@ -245,6 +257,7 @@ public class Withdrawal {
 		this.clearBy = clearBy;
 		this.clearDate = clearDate;
 		this.accountId = accountId;
+		this.remark=remark;
 	}
 
 
@@ -255,8 +268,12 @@ public class Withdrawal {
 				+ ", bankId=" + bankId + ", bankName=" + bankName + ", bankType=" + bankType + ", entryDate="
 				+ entryDate + ", clearStatus=" + clearStatus + ", dcrDate=" + dcrDate + ", depositDate=" + depositDate
 				+ ", entryBy=" + entryBy + ", clearBy=" + clearBy + ", clearDate=" + clearDate + ", accountId="
-				+ accountId + "]";
+				+ accountId + ", remark=" + remark + "]";
 	}
+
+
+
+	 
 	
 	
 

@@ -33,6 +33,7 @@ public class CustomerSave {
 	private int bpincode;
 	private Date bentrydate;
 	private String bentryby;
+	private String bvoterid;
 	
 //	Co_Borrower Details
 
@@ -52,7 +53,7 @@ public class CustomerSave {
 	private String cbstate;
 	private String cbdistrict;
 	private int cbpincode;
-	 
+	private String cbvoterid; 
 	
 	
 	
@@ -930,15 +931,86 @@ public class CustomerSave {
 
 
 
-	public CustomerSave(  Long branch, String sourcedby, Long centername, String appdate, String bname,
-			String bfhname, String bcontectnum, String bpannum, String bkycname, String bkycnumber, Date bdob,
-			String beducation, String bemail, String baddressl1, String baddressl2, String blandmark, String bcity,
-			String bstate, String bdistrict, int bpincode, Date bentrydate, String bentryby, String cbname,
+	public String getBvoterid() {
+		return bvoterid;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public void setBvoterid(String bvoterid) {
+		this.bvoterid = bvoterid;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public String getCbvoterid() {
+		return cbvoterid;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public void setCbvoterid(String cbvoterid) {
+		this.cbvoterid = cbvoterid;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public CustomerSave(Long branch, String sourcedby, Long centername, String appdate, String bname, String bfhname,
+			String bcontectnum, String bpannum, String bkycname, String bkycnumber, Date bdob, String beducation,
+			String bemail, String baddressl1, String baddressl2, String blandmark, String bcity, String bstate,
+			String bdistrict, int bpincode, Date bentrydate, String bentryby, String bvoterid, String cbname,
 			String cbfhname, String cbcontectnum, String cbpannum, String cbkycname, String cbkycnumber, Date cbdob,
 			String cbeducation, String cbemail, String cbaddressl1, String cbaddressl2, String cblandmark,
-			String cbcity, String cbstate, String cbdistrict, int cbpincode, Date cbentrydate, String cbentryby) {
+			String cbcity, String cbstate, String cbdistrict, int cbpincode, String cbvoterid) {
 		super();
-		 
 		this.branch = branch;
 		this.sourcedby = sourcedby;
 		this.centername = centername;
@@ -961,6 +1033,7 @@ public class CustomerSave {
 		this.bpincode = bpincode;
 		this.bentrydate = bentrydate;
 		this.bentryby = bentryby;
+		this.bvoterid = bvoterid;
 		this.cbname = cbname;
 		this.cbfhname = cbfhname;
 		this.cbcontectnum = cbcontectnum;
@@ -977,8 +1050,15 @@ public class CustomerSave {
 		this.cbstate = cbstate;
 		this.cbdistrict = cbdistrict;
 		this.cbpincode = cbpincode;
-		 
+		this.cbvoterid = cbvoterid;
 	}
+
+
+
+
+
+
+
 
 
 
@@ -989,22 +1069,33 @@ public class CustomerSave {
 
 	@Override
 	public String toString() {
-		return "CustomerSave [  branch=" + branch + ", sourcedby=" + sourcedby + ", centername="
-				+ centername + ", appdate=" + appdate + ", bname=" + bname + ", bfhname=" + bfhname + ", bcontectnum="
-				+ bcontectnum + ", bpannum=" + bpannum + ", bkycname=" + bkycname + ", bkycnumber=" + bkycnumber
-				+ ", bdob=" + bdob + ", beducation=" + beducation + ", bemail=" + bemail + ", baddressl1=" + baddressl1
-				+ ", baddressl2=" + baddressl2 + ", blandmark=" + blandmark + ", bcity=" + bcity + ", bstate=" + bstate
-				+ ", bdistrict=" + bdistrict + ", bpincode=" + bpincode + ", bentrydate=" + bentrydate + ", bentryby="
-				+ bentryby + ", cbname=" + cbname + ", cbfhname=" + cbfhname + ", cbcontectnum=" + cbcontectnum
-				+ ", cbpannum=" + cbpannum + ", cbkycname=" + cbkycname + ", cbkycnumber=" + cbkycnumber + ", cbdob="
-				+ cbdob + ", cbeducation=" + cbeducation + ", cbemail=" + cbemail + ", cbaddressl1=" + cbaddressl1
-				+ ", cbaddressl2=" + cbaddressl2 + ", cblandmark=" + cblandmark + ", cbcity=" + cbcity + ", cbstate="
-				+ cbstate + ", cbdistrict=" + cbdistrict + ", cbpincode=" + cbpincode + " ]";
+		return "CustomerSave [branch=" + branch + ", sourcedby=" + sourcedby + ", centername=" + centername
+				+ ", appdate=" + appdate + ", bname=" + bname + ", bfhname=" + bfhname + ", bcontectnum=" + bcontectnum
+				+ ", bpannum=" + bpannum + ", bkycname=" + bkycname + ", bkycnumber=" + bkycnumber + ", bdob=" + bdob
+				+ ", beducation=" + beducation + ", bemail=" + bemail + ", baddressl1=" + baddressl1 + ", baddressl2="
+				+ baddressl2 + ", blandmark=" + blandmark + ", bcity=" + bcity + ", bstate=" + bstate + ", bdistrict="
+				+ bdistrict + ", bpincode=" + bpincode + ", bentrydate=" + bentrydate + ", bentryby=" + bentryby
+				+ ", bvoterid=" + bvoterid + ", cbname=" + cbname + ", cbfhname=" + cbfhname + ", cbcontectnum="
+				+ cbcontectnum + ", cbpannum=" + cbpannum + ", cbkycname=" + cbkycname + ", cbkycnumber=" + cbkycnumber
+				+ ", cbdob=" + cbdob + ", cbeducation=" + cbeducation + ", cbemail=" + cbemail + ", cbaddressl1="
+				+ cbaddressl1 + ", cbaddressl2=" + cbaddressl2 + ", cblandmark=" + cblandmark + ", cbcity=" + cbcity
+				+ ", cbstate=" + cbstate + ", cbdistrict=" + cbdistrict + ", cbpincode=" + cbpincode + ", cbvoterid="
+				+ cbvoterid + "]";
 	}
 
 
- 
 
+
+
+
+
+
+
+
+
+
+
+ 
 
 
   	

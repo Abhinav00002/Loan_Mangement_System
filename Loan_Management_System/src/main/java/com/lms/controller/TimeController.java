@@ -21,6 +21,8 @@ public class TimeController {
 
 	@GetMapping("/timelist")
 	public List<Time> getTimes() {
-		return timeRepository.findAll();
+		List<Time> time=timeRepository.findAll();
+				System.out.println(time);
+				return time;
 	}
 }

@@ -24,6 +24,7 @@ public class Salary {
 	private int amount;
 	private int entryBy; 
 	private Date entryDate;
+	private String remark;
 	
 	
 	public Salary() {
@@ -112,9 +113,20 @@ public class Salary {
 		this.branchName = branchName;
 	}
 
+	
+
+	public String getRemark() {
+		return remark;
+	}
+
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 
 	public Salary(int salaryId, int account, int staffId, String branchName, Date salaryDate, int amount, int entryBy,
-			Date entryDate) {
+			Date entryDate, String remark) {
 		super();
 		this.salaryId = salaryId;
 		this.account = account;
@@ -124,6 +136,7 @@ public class Salary {
 		this.amount = amount;
 		this.entryBy = entryBy;
 		this.entryDate = entryDate;
+		this.remark=remark;
 	}
 
 
@@ -131,8 +144,11 @@ public class Salary {
 	public String toString() {
 		return "Salary [salaryId=" + salaryId + ", account=" + account + ", staffId=" + staffId + ", branchName="
 				+ branchName + ", salaryDate=" + salaryDate + ", amount=" + amount + ", entryBy=" + entryBy
-				+ ", entryDate=" + entryDate + "]";
+				+ ", entryDate=" + entryDate + ", remark=" + remark + "]";
 	}
+
+
+	 
 
 
 	 	

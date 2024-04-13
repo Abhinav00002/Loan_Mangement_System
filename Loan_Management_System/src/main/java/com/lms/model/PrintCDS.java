@@ -31,6 +31,8 @@ public class PrintCDS {
 	private Date duedate;
 	private String branchName;
 	private int tenor;
+	private String staffName;
+	
 	public int getLoanId() {
 		return loanId;
 	}
@@ -164,6 +166,14 @@ public class PrintCDS {
 	public void settenor(int tenor) {
 		this.tenor = tenor;
 	}
+	
+	 
+	public String getStaffName() {
+		return staffName;
+	}
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
 	public PrintCDS() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -171,7 +181,7 @@ public class PrintCDS {
 	public PrintCDS(int loanId, int branchid, int centerid, String daysName, float time, String customerName,
 			String mobileNumber, int centerType, String addressLine1, String addressLine2, String landmark, String city,
 			String districtName, String stateName, int pincode, String coBorrowerName, int emi, int emipending,
-			int pendinginst, Date duedate, String branchName, int tenor) {
+			int pendinginst, Date duedate, String branchName, int tenor, String staffName) {
 		super();
 		this.loanId = loanId;
 		this.branchid = branchid;
@@ -195,6 +205,7 @@ public class PrintCDS {
 		this.duedate = duedate;
 		this.branchName = branchName;
 		this.tenor = tenor;
+		this.staffName = staffName;
 	}
 	@Override
 	public String toString() {
@@ -204,10 +215,11 @@ public class PrintCDS {
 				+ ", landmark=" + landmark + ", city=" + city + ", districtName=" + districtName + ", stateName="
 				+ stateName + ", pincode=" + pincode + ", coBorrowerName=" + coBorrowerName + ", emi=" + emi
 				+ ", emipending=" + emipending + ", pendinginst=" + pendinginst + ", duedate=" + duedate
-				+ ", branchName=" + branchName + ", tenor=" + tenor + "]";
+				+ ", branchName=" + branchName + ", tenor=" + tenor + ", staffName=" + staffName + "]";
 	}
 	 
 	
 	
-
+	
+	
 }

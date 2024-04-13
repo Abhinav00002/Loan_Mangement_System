@@ -21,4 +21,19 @@ public interface UserService {
 	
 	//delete user by id
 	public void deleteUser(Long userId);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 Integer getUserBranchId(String username);
+	    int getUserRank(String username);
+	    boolean isUserAuthorized(String username, int requiredRank, int branchId);
+
 }

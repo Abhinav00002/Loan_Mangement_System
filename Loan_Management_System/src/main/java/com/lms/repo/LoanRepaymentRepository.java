@@ -21,7 +21,8 @@ public interface LoanRepaymentRepository  extends JpaRepository<LoanRepayment, L
 	@Query(value = "SELECT * FROM loan_repayment_master where loan_id=:loanId",nativeQuery = true)
 	public List<LoanRepayment> findByLoanId(@Param("loanId") Integer loanid);
 	
-	
+	 boolean existsByLoanIdAndBranchId(Integer loanId, Integer branchId);
+
  
 	 //get LoanRepayment By loan id
 	@Query(value="SELECT  "
@@ -59,23 +60,28 @@ public interface LoanRepaymentRepository  extends JpaRepository<LoanRepayment, L
 	 		+ "WHERE l.id =:loanId))")
 	 public void updatecenterIdByloanId( @Param("loanId")  long loanId,@Param("newCenterId") int newCenterId);
 	 
-	 @Query(value = "SELECT  lc.loan_id AS loanId, lc.disbursement_date AS loanCreationDate, s.loneamount AS loanAmount,   "
-	 		+ "b.branch_name AS branchName,b.branch_id AS branchId,  c.customer_name AS customerName,c.mobile_number AS contactNo,  "
-	 		+ "c.addresss_line1 AS addressLine1,  c.address_line2 AS addressLine2, cb.customer_name AS spouseName, "
-	 		+ "ct.center_id AS centerId, t.time AS centerTime, d.days_name AS centerDay, sm.staff_id AS staffId, "
-	 		+ "sm.staff_name AS staffName "
-	 		+ "FROM loan_master lc "
-	 		+ "INNER JOIN scheme_master s ON lc.scheme = s.scheme_id "
-	 		+ "INNER JOIN lead_master l ON lc.lead_id = l.leadid "
-//	 		+ "INNER JOIN loan_repayment_master lrm ON l.leadid = lrm.loan_id "
-	 		+ "INNER JOIN branch_master b ON lc.branchname = b.branch_id "
-	 		+ "INNER JOIN customer_master c ON l.borrowerid = c.customer_id "
-	 		+ "INNER JOIN customer_master cb ON l.co_borrower_id = cb.customer_id "
-	 		+ "INNER JOIN center_master ct ON l.centerid = ct.center_id and l.branchid=ct.branch_name "
-	 		+ "INNER JOIN time t ON ct.center_meeting_time = t.time_id "
-	 		+ "INNER JOIN days d ON ct.center_meeting_day = d.days_id "
-	 		+ "INNER JOIN staff_master sm ON lc.sourcedby = sm.staff_id "
-	 		+ "WHERE lc.loan_id =  :loanid", nativeQuery = true)
+	 @Query(value = "SELECT  lc.loan_id AS loanId,l.leadid AS LeadId, lc.disbursement_date AS loanCreationDate, s.loneamount AS loanAmount,     "
+	 		+ "	 		   b.branch_name AS branchName,b.branch_id AS branchId,  c.customer_name AS customerName,c.customer_id AS customerId,c.mobile_number AS contactNo,    "
+	 		+ "	 		   c.addresss_line1 AS addressLine1,  c.address_line2 AS addressLine2, cb.customer_name AS spouseName,   "
+	 		+ "	 		   ct.center_id AS centerId, t.time AS centerTime, d.days_name AS centerDay, sm.staff_id AS staffId,   "
+	 		+ "	 		   sm.staff_name AS staffName  ,smm.staff_name AS manageBy,l.manage_by, "
+	 		+ "               c.city,c.district,dm.district_name ,c.state,stm.state_name,c.landmark,c.pincode "
+	 		+ "	 		   FROM loan_master lc   "
+	 		+ "	 		   INNER JOIN scheme_master s ON lc.scheme = s.scheme_id   "
+	 		+ "	 		   INNER JOIN lead_master l ON lc.lead_id = l.leadid   "
+	 		+ "                "
+//	 		+ "     INNER JOIN loan_repayment_master lrm ON l.leadid = lrm.loan_id   "
+	 		+ "	 		   INNER JOIN branch_master b ON lc.branchname = b.branch_id   "
+	 		+ "	 		   INNER JOIN customer_master c ON l.borrowerid = c.customer_id   "
+	 		+ "	 		   INNER JOIN customer_master cb ON l.co_borrower_id = cb.customer_id   "
+	 		+ "	 		   INNER JOIN center_master ct ON l.centerid = ct.center_id and l.branchid=ct.branch_name   "
+	 		+ "	 		   INNER JOIN time t ON ct.center_meeting_time = t.time_id   "
+	 		+ "	 		   INNER JOIN days d ON ct.center_meeting_day = d.days_id   "
+	 		+ "	 		   INNER JOIN staff_master sm ON lc.sourcedby = sm.staff_id  "
+	 		+ "               Left  JOIN staff_master smm ON   l.manage_by =smm.staff_id "
+	 		+ "               inner join  district_master dm On dm.district_id=c.district "
+	 		+ "               inner join state_master stm On stm.state_id=c.state "
+	 		+ "	 		   WHERE lc.loan_id =:loanid", nativeQuery = true)
 	 List<Map<String, Object>> getCombinedDataByid(@Param("loanid") Integer loanid);
 	 
 	 
@@ -126,11 +132,27 @@ public interface LoanRepaymentRepository  extends JpaRepository<LoanRepayment, L
 	 
 	 
 //	 select sum(amount) from deposit_master where branch_id=2 and entry_date='2023-08-07';// for sum of deposit
-    //
+    /* SELECT
+	 lm.loan_id,
+	    CASE
+	        WHEN lm.coll_amount = 0 THEN lm.emi
+	        ELSE 0
+	    END AS due_amount
+	FROM
+	    loan_repayment_master lm;*/
+	 @Query(value = "SELECT"
+	 		+ "	 lm.loan_id,"
+	 		+ "	    CASE"
+	 		+ "	        WHEN lm.coll_amount = 0 THEN lm.emi"
+	 		+ "	        ELSE 0"
+	 		+ "	    END AS due_amount"
+	 		+ "	FROM "
+	 		+ "	    loan_repayment_master lm",nativeQuery = true)
+	 public List<Map<String, Object>> getDueDump();
 	 
+//	 @Query(value = "")
 	 
-	 
-	 
+	
 	 
 	 
 	 

@@ -54,8 +54,7 @@ public class DepositController {
 		// Get the current user's ID as a Long
 		Integer userId = (int) userDetails.getId();
 		// Get the current user's name
-		String username = userDetails.getUsername();
-		
+		String username = userDetails.getUsername(); 
 		deposit.setEntryBy(userId);
 		Integer accountId = deposit.getBankId();
 		long branchId = (long) deposit.getBranchId();
@@ -72,7 +71,7 @@ public class DepositController {
 		} else {
 			// Handle the case when the bank with the provided bankId is not found.
 			throw new Exception("Bank not found for bankId: " + accountId);
-		}
+		} 
 		depositRepository.save(deposit);
 		return deposit;
 
@@ -119,14 +118,6 @@ public class DepositController {
 	
 	
 	
-	 //Get Client Details in Live center
-	 @GetMapping("/clientDetails/{branchId}/{centerId}/{centerType}")
-	 public List<Map<String, Object>>  getClientDetailsInLiveCenter(@PathVariable("centerId") Integer centerId,
-			 @PathVariable("branchId") Integer branchId,
-			 @PathVariable("centerType") Integer centerType){
-		 List<Map<String, Object>> clientDetails=depositRepository.getCenterClientDetails(centerType, centerId, branchId);
-		 return clientDetails;
-	 }
 	
        
  

@@ -1,5 +1,7 @@
 package com.lms.model.address;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,7 +19,7 @@ public class Time {
 	@Column(name="time_id")
 	private int tid;
 	 
-	private float time;
+	private BigDecimal  time;
 
 	
 	
@@ -40,19 +42,19 @@ public class Time {
 
 
 
-	public float getTime() {
+	public BigDecimal  getTime() {
 		return time;
 	}
 
 
 
-	public void setTime(float time) {
+	public void setTime(BigDecimal  time) {
 		this.time = time;
 	}
 
 
 
-	public Time(int tid, float time) {
+	public Time(int tid, BigDecimal  time) {
 		super();
 		this.tid = tid;
 		this.time = time;

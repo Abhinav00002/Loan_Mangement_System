@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.model.Branch;
 import com.lms.model.Center;
+import com.lms.model.ClientRemark;
 import com.lms.model.Customer;
 import com.lms.model.CustomerSave;
 import com.lms.model.Lead;
@@ -76,6 +77,12 @@ public class CustomerSaveController {
 			     }else if(saveCustomer.getBdob()==null || saveCustomer.getBdob().toString().isEmpty()) {
 			    	 String errorMessage = "Borrower Date of birth is required.";
 			    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+				 }else if(saveCustomer.getBkycname()==null || saveCustomer.getBkycname().toString().isEmpty()) {
+			    	 String errorMessage = "Select Borrower KYC Name.";
+			    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+				 }else if(saveCustomer.getBkycnumber()==null || saveCustomer.getBkycnumber().toString().isEmpty()) {
+			    	 String errorMessage = "Borrower KYC Number is required.";
+			    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
 				 }
 		  if (saveCustomer.getCbcontectnum() == null || saveCustomer.getCbcontectnum().length() != 10) {
 			  String errorMessage = "Invalid Co_Borrower Contact Number. Contact Number must be at least 10 characters long.";
@@ -88,6 +95,12 @@ public class CustomerSaveController {
 		    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
 			 }
 		//Borrower save
+		 String Bkyctype=saveCustomer.getBkycname();
+		 String BkycNumber=saveCustomer.getBkycnumber();
+		  if(customerRepository.getCautionClient(Bkyctype, BkycNumber)==1  ) {
+	    	 String errorMessage = "Borrower is in Caution  State.";
+	    	 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
+		 }
 		Customer customer=new Customer();
 			customer.setCname(saveCustomer.getBname());
 			customer.setFname(saveCustomer.getBfhname());
@@ -107,6 +120,7 @@ public class CustomerSaveController {
 			customer.setEntrydate(saveCustomer.getBentrydate());
 			customer.setEntryby(saveCustomer.getBentryby());
 			customer.setSourcedBy(saveCustomer.getSourcedby());
+			customer.setVoterid(saveCustomer.getBvoterid());
 			//saveBerrower
 			customer=customerRepository.save(customer);
 			int borrowerId=customer.getCid();
@@ -131,6 +145,7 @@ public class CustomerSaveController {
 			customer.setEntrydate(saveCustomer.getBentrydate());
 			customer.setEntryby(saveCustomer.getBentryby());
 			customer.setSourcedBy(saveCustomer.getSourcedby());
+			customer.setVoterid(saveCustomer.getCbvoterid());
 			//save Co_Borrower
 			customerRepository.save(customer);
 			int coborrowerId=customer.getCid();
@@ -148,13 +163,26 @@ public class CustomerSaveController {
 			lead.setManageBy(saveCustomer.getSourcedby()); 
 			leadRepository.save(lead);
 			
-			
+			System.out.println(saveCustomer);
 			return ResponseEntity.ok(saveCustomer);
 
 		
 	}
 	
-	
+	//check if client is coution
+	@GetMapping("/check/coutionCLient/{Bkyctype}/{BkycNumber}")
+	public ResponseEntity<Object> checkClientRemark(@PathVariable   String Bkyctype,
+			@PathVariable String BkycNumber) {
+	    
+	    Map<String, Object> response = new HashMap<>(); 
+	    Integer savedClientRemark = customerRepository.getCautionClient(Bkyctype, BkycNumber);
+	    if(savedClientRemark==1) {
+	   
+	    response.put("message", "Client Marked as COUTION!!!!!!!!!");
+	    }
+	    
+	    return ResponseEntity.ok(response);
+	}
 	
 // Get Lead Data for Passbook	
 	@GetMapping("/lead-data/{leadId}")

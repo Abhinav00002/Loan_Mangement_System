@@ -10,11 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.lms.model.Attendance;
 
-public interface AttendanceRepository  extends JpaRepository<Attendance, Long> {
-	
-	  boolean existsByMarkDateAndClientId(LocalDate markDate, Long clientId);
+public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
-	  @Query(value = "select a.id, a.client_id, a.marked_by, a.mark_date, a.marked, a.latitude, a.longitude from attendance_master a where a.client_id=:clientId ",nativeQuery = true)
-	  public List<Attendance> findByClientId(Long clientId);
+	boolean existsByMarkDateAndClientId(LocalDate markDate, Long clientId);
+
+	@Query(value = "select a.id, a.client_id, a.marked_by, a.mark_date, a.marked, a.latitude, a.longitude from attendance_master a where a.client_id=:clientId ", nativeQuery = true)
+	public List<Attendance> findByClientId(Long clientId);
 
 }

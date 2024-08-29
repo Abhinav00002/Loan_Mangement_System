@@ -31,13 +31,14 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
 	public Integer getmaxcenterId(Long branchId);
 	  
 	  @Transactional
-	  @Query(value = "SELECT cm.addressl1, cm.addressl2, cm.landmark, cm.pincode, cm.center_type, t.time, d.days_name , cm.ce_manage_by, sm.staff_name "
-	  		+ "FROM center_master cm  "
-	  		+ "JOIN lead_master lm ON cm.ncid = lm.centerid  "
-	  		+ "JOIN loan_master lom ON lm.leadid = lom.lead_id  "
-	  		+ "JOIN time t ON t.time_id = cm.center_meeting_time  "
-	  		+ "JOIN days d ON d.days_id = cm.center_meeting_day  "
-	  		+ "JOIN staff_master sm ON sm.staff_id=cm.ce_manage_by "
+	  @Query(value = "SELECT cm.addressl1, cm.addressl2, cm.landmark, cm.pincode, cm.center_type, t.time, d.days_name , cm.ce_manage_by, sm.staff_name  "
+	  		+ ",cm.center_id AS centerId, lm.manage_by, sm1.staff_name AS loanManageBy FROM center_master cm   "
+	  		+ "JOIN lead_master lm ON cm.ncid = lm.centerid   "
+	  		+ "JOIN loan_master lom ON lm.leadid = lom.lead_id   "
+	  		+ "JOIN time t ON t.time_id = cm.center_meeting_time   "
+	  		+ "JOIN days d ON d.days_id = cm.center_meeting_day   "
+	  		+ "JOIN staff_master sm ON sm.staff_id=cm.ce_manage_by  "
+	  		+ "JOIN staff_master sm1 ON sm1.staff_id=lm.manage_by "
 	  		+ "WHERE lom.loan_id =  :loanId ORDER BY center_id DESC", nativeQuery = true)
 	List<Map<String, Object>> getCenterDataByLoanId(@Param("loanId") Integer loanId);
 	  

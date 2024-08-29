@@ -27,7 +27,7 @@ public class BranchController {
 	@Autowired
 	private BranchRepository branchRepository;
 	@Autowired
-	private  UserServiceImpl userServiceImpl;
+	private UserServiceImpl userServiceImpl;
 
 	// save Branch Data
 	@PostMapping("/")
@@ -42,59 +42,58 @@ public class BranchController {
 	// Get Branch by Id
 	@GetMapping("/list/{branchId}")
 	public ResponseEntity<Branch> getBranchById(@PathVariable("branchId") Long branchId, Principal principal) {
-	    String username = principal.getName();
-	    Integer userBranchId = userServiceImpl.getUserBranchId(username);
-	    int userRank = userServiceImpl.getUserRank(username);
-	    
-	    if (userRank == 1 && userBranchId==1) {
-	        userBranchId = branchId.intValue();
-	    }
+		String username = principal.getName();
+		Integer userBranchId = userServiceImpl.getUserBranchId(username);
+		int userRank = userServiceImpl.getUserRank(username);
 
-	    if (!userServiceImpl.isUserAuthorized(username, userRank, userBranchId)) {
-	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-	    }
+		if (userRank == 1 && userBranchId == 1) {
+			userBranchId = branchId.intValue();
+		}
 
-	    Branch branch = this.branchRepository.getBranchById(branchId);
-	    if (branch == null) {
-	        return ResponseEntity.notFound().build();
-	    }
-	    return ResponseEntity.ok(branch);
+		if (!userServiceImpl.isUserAuthorized(username, userRank, userBranchId)) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
+
+		Branch branch = this.branchRepository.getBranchById(branchId);
+		if (branch == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(branch);
 	}
 
 	// Get Branches
 	@GetMapping("/list")
 	public ResponseEntity<List<Branch>> getBranches(Principal principal) {
-	    String username = principal.getName();
-	    Integer userBranchId = userServiceImpl.getUserBranchId(username);
-	    int userRank = userServiceImpl.getUserRank(username);
-	    System.out.println("User Branch Id: " + userBranchId);
-	    System.out.println("User Rank: " + userRank);
+		String username = principal.getName();
+		Integer userBranchId = userServiceImpl.getUserBranchId(username);
+		int userRank = userServiceImpl.getUserRank(username);
+		System.out.println("User Branch Id: " + userBranchId);
+		System.out.println("User Rank: " + userRank);
 
-	    // Check if the user is authorized to access the list of branches
-	    if (!userServiceImpl.isUserAuthorized(username, userRank, userBranchId)) {
-	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-	    }
+		// Check if the user is authorized to access the list of branches
+		if (!userServiceImpl.isUserAuthorized(username, userRank, userBranchId)) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		}
 
-	    // If user rank is 1, they can access all branches, so return all branches
-	    if (userRank == 1 && userBranchId == 1) {
-	        List<Branch> branches = branchRepository.findAll();
-	        return ResponseEntity.ok(branches);
-	    }
+		// If user rank is 1, they can access all branches, so return all branches
+		if (userRank == 1 && userBranchId == 1) {
+			List<Branch> branches = branchRepository.findAll();
+			return ResponseEntity.ok(branches);
+		}
 
-	    // If user rank is 2, they can access only their branch's data
-	   if (userRank == 2 || (userBranchId != 1 && userRank == 1)) {
-	        Branch userBranch = branchRepository.getBranchById(userBranchId.longValue());
-	        if (userBranch != null) {
-	            List<Branch> branches = new ArrayList<>();
-	            branches.add(userBranch);
-	            return ResponseEntity.ok(branches);
-	        }
-	    }
+		// If user rank is 2, they can access only their branch's data
+		if (userRank == 2 || (userBranchId != 1 && userRank == 1)) {
+			Branch userBranch = branchRepository.getBranchById(userBranchId.longValue());
+			if (userBranch != null) {
+				List<Branch> branches = new ArrayList<>();
+				branches.add(userBranch);
+				return ResponseEntity.ok(branches);
+			}
+		}
 
-	    // If user rank is 3, they are not permitted to access branches data
-	    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+		// If user rank is 3, they are not permitted to access branches data
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
 	}
-
 
 	//
 	// @PostMapping("/save")

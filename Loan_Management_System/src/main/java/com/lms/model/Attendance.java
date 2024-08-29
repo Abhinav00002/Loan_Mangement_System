@@ -15,111 +15,103 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "attendance_master")
 public class Attendance {
-	
-	 
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id;
 
-	    @Column(name = "client_id")
-	    private Long clientId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	    @Column(name = "marked_by")
-	    private String markedBy;
+	@Column(name = "client_id")
+	private Long clientId;
 
-	   
-	    @Column(name = "mark_date")
-	    private LocalDate markDate;
+	@Column(name = "marked_by")
+	private String markedBy;
 
-	    private boolean marked;
+	@Column(name = "mark_date")
+	private LocalDate markDate;
 
-	    private double latitude;
+	private boolean marked;
 
-	    private double longitude;
-	    
-	    
-	    
-	    
+	private double latitude;
 
-		public Attendance() {
-			super();
-			// TODO Auto-generated constructor stub
-		}
+	private double longitude;
 
-		public Long getId() {
-			return id;
-		}
+	public Attendance() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-		public void setId(Long id) {
-			this.id = id;
-		}
+	public Long getId() {
+		return id;
+	}
 
-		public Long getClientId() {
-			return clientId;
-		}
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-		public void setClientId(Long clientId) {
-			this.clientId = clientId;
-		}
+	public Long getClientId() {
+		return clientId;
+	}
 
-		public String getMarkedBy() {
-			return markedBy;
-		}
+	public void setClientId(Long clientId) {
+		this.clientId = clientId;
+	}
 
-		public void setMarkedBy(String markedBy) {
-			this.markedBy = markedBy;
-		}
+	public String getMarkedBy() {
+		return markedBy;
+	}
 
-		public LocalDate getMarkDate() {
-			return markDate;
-		}
+	public void setMarkedBy(String markedBy) {
+		this.markedBy = markedBy;
+	}
 
-		public void setMarkDate(LocalDate markDate) {
-			this.markDate = markDate;
-		}
+	public LocalDate getMarkDate() {
+		return markDate;
+	}
 
-		public boolean isMarked() {
-			return marked;
-		}
+	public void setMarkDate(LocalDate markDate) {
+		this.markDate = markDate;
+	}
 
-		public void setMarked(boolean marked) {
-			this.marked = marked;
-		}
+	public boolean isMarked() {
+		return marked;
+	}
 
-		public double getLatitude() {
-			return latitude;
-		}
+	public void setMarked(boolean marked) {
+		this.marked = marked;
+	}
 
-		public void setLatitude(double latitude) {
-			this.latitude = latitude;
-		}
+	public double getLatitude() {
+		return latitude;
+	}
 
-		public double getLongitude() {
-			return longitude;
-		}
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
 
-		public void setLongitude(double longitude) {
-			this.longitude = longitude;
-		}
+	public double getLongitude() {
+		return longitude;
+	}
 
-		public Attendance(Long id, Long clientId, String markedBy, LocalDate markDate, boolean marked, double latitude,
-				double longitude) {
-			super();
-			this.id = id;
-			this.clientId = clientId;
-			this.markedBy = markedBy;
-			this.markDate = markDate;
-			this.marked = marked;
-			this.latitude = latitude;
-			this.longitude = longitude;
-		}
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
+	}
 
-		@Override
-		public String toString() {
-			return "Attendance [id=" + id + ", clientId=" + clientId + ", markedBy=" + markedBy + ", markDate="
-					+ markDate + ", marked=" + marked + ", latitude=" + latitude + ", longitude=" + longitude + "]";
-		}
+	public Attendance(Long id, Long clientId, String markedBy, LocalDate markDate, boolean marked, double latitude,
+			double longitude) {
+		super();
+		this.id = id;
+		this.clientId = clientId;
+		this.markedBy = markedBy;
+		this.markDate = markDate;
+		this.marked = marked;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
 
-	   
-		
+	@Override
+	public String toString() {
+		return "Attendance [id=" + id + ", clientId=" + clientId + ", markedBy=" + markedBy + ", markDate=" + markDate
+				+ ", marked=" + marked + ", latitude=" + latitude + ", longitude=" + longitude + "]";
+	}
+
 }
